@@ -1,0 +1,6 @@
+* To-do for the meeting
+- Start using Julia
+- Start implementing easy genetic sr
+* Topics to discuss during the meeting
+- What I have been doing (?)
+- Things for next week, possibly study transdimensional mcmc/bayesian sr

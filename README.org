@@ -1,0 +1,6 @@
+Hey Don,
+
+I have organized the project in the following way:
+
+- plan.org :: To keep the general organization of the internship.
+- meetings/... :: To write down things we have discussed during the meetings and things to-do for the meetings.

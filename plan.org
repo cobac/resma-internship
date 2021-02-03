@@ -1,0 +1,44 @@
+* Things I'm working on
+** Learn Julia
+*** Cherrypicking topics from
+- https://github.com/mitmath/18S191
+- https://github.com/mitmath/18337
+*** Implement easy genetic SR
+- Based on the easiest case of python's gplearn
+** Study genetic algorithms
+- python::gplearn
+- R::GA documentation & paper
+
+* Pending
+** Study trans-dimensional mcmc
+** Study Bayesian SR
+** TODO Check what's up with the ethics thing
+** TODO Research proposal
+DEADLINE: <2021-03-18 Thu>
+- Resmas deadline :: 25.3
+** TODO Final report
+DEADLINE: <2021-06-18 Fri>
+- Resmas deadline :: 30.6
+
+* Things
+** How to represent the tree data structure?
+*** Abstracttrees.jl ?
+** genetic packages
+*** ga R genetic package
+  - https://cran.r-project.org/web/packages/GA/index.html 
+  - Look at the symbolic regression
+*** evolutionary.jl
+  - Do they support discrete parameters
+*** Jump.jl
+** Can be reuse tooling from..
+*** Turing?
+*** Flux?
+*** ModelingToolkit.jl?
+** Candidates to compare method
+*** Bart
+- Bayesiantrees::R
+  - C++
+- bartMachine::R
+  - Java :|
+*** non-bayesian Genetic algorithm
+
