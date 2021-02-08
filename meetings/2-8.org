@@ -3,4 +3,11 @@
 - Start implementing easy genetic sr
 * Topics to discuss during the meeting
 - What I have been doing (?)
-- Things for next week, possibly study transdimensional mcmc/bayesian sr
+  - Looking at how Julia works
+  - Simple genetic algorithm to estimate polynomials
+  - Only element-wise mutations
+  - Works ok-ish (bad) for the higher degrees
+  - Tried to use static-mutable arrays, but worse performance
+- Things for next week,
+  - possibly study transdimensional mcmc/bayesian sr
+  - Implement tree genetic algo
