@@ -1,0 +1,10 @@
+* To-do for the meeting
+** Bayesian SR paper
+- Bayesian SR paper
+** Julia SR
+- Trees
+  - Don suggests multiple dispatch with function-specific node types
+- Look at SymbolicRegression.jl
+* Topics to discuss during the meeting
+** What I have been doing
+** Bayesian paper

@@ -10,7 +10,8 @@
 - R::GA documentation & paper
 
 * Pending
-** Study trans-dimensional mcmc
+** CANCELED Study trans-dimensional mcmc
+CLOSED: [2021-02-10 Wed 20:00]
 ** Study Bayesian SR
 ** TODO Check what's up with the ethics thing
 ** TODO Research proposal
@@ -41,4 +42,5 @@ DEADLINE: <2021-06-18 Fri>
 - bartMachine::R
   - Java :|
 *** non-bayesian Genetic algorithm
+*** https://advances.sciencemag.org/content/6/16/eaay2631
 

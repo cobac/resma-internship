@@ -2,7 +2,7 @@
 - Start using Julia
 - Start implementing easy genetic sr
 * Topics to discuss during the meeting
-- What I have been doing (?)
+- What I have been doing
   - Looking at how Julia works
   - Simple genetic algorithm to estimate polynomials
   - Only element-wise mutations
@@ -11,3 +11,13 @@
 - Things for next week,
   - possibly study transdimensional mcmc/bayesian sr
   - Implement tree genetic algo
+* Notes from the meeting
+- Trees, don't want to duplicate them, link trees to trees
+  - First easy one
+    - SymbolicRegression.jl
+    - Use multiple dispatch with function-specidic node types
+  - Memory saving advantageous?
+  - Not always an array in order, pointers anyway
+  - Bayesian paper not transdimensional
+  - partial sort for my algo
+  - next monday same time
