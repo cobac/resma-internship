@@ -4,7 +4,171 @@
 ** Julia SR
 - Trees
   - Don suggests multiple dispatch with function-specific node types
-- Look at SymbolicRegression.jl
+- Look at =SymbolicRegression.jl=
 * Topics to discuss during the meeting
 ** What I have been doing
+- Moved polynomial code into module etc
+- A bit overwhelmed
+- Rabbit hole of Julia's types, constructors, methods, Tree DS
+*** Tree = mutable Node with recursive type
+- Like =SymbolicRegression.jl=
+- Like you proposed with dispatching on type by expression?
+- Haskell-y
+        
+    #+BEGIN_SRC julia :results output :exports both
+      abstract type Node end
+
+      mutable struct NodeVal{T} <: Node
+          age::Int64
+          fitness::Int64
+          # whatever else we want to keep track
+          val::T
+      end 
+      mutable struct NodeSin <: Node
+          age::Int64
+          fitness::Int64
+          child::Node
+      end 
+
+      mutable struct NodeTimes <: Node
+          age::Int64
+          fitness::Int64
+          left::Node
+          right::Node
+      end 
+
+      parse(tree::NodeSin) = sin(parse(tree.child))
+      parse(tree::NodeTimes) = parse(tree.left) + parse(tree.right)
+      parse(tree::NodeVal) = tree.val
+    #+END_SRC
+        
+*** Tree = Chromosome that points at nodes
+- Native Julia AST/metaprogramming
+
+#+BEGIN_SRC julia :eval :session :results silent :exports code
+  :((2+2)*(3-1))
+#+END_SRC
+      
+- Lisp-y
+- =ExprRules.jl= and =ExprOptimization.jl=
+  - [[https://nbviewer.jupyter.org/github/sisl/ExprRules.jl/blob/master/examples/grammar.ipynb][Summary of grammars and expressions]]
+  - [[https://nbviewer.jupyter.org/github/sisl/ExprOptimization.jl/blob/master/examples/symbolic_regression.ipynb][Summary of SR]]
+
+#+BEGIN_SRC julia :eval :session :results silent :exports code
+#+BEGIN_SRC julia :results output :exports both
+  mutable struct RuleNode
+      ind::Int # index in grammar
+                _val::Any  #value of _() evals
+                children::Vector{RuleNode}
+            end
+  RuleNode(ind::Int) = RuleNode(ind, nothing, RuleNode[])
+  RuleNode(ind::Int, children::Vector{RuleNode}) = RuleNode(ind, nothing, children)
+  RuleNode(ind::Int, _val::Any) = RuleNode(ind, _val, RuleNode[])
+  #+END_SRC
+  
+#+BEGIN_SRC julia :eval :session :results output :exports both
+  grammar = @grammar begin
+      # Variables
+      Real = x
+      Real = y
+      # Functions
+      Real = Real + Real
+      Real = Real - Real
+      Real = Real * Real 
+      Real = Real / Real
+      Real = cos(Real) 
+      # Arbitrary functions
+      Real = f(Real)
+      # Values
+      Real = |(1:3)
+      # any function evaluated at evaluation time
+      #  e.g. to generate floats
+      Real = _(rand(Float64))
+  end
+
+  f(x)= sqrt(abs(2x-3))
+  symbol_table = SymbolTable(grammar)
+
+#+END_SRC
+        
+#+RESULTS:
+: Dict{Symbol,Any} with 9 entries:
+:   :+    => +
+:   :f    => f
+:   :/    => /
+:   :y    => 3
+:   :Real => Real
+:   :-    => -
+:   :cos  => cos
+:   :*    => *
+:   :x    => 2
+
+#+BEGIN_SRC julia :eval :session :results output :exports both
+  tree = rand(RuleNode, grammar, :Real,  20)
+#+END_SRC
+
+#+RESULTS:
+: 3{7{9}7{4{8{5{12,9}}11}}}
+
+#+BEGIN_SRC julia :eval :session :results output :exports both
+  equation = get_executable(tree, grammar)
+  print_tree(equation)
+#+END_SRC
+
+#+RESULTS:
+: :((3 * f(cos(x))) * (y * 0.97203))
+: ├─ :*
+: ├─ :(3 * f(cos(x)))
+: │  ├─ :*
+: │  ├─ 3
+: │  └─ :(f(cos(x)))
+: │     ├─ :f
+: │     └─ :(cos(x))
+: │        ├─ :cos
+: │        └─ :x
+: └─ :(y * 0.97203)
+:    ├─ :*
+:    ├─ :y
+:    └─ 0.97203
+
+#+BEGIN_SRC julia :eval :session :results output :exports both
+  x = 2
+  y = 3
+  @btime eval(equation)
+#+END_SRC
+
+#+RESULTS:
+: 101.592 μs (54 allocations: 3.42 KiB)
+
+#+BEGIN_SRC julia :eval :session :results output :exports both
+  symbol_table[:x] = 2
+  symbol_table[:y] = 3
+  @btime Core.eval(symbol_table, equation)
+#+END_SRC
+
+#+RESULTS:
+: 282.014 ns (5 allocations: 80 bytes)
+
+#+BEGIN_SRC julia :eval :session :results output :exports both
+  node_index = sample(NodeLoc, tree)
+  old_node = get(tree, node_index)
+  new_node = rand(RuleNode, grammar, :Real, 3)
+  insert!(tree, node_index, new_node)
+  new_equation = get_executable(tree, grammar)
+
+  equation
+  new_equation
+#+END_SRC
+
+#+RESULTS:
+: :(1 + cos(f(0.07262990211187215 * 1) - 3))
+: 
+: :(cos(1) + cos(f(0.07262990211187215 * 1) - 3))
+
+#+BEGIN_SRC julia :eval :session :results silent :exports code
+  iter = ExpressionIterator(grammar, 2, :Real)
+  collect(iter)
+  count_expressions(grammar, 2, :Real)
+#+END_SRC
+
 ** Bayesian paper
