@@ -17,29 +17,32 @@
         
     #+BEGIN_SRC julia :results output :exports both
       abstract type Node end
+      abstract type NodeBin <: Node end
+      abstract type NodeUni <: Node end
 
-      mutable struct NodeVal{T} <: Node
+      mutable struct NodeVal <: Node
           age::Int64
           fitness::Int64
           # whatever else we want to keep track
-          val::T
+          val::Float64 # Or Symbol to point to a feautre
       end 
-      mutable struct NodeSin <: Node
+      mutable struct NodeSin <: NodeUni
           age::Int64
           fitness::Int64
           child::Node
       end 
 
-      mutable struct NodeTimes <: Node
+      mutable struct NodeTimes <: NodeBin
           age::Int64
           fitness::Int64
           left::Node
           right::Node
       end 
 
-      parse(tree::NodeSin) = sin(parse(tree.child))
-      parse(tree::NodeTimes) = parse(tree.left) + parse(tree.right)
-      parse(tree::NodeVal) = tree.val
+      eval(tree::NodeSin) = sin(eval(tree.child))
+      eval(tree::NodeTimes) = eval(tree.left) + eval(tree.right)
+      eval(tree::NodeVal) = tree.val
+
     #+END_SRC
         
 *** Tree = Chromosome that points at nodes
