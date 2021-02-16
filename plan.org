@@ -1,36 +1,25 @@
-* Things I'm working on
-** Learn Julia
-*** Cherrypicking topics from
-- https://github.com/mitmath/18S191
-- https://github.com/mitmath/18337
-*** Implement easy genetic SR
-- Based on the easiest case of python's gplearn
-** Study genetic algorithms
-- python::gplearn
-- R::GA documentation & paper
-
-* Pending
-** CANCELED Study trans-dimensional mcmc
-CLOSED: [2021-02-10 Wed 20:00]
-** Study Bayesian SR
+* Pending tasks
 ** TODO Check what's up with the ethics thing
-** TODO Research proposal
+** TODO [#A] Research proposal
 DEADLINE: <2021-03-18 Thu>
 - Resmas deadline :: 25.3
-** TODO Final report
+** TODO [#A] Final report
 DEADLINE: <2021-06-18 Fri>
 - Resmas deadline :: 30.6
 
-* Things
-** How to represent the tree data structure?
+* Completed tasks
+** DONE Study Bayesian SR
+CLOSED: [2021-02-16 Tue 19:40]
+** CANCELED Study trans-dimensional mcmc
+CLOSED: [2021-02-10 Wed 20:00]
+** DONE How to represent the tree data structure?
+CLOSED: [2021-02-16 Tue 19:43]
 *** Abstracttrees.jl ?
+*** SymbolicRegression.jl?
+*** ExprRules.jl !!
+
+* Notes
 ** genetic packages
-*** ga R genetic package
-  - https://cran.r-project.org/web/packages/GA/index.html 
-  - Look at the symbolic regression
-*** evolutionary.jl
-  - Do they support discrete parameters
-*** Jump.jl
 ** Can be reuse tooling from..
 *** Turing?
 *** Flux?
@@ -42,5 +31,14 @@ DEADLINE: <2021-06-18 Fri>
 - bartMachine::R
   - Java :|
 *** non-bayesian Genetic algorithm
-*** https://advances.sciencemag.org/content/6/16/eaay2631
+**** non-bayesian genetic algorithm with the linear operator
+**** ExprOptimization.jl
+**** ExprRules.jl
+**** ga R genetic package
+  - https://cran.r-project.org/web/packages/GA/index.html 
+  - Look at the symbolic regression
+**** evolutionary.jl
+  - Do they support discrete parameters
+**** Jump.jl
+**** https://advances.sciencemag.org/content/6/16/eaay2631
 
