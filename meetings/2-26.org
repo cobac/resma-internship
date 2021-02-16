@@ -1,0 +1,7 @@
+* to-do for the meeting
+- Start outline of proposal 
+- Start coding up the Bayesian SR without the linear transformation
+
+* Topics to discuss during the meeting
+** What have I been doing code-wise
+** Proposal outline
