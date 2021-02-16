@@ -26,6 +26,7 @@
           # whatever else we want to keep track
           val::Float64 # Or Symbol to point to a feautre
       end 
+
       mutable struct NodeSin <: NodeUni
           age::Int64
           fitness::Int64
@@ -175,3 +176,18 @@
 #+END_SRC
 
 ** Bayesian paper
+- Is it worth to go through all the hustle of reversible jumping and all that just to have =lt()= operators?
+  - linear relationships, nice, substitute numbers as variables, signal capture
+- How to choose the final equation?
+  - Highest fit
+  - Prediction mindset
+  - We get intervals from all (or x%) of the expressions
+- It's best to use the haskell-y tree DS??
+  - Look at how to differentiate from left and right nodes in the =expressions= syntaxt.
+- Every element of the Markov Chain is similar to the last one except one tree?
+  - yes
+- The proposal of \(\boldsymbol \Theta \) if the dimensions are the same is just from the prior?
+  - Yes
+  - Maybe we could propose samples from a distribution centered around the current values (?)
+- Trade-off between sampling speed and acceptance rate
+
