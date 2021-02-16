@@ -6,6 +6,7 @@ DEADLINE: <2021-03-18 Thu>
 ** TODO [#A] Final report
 DEADLINE: <2021-06-18 Fri>
 - Resmas deadline :: 30.6
+** Learn about tests in Julia
 
 * Completed tasks
 ** DONE Study Bayesian SR
@@ -19,7 +20,6 @@ CLOSED: [2021-02-16 Tue 19:43]
 *** ExprRules.jl !!
 
 * Notes
-** genetic packages
 ** Can be reuse tooling from..
 *** Turing?
 *** Flux?
