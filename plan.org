@@ -7,6 +7,7 @@ DEADLINE: <2021-03-18 Thu>
 DEADLINE: <2021-06-18 Fri>
 - Resmas deadline :: 30.6
 ** Learn about tests in Julia
+** Learn about parallelization in julia
 
 * Completed tasks
 ** DONE Study Bayesian SR
@@ -20,7 +21,7 @@ CLOSED: [2021-02-16 Tue 19:43]
 *** ExprRules.jl !!
 
 * Notes
-** Can be reuse tooling from..
+** Can be reuse tooling from...
 *** Turing?
 *** Flux?
 *** ModelingToolkit.jl?
