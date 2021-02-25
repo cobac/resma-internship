@@ -1,0 +1,36 @@
+* Project description (1200 w)
+** Prior research
+Describe prior research, a comprehensible literature review of the research field, converging upon the research questions.
+
+a) Describe the state of affairs, including the theoretical framework, in the current research field based on the existing body of literature.
+b) Describe the state of affairs, including the theoretical framework, in the current research field based on the existing body of literature.
+** Key questions
+Now state the key questions, the essence of the proposal. Here, the intended research should be connected to prior research. Testable hypotheses should be derived from the key question, and the relation between theory and research hypotheses should be clearly specified.
+a) Formulate a general relevant research question based on previous research.
+b) Translate the general research question in a clear manner into a specific research question.
+c) Translate the specific research questions into testable research hypotheses.
+* Procedure (1000 w)
+** Operationalization
+a) Operationalize the research questions in a clear manner into a research design/strategy. 
+b) Describe the procedures for conducting the research and collecting the data. 
+c) For methodological and/or simulation projects describe the design of the simulation study.
+** Sample characteristics
+d) In case of a simulation study, indicate how data will be generated.
+** Data analysis
+Indicate for each research question separately, how it is translated into a statistical prediction. For example: “In a repeated measures ANOVA we expect an interaction effect of the between factor x and the within factor y on the dependent variable z. Also indicate how you will correct for multiple comparisons. Only the analyses proposed here can be described as confirmatory analyses in your research report. All other have to be mentioned as exploratory. 
+
+* Intended results (250 w)
+Clarify what the implication of possible outcomes would be (per hypothesis) for the specific and general research questions as well as for the theory. Address the following in approximately 250 words:
+a) What are the interpretations if the results do match the expectations? 
+b) What are the interpretations if the results do not match the expectations?
+c) Are there any alternative interpretations?
+d) Is there any practical or societal relevance? Please explain.
+* Work plan (500w)
+** Time schedule
+State the total amount of EC as noted in the internship contract (18-24 EC), 1EC stands for 28 hours work. Present and justify a time schedule in weeks, including your time investment in hours per week. Plan some spare time, and indicate what elements can be cut / reduced if necessary. Provide the intended presentation date.
+
+** 	Infrastructure
+Where will the research take place? How is access to the facilities and materials ensured?
+
+** 	Data storage
+Each researcher needs to comply with the storage protocol of the Research Institute Psychology: http://psyres.uva.nl/content/scientific-integrity-docs/data-protocol.html
