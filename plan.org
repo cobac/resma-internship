@@ -1,5 +1,5 @@
 * Pending tasks
-** TODO Check what's up with the ethics thing
+** WAITING Check what's up with the ethics thing
 ** TODO [#A] Research proposal
 DEADLINE: <2021-03-18 Thu>
 - Resmas deadline :: 25.3
@@ -34,7 +34,6 @@ CLOSED: [2021-02-16 Tue 19:43]
 *** non-bayesian Genetic algorithm
 **** non-bayesian genetic algorithm with the linear operator
 **** ExprOptimization.jl
-**** ExprRules.jl
 **** ga R genetic package
   - https://cran.r-project.org/web/packages/GA/index.html 
   - Look at the symbolic regression
