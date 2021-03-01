@@ -35,6 +35,8 @@
   - Implement different versions of the Bayesian SR.
   - Compare to related methods.
   - Justify interest -> No Bayesian version available (?)
+  - Ml usually not interpretable, focused on prediction but still interpretable
+    - Used in psych...
     - Interpretable (physics things)
     - Not more computationally complex than other algorithms (genetic, DL)
   - What Bayesian implementation did you have in mind?
@@ -49,3 +51,4 @@
 - Project organization in Julia
 - Outline of proposal
   - Meeting on the 5th
+

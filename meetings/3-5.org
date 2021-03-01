@@ -1,0 +1,9 @@
+* To-do for the meeting
+** Julia
+- Environment into a package, Revise.jl
+- append! thing
+  - append!
+  - ExprRules.append!
+- Variables grammar
+** Proposal outline
+* Topics to discuss
