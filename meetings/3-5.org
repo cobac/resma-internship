@@ -4,6 +4,7 @@
 - append! thing
   - append!
   - ExprRules.append!
+  - Works just with append! after loading everything as a package
 - Variables grammar
 ** Proposal outline
 * Topics to discuss
