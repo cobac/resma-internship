@@ -1,5 +1,5 @@
-include("BayesianSR.jl")
-using .BayesianSR
+using BayesianSR
+using Tests
 
 using ExprRules
 using Random
@@ -51,6 +51,5 @@ end
 #new_node = rand(RuleNode, grammar, :Real, 3)
 #insert!(tree, node_index, new_node)
 #new_equation = get_executable(tree, grammar)
-
 
 
