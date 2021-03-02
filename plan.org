@@ -41,4 +41,5 @@ CLOSED: [2021-02-16 Tue 19:43]
   - Do they support discrete parameters
 **** Jump.jl
 **** https://advances.sciencemag.org/content/6/16/eaay2631
+*** Bayesian with only 1 tree
 
