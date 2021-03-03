@@ -1,14 +1,12 @@
-* To-do for the meeting
+* Things I've done
 ** Julia
 - Environment into a package, Revise.jl
-- Tests
-  - Safetestset
 - append! thing
-  - append!
-  - ExprRules.append!
   - Works just with append! after loading everything as a package
 - Variables grammar
 ** Proposal outline
 * Topics to discuss
-** Workflow
-- Environment package activate
+** Proposal outline feedback
+** For next week
+- Translate manual test into proper ones
+- Tree modification functions
