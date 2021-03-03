@@ -32,6 +32,7 @@ end
 begin
     g1 = BayesianSR.defaultgrammar
     g2 = BayesianSR.variablesgrammar
+    g2_fun = variablestogrammar(x)
     g3 = BayesianSR.fullgrammar
 end 
 
