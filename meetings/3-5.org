@@ -1,12 +1,46 @@
-* Things I've done
+* Topics to discuss
+
 ** Julia
 - Environment into a package, Revise.jl
-- append! thing
-  - Works just with append! after loading everything as a package
-- Variables grammar
+  - append! thing and all the quirks do work now
+- Variables grammar 
+  
+** Select equation from a Bayesian approach
+- I think they just select the last Expression after N iterations
+- Seems a waste to only select one expression
+- For prediction is not an issue because you can evaluate multiple expressions and get ranges
+- But for equation discovery??
+- Selecting the /best/ one will bias favoring more complex expressions
+- Someway of combining trees?
+- Uncertainty about trees?
+- How is it done in other models with trans-dimensional jumps?
+  
 ** Proposal outline
-* Topics to discuss
-** Proposal outline feedback
+- Hard to think about all the stuff in advance
+- Most decisions we can't make them yet
+- Topics that seem nice but idk if it's going to make sense
+  - Hyperparameters not included
+- For now it's structured with 2 main goals
+  - Implementing an testing performance of Bayesian SR
+  - Show how to use Bayesian SR to incorporate structure, /inductive bias/.
+- Schedule ::
+  - Today proposal presentation
+  - 3-12 (next Friday) written down with your feedback
+  - Send out to peer review
+  - 3-19 Final version with peer feedback
+  - ... + and if we change our mind + your feedback
+  - *Sign and submit by 3-25*
+    
+** Workflow for writing
+- Feedback over a pdf?
+- Issues tracker?
+- Latex?
+- Markup
+  
 ** For next week
 - Translate manual test into proper ones
-- Tree modification functions
+- Write up the proposal
+- Check [[https://advances.sciencemag.org/content/6/5/eaav6971][Other bayesian SR]]
+- Tree modification functions... maybe not
+  
+* Notes
