@@ -42,4 +42,6 @@ CLOSED: [2021-02-16 Tue 19:43]
 **** Jump.jl
 **** https://advances.sciencemag.org/content/6/16/eaay2631
 *** Bayesian with only 1 tree
+*** Estimate symbolic equation from neural nets
+*** Proposal distributions during sampling different from the priors
 
