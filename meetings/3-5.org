@@ -44,3 +44,17 @@
 - Tree modification functions... maybe not
   
 * Notes
+** Trees
+- If there are similar structures a la linear models we could average
+- The variance will determine
+- Train-test
+- In linears is doable because it's just add-not dependencies
+** Stopping
+** Parallellization
+- the algorithm is inherently not parallellizable
+- Population-genetic mcmc inter-chain proposals
+** Comparisons
+- RMSE/complexity
+- Speed of convergence
+- Interpretability
+** Look at psychological forest
