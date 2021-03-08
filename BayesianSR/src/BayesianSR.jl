@@ -1,5 +1,5 @@
 module BayesianSR
-export EqTree, Sample, fullgrammar, Chain, operatortypes, ols, tableforeval, evaltree, optimβ!
+export EqTree, Sample, Chain, operatortypes, ols, tableforeval, evaltree, optimβ!
 
 using ExprRules
 # using AbstractTrees
@@ -11,7 +11,7 @@ mutable struct EqTree
     #   Θ::Thetas
 end 
 
-EqTree() = EqTree(rand(RuleNode, fullgrammar, :Real, 20))
+EqTree(grammar) = EqTree(rand(RuleNode, grammar, :Real, 20))
 
 # TODO: Implement lt()
 # struct Thetas
@@ -23,7 +23,7 @@ mutable struct Sample#{k}
     trees::Vector{EqTree}
     β::Vector{Float64}
 end 
-Sample(k) = Sample([EqTree() for i in 1:k], zeros(k+1))
+Sample(k, grammar) = Sample([EqTree(grammar) for i in 1:k], zeros(k+1))
 
 mutable struct Chain
     samples::Vector{Sample}
