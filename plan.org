@@ -44,4 +44,5 @@ CLOSED: [2021-02-16 Tue 19:43]
 *** Bayesian with only 1 tree
 *** Estimate symbolic equation from neural nets
 *** Proposal distributions during sampling different from the priors
+** Differentiable programming to use the structure??
 
