@@ -3,6 +3,7 @@
 *** Translate manual test into proper ones
 - Tests
   - Safetestset
-  - https://www.youtube.com/watch?v=QVmU29rCjaA
-*** Implement functions to modify trees
 ** Write proposal
+* Next meeting
+** Feedback proposal
+** Functions to modify trees
