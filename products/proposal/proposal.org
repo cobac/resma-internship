@@ -1,0 +1,154 @@
+#+author: David Coba 
+
+#+BEGIN_SRC elisp :eval :results none :exports results
+  (setq custom-tex-template (mapconcat 'identity (list
+                                                  org-tex-apa-template
+                                                  org-tex-math-template
+                                                  ) "\n"))
+  (coba-define-org-tex-template)
+#+END_SRC
+
+#+LATEX_HEADER: \title{\textbf{Researh Proposal \\
+#+LATEX_HEADER:  Bayesian Symbolic Regression}}
+#+LATEX_HEADER: \affiliation{UvA}
+
+#+LATEX_HEADER: \shorttitle{Bayesian symbolic regression}
+
+\maketitle
+
+* Project description 
+# \raggedright
+# (1200 w)
+# Describe prior research, a comprehensible literature review of the research field, converging upon the research questions.
+# 
+# - Describe the state of affairs, including the theoretical framework, in the current research field based on the existing body of literature.
+# - Clarify how the previous research eventuates into the research questions of the current proposal
+
+Symbolic regression is a machine learning technique that attempts to find a mathematical expression that describes relationships between features of the data. The mathematical expressions can be arbitrarily complex and are constructed from a prespecified set of features and operators (e.g. addition, multiplication, trigonometric functions, etc.).
+The main advantage of symbolic regression over other machine learning techniques is that the resulting models are explicit and interpretable.
+This lack of interpretability is one of the biggest barriers to the use machine learning methods for basic scientific research,
+but symbolic regression completely bypasses this issue.
+The goal of this research is to implement an 
+easy to use Bayesian Symbolic Regression framework and to compare its performance with other methods.
+  
+#   - Relevance in psychological contexts
+#     - Formal theories / modelling
+#     - Importance of exploratory research / abductive reasoning
+#     - How SR can be a tool to explore patterns in the data
+#     - Used to explore possible models 
+
+# TODO: New transition
+The space of possible mathematical expressions is arbitrarily large, and therefore it is not viable to explore it exhaustively.
+The most common approach to perform symbolic regression is to do a targeted search using evolutionary algorithms, which 
+work by mimicking the evolution of a population of candidate expressions. An example of this approach is the 
+widely used software /Eureqa/[fn:: https://www.creativemachineslab.com/eureqa.html] parencite:schmidt2009eureqa.
+More recently, some researchers have explored the use of neural networks to assist in the search of expressions.
+textcite:udrescu2020aifeynm use a neural network to discover hidden structure that is common in physical formulas (e.g. coherent units, symmetry), and they outperform by large margins the previous best efforts.
+On the other hand, textcite:cranmer2020discovsymbol fit neural networks that induce bias about the structure of the target system, and then they recover a mathematical expression with evolutionary algorithms from the networks instead of directly from the target system.
+This approach has better generalizability and predictive performance than just the neural networks or evolutionary algorithms on their own.
+The key aspect of these methods is that the neural networks encode prior information about the structure of the target mathematical expression, and therefore encourage a low-dimensional representation.
+These methods are the current state of the art when it comes to recovering or discovering new mathematical expressions.
+
+# cite:plonsky2017psychoforest psych theoretical knowledge + ml = nice results
+
+A different approach to perform symbolic regression is the use of Bayesian methods.
+The main feature of these models are the Markov chain Monte Carlo samplers that explore the space of possible mathematical expressions.
+One of the disadvantages of having to sample from a multidimensional space is that Bayesian methods are usually more computationally demanding than alternative techniques, but in this case they are not necessarily more demanding than their evolutionary or machine learning counterparts.
+Under these methods we can encode prior information about the components and the structure of mathematical expressions.
+textcite:guimera2020bayesmachin use the possibilities of Bayesian modelling to incorporate prior information about the frequency of mathematical operators, while textcite:jin2019bsr specify a model that is constrained to a linear combination of mathematical expressions.
+However, as long as we assume a distribution over the residuals, we can specify models with other structures.
+In this way, we could encode prior information about the structure of the target system that matches our knowledge about how the system behaves, similarly to how textcite:cranmer2020discovsymbol do with neural networks.
+And that is the key of this research. We aim to develop a general way to specify Bayesian symbolic regression models.
+
+[And ideally a package with a nice API for general use if it works nicely.]
+
+# Now state the key questions, the essence of the proposal. Here, the intended research should be connected to prior research. Testable hypotheses should be derived from the key question, and the relation between theory and research hypotheses should be clearly specified.
+ 
+# - Formulate a general relevant research question based on previous research.
+# - Translate the general research question in a clear manner into a specific research question.
+# - Translate the specific research questions into testable research hypotheses.
+
+\hfill Word count: 542/1200
+
+* Procedure 
+
+[We expect this section to change significantly on the final report. For now it describes the steps that we plan to follow in the following months.]
+
+# (1000 w)
+# ** Operationalization
+# - Operationalize the research questions in a clear manner into a research design/strategy. 
+# - Describe the procedures for conducting the research and collecting the data. 
+# - *For methodological and/or simulation projects describe the design of the simulation study.*
+
+The first step will be to implement textcite:jin2019bsr Bayesian symbolic regression algorithm. Their algorithm is constrained to a linear combination of mathematical expressions represented as symbolic trees. \[
+y = \beta_0 + \beta_1 \Psi_1(x) + \dots + \beta_K \Psi_K(x)\]
+Where \(\Psi_i\) is the \(i\)th symbolic tree that represents a function of the features \(x\).
+We want to test two possible modifications to their algorithm. First, since a single symbolic tree can capture the default linear combination of tress we want to explore the differences between using \(K\) trees versus only using 1 tree. And second, their algorithm generates possible movements for the MCMC sampler from the prior distribution of the parameters. We want to test if there is any benefit from generating proposals from a distribution centered around the current values of the parameters.
+
+We will compare the original algorithm's performance against the performance of the modifications and the performance of a standard evolutionary symbolic regression algorithm[fn:: 
+There are two main evolutionary algorithms we could choose.
+=ExprOptimization.jl=, which is based on the same tooling that we have chosen to use, and =SymbolicRegression.jl=, which is the one developed by the authors of  textcite:cranmer2020discovsymbol.].
+To assess the predictive performance of the different models we will use the variance of the residuals. We will also look at the complexity of the models measured as the number of nodes, the speed to convergence and the stability of the solutions.
+We will perform the comparisons with data generated from a standard set of functions (Expression ref:eq:standardf) that have been used to benchmark other symbolic regression algorithms. 
+Additionally, we plan on using a publicly available data set[fn:: Possibly a psychological data set instead of one of the examples used in the referenced literature.] that we could use to evaluate the interpretability of the expressions produced by the model.
+
+#+NAME: eq:standardf
+\begin{align}
+f_1(x_0, x_1) &= 2.5x_0^4-1.3x_0^3+0.5x_1^2-1.7x_1 \nonumber \\ 
+f_2(x_0, x_1) &= 8x_0^2 + 8x_1^3-15 \nonumber \\
+f_3(x_0, x_1) &= 0.2x_0^3+0.5x_1^3-1.2x_1-0.5x_0 \nonumber \\
+f_4(x_0, x_1) &= 1.5 \exp(x_0) + 5 \cos (x_1)\nonumber \\
+f_5(x_0, x_1) &= 6.0 \sin (x_0) \cos(x_1) \nonumber \\
+f_6(x_0, x_1) &= 1.35x_0x_1 + 5.5 \sin \left[ (x_0-1)(x_1-1) \right]
+\end{align}
+
+The last step will be to implement a Bayesian symbolic regression algorithm that incorporates information about the structure of the Newtonian Dynamics system described in textcite:cranmer2020discovsymbol. They use graphical neural networks to encode prior information about the shape of the target mathematical expression. For example, in a model of particles attached to each other by springs,
+the acceleration that a particle experiences is proportional to the sum of forces between that particle and all other particles in the system. Moreover, the mathematical expression that describes every force should be the same for any pair of particles. In a Bayesian symbolic regression approach we can encode this structure in the following model \[
+\vec{a}_i \propto \sum_{\forall j \neq i}^{} F_i_j
+\approx \sum_{\forall j \neq i}^{} \Psi_F(x_i, x_j)\;\text{,}
+\] 
+where \(\Psi_F\) denotes the mathematical expression that the algorithm needs to estimate and \(x_i\) is the set of features corresponding to the \(i\)th particle. To compare the performance of the Bayesian algorithm versus their approach we plan on using the same system that they use and measure the predictive performance and speed of both methods.
+ 
+# ** Sample characteristics
+# - In case of a simulation study, indicate how data will be generated.
+   
+# - For the comparison with DL use the same data as them.
+ 
+# ** Data analysis
+# Indicate for each research question separately, how it is translated into a statistical prediction. For example: “In a repeated measures ANOVA we expect an interaction effect of the between factor x and the within factor y on the dependent variable z. Also indicate how you will correct for multiple comparisons. Only the analyses proposed here can be described as confirmatory analyses in your research report. All other have to be mentioned as exploratory. 
+ 
+\hfill Word count: 480/1000
+ 
+* Intended results 
+# (250 w)
+# Clarify what the implication of possible outcomes would be (per hypothesis) for the specific and general research questions as well as for the theory. Address the following in approximately 250 words:
+# - What are the interpretations if the results do match the expectations? 
+# - What are the interpretations if the results do not match the expectations?
+# - Are there any alternative interpretations?
+# - Is there any practical or societal relevance? Please explain.
+
+Symbolic regression algorithms perform best when the relationships they are trying to capture can be represented by a sparse mathematical expression. Including prior knowledge about the properties of a system in the model is a way of encouraging such sparsity, reducing the amount of relationships that the algorithm needs to capture on its own. The main advantages we see of using a Bayesian approach is that it is a general framework that could be used in a multitude in contexts. If the Bayesian models end up performing better than the alternatives, they will be a straightforward alternative that avoids formulating neural networks to incorporating prior knowledge.
+
+\hfill Word count: 106/250
+
+* Work plan
+# (500w)
+** Time schedule
+# State the total amount of EC as noted in the internship contract (18-24 EC), 1EC stands for 28 hours work. Present and justify a time schedule in weeks, including your time investment in hours per week. Plan some spare time, and indicate what elements can be cut / reduced if necessary. Provide the intended presentation date.
+
+This internship project consists of 18EC which corresponds to 504 hours of work. Over a period of 21 weeks it averages to 24 hours of work per week.
+
+- February/March: During these months we have reviewed the relevant literature, selected and learned the tooling we are going to use, and designed the structure of the project.
+- April: We plan to implement a simple Bayesian symbolic regression algorithm and evaluate its performance.
+- May: We plan to implement and evaluate a Bayesian symbolic regression model equivalent to textcite:cranmer2020discovsymbol Newtonian Dynamics case.
+- June: I will write my internship report. I intend to present the final draft of my internship report on the 18th of June.
+ 
+If we encounter delays in our planning we could cut down on the number of models to which we compare the performance of the Bayesian symbolic regression algorithm at any step. If it were necessary we could cut the whole comparison with the Newtonian Dynamics case too.
+  
+** 	Data storage
+
+We plan on only using either synthetic or publicly available datasets. We are keeping and will keep all project files under version control, with physical and remote daily backups.
+
+\hfill Word count: 191/500
+
+\printbibliography
