@@ -8,7 +8,7 @@
   (coba-define-org-tex-template)
 #+END_SRC
 
-#+LATEX_HEADER: \title{\textbf{Researh Proposal \\
+#+LATEX_HEADER: \title{\textbf{Research Proposal \\
 #+LATEX_HEADER:  Bayesian Symbolic Regression}}
 #+LATEX_HEADER: \affiliation{UvA}
 
@@ -27,7 +27,7 @@
 Symbolic regression is a machine learning technique that attempts to find a mathematical expression that describes relationships between features of the data. The mathematical expressions can be arbitrarily complex and are constructed from a prespecified set of features and operators (e.g. addition, multiplication, trigonometric functions, etc.).
 The main advantage of symbolic regression over other machine learning techniques is that the resulting models are explicit and interpretable.
 This lack of interpretability is one of the biggest barriers to the use machine learning methods for basic scientific research,
-but symbolic regression completely bypasses this issue.
+but symbolic regression avoids this issue.
 The goal of this research is to implement an 
 easy to use Bayesian Symbolic Regression framework and to compare its performance with other methods.
   
@@ -38,7 +38,7 @@ easy to use Bayesian Symbolic Regression framework and to compare its performanc
 #     - Used to explore possible models 
 
 # TODO: New transition
-The space of possible mathematical expressions is arbitrarily large, and therefore it is not viable to explore it exhaustively.
+The space of possible mathematical expressions is infinitely large, and therefore it is not viable to explore it exhaustively.
 The most common approach to perform symbolic regression is to do a targeted search using evolutionary algorithms, which 
 work by mimicking the evolution of a population of candidate expressions. An example of this approach is the 
 widely used software /Eureqa/[fn:: https://www.creativemachineslab.com/eureqa.html] parencite:schmidt2009eureqa.
@@ -54,7 +54,7 @@ These methods are the current state of the art when it comes to recovering or di
 A different approach to perform symbolic regression is the use of Bayesian methods.
 The main feature of these models are the Markov chain Monte Carlo samplers that explore the space of possible mathematical expressions.
 One of the disadvantages of having to sample from a multidimensional space is that Bayesian methods are usually more computationally demanding than alternative techniques, but in this case they are not necessarily more demanding than their evolutionary or machine learning counterparts.
-Under these methods we can encode prior information about the components and the structure of mathematical expressions.
+Furthermore, an advantage of Bayesian methods is that we can encode prior information about the components and the structure of mathematical expressions.
 textcite:guimera2020bayesmachin use the possibilities of Bayesian modelling to incorporate prior information about the frequency of mathematical operators, while textcite:jin2019bsr specify a model that is constrained to a linear combination of mathematical expressions.
 However, as long as we assume a distribution over the residuals, we can specify models with other structures.
 In this way, we could encode prior information about the structure of the target system that matches our knowledge about how the system behaves, similarly to how textcite:cranmer2020discovsymbol do with neural networks.
@@ -80,14 +80,14 @@ And that is the key of this research. We aim to develop a general way to specify
 # - Describe the procedures for conducting the research and collecting the data. 
 # - *For methodological and/or simulation projects describe the design of the simulation study.*
 
-The first step will be to implement textcite:jin2019bsr Bayesian symbolic regression algorithm. Their algorithm is constrained to a linear combination of mathematical expressions represented as symbolic trees. \[
-y = \beta_0 + \beta_1 \Psi_1(x) + \dots + \beta_K \Psi_K(x)\]
-Where \(\Psi_i\) is the \(i\)th symbolic tree that represents a function of the features \(x\).
-We want to test two possible modifications to their algorithm. First, since a single symbolic tree can capture the default linear combination of tress we want to explore the differences between using \(K\) trees versus only using 1 tree. And second, their algorithm generates possible movements for the MCMC sampler from the prior distribution of the parameters. We want to test if there is any benefit from generating proposals from a distribution centered around the current values of the parameters.
+The first step will be to implement textcite:jin2019bsr Bayesian symbolic regression algorithm. Their algorithm is constrained to a linear combination of mathematical expressions represented as symbolic trees: \[
+y = \beta_0 + \beta_1 \Psi_1(x) + \dots + \beta_K \Psi_K(x)\;\text{,}\]
+where \(\Psi_i\) is the \(i\)th symbolic tree that represents a function of the features \(x\), \(y\) is the outcome variable and \(\beta\) are the linear coefficients..
+We want to test two possible modifications to their algorithm. First, since a single symbolic tree can capture the default linear combination of tress we want to explore the differences between using \(K\) trees versus only using 1 tree. And second, their algorithm generates possible movements for the MCMC sampler from the prior distribution of the parameters. We want to test if there is a  computational advantage if we generate proposals from a distribution centered around the current values of the parameters.
 
-We will compare the original algorithm's performance against the performance of the modifications and the performance of a standard evolutionary symbolic regression algorithm[fn:: 
+We will compare the original algorithm's performance against the performance of the modifications and the performance of a standard evolutionary symbolic regression algorithm.[fn:: 
 There are two main evolutionary algorithms we could choose.
-=ExprOptimization.jl=, which is based on the same tooling that we have chosen to use, and =SymbolicRegression.jl=, which is the one developed by the authors of  textcite:cranmer2020discovsymbol.].
+=ExprOptimization.jl=, which is based on the same tooling that we have chosen to use, and =SymbolicRegression.jl=, which is the one developed by the authors of  textcite:cranmer2020discovsymbol.]
 To assess the predictive performance of the different models we will use the variance of the residuals. We will also look at the complexity of the models measured as the number of nodes, the speed to convergence and the stability of the solutions.
 We will perform the comparisons with data generated from a standard set of functions (Expression ref:eq:standardf) that have been used to benchmark other symbolic regression algorithms. 
 Additionally, we plan on using a publicly available data set[fn:: Possibly a psychological data set instead of one of the examples used in the referenced literature.] that we could use to evaluate the interpretability of the expressions produced by the model.
