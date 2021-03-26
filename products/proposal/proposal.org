@@ -1,23 +1,69 @@
-#+author: David Coba 
+#+title: Form 2A - Research Master's Psychology: Research Internship Research Proposal
+#+date:
+#+author: 
 
 #+BEGIN_SRC elisp :eval :results none :exports results
-  (setq custom-tex-template (mapconcat 'identity (list
-                                                  org-tex-apa-template
-                                                  org-tex-math-template
-                                                  ) "\n"))
   (coba-define-org-tex-template)
+  (setq custom-tex-template (mapconcat 'identity (list
+                                                  org-tex-report-template
+                                                  org-tex-math-template
+                                                  org-tex-graphix-template                                                  
+                                                  ) "\n"))
+(coba-define-org-tex-template)
 #+END_SRC
 
-#+LATEX_HEADER: \title{\textbf{Research Proposal \\
-#+LATEX_HEADER:  Bayesian Symbolic Regression}}
-#+LATEX_HEADER: \affiliation{UvA}
+#+LATEX_CLASS_OPTIONS: [12pt]
+#+LATEX_HEADER: \setlength{\parskip}{\baselineskip}%
+#+LATEX_HEADER: \setlength{\parindent}{4pt}
 
-#+LATEX_HEADER: \shorttitle{Bayesian symbolic regression}
+#+LATEX_HEADER: \defbibheading{bibliography}[References]{%
+#+LATEX_HEADER: \section{#1}}
 
-\maketitle
+# #+LATEX_HEADER: \title{\textbf{Research Proposal \\
+# #+LATEX_HEADER:  Bayesian Symbolic Regression}}
+# #+LATEX_HEADER: \affiliation{UvA}
+
+# #+LATEX_HEADER: \shorttitle{Bayesian symbolic regression}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LATEX_HEADER: \fancyhf{}
+#+LATEX_HEADER: \renewcommand{\headrulewidth}{0pt}
+# #+LATEX_HEADER: \setlength\headheight{80.0pt}
+# #+LATEX_HEADER: \addtolength{\textheight}{-80.0pt}
+#+LATEX_HEADER: \lhead{\includegraphics[width = .40 \textwidth]{uvalogo.pdf}}
+#+LATEX_HEADER: \rhead{Graduate School of Psychology}
+
+\thispagestyle{fancy}
+
+\raggedright
+* General Information
+** Student information 
+- Student name: :: David Coba
+- Student Id card numbers: :: 12439665
+- Address: :: Dennenrodepad 65
+- Postal code and residence: :: 1102 MW, Amsterdam
+- Telephone number: :: +31 0620057624
+- Email address: :: coba@cobac.eu
+** Supervisor information
+- Supervisor (eligible for the ResMas): :: Eric-Jan Wagenmakers
+- Specialization: :: Psychological Methods
+** Other information
+- Date: :: 25.03.2021
+- Number of ECs for the research internship: :: 18EC
+- Ethics Review Board (ERB) code: :: -
+  
+* Title and Summary of the Research Project
+** Title: Bayesian Symbolic Regression
+** Summary of proposal 
+# 150w
+Symbolic regression is a machine learning method that generates explicit mathematical expressions by composing basic functions. 
+Since the models are just mathematical expressions they are fully interpretable, unlike most other machine learning techniques.
+
+The goal of this project is to develop and test a general Bayesian symbolic regression framework. The current state of the art in symbolic regression are methods that are able to include information about the structure of the target system they are trying to model. However, they use an approach with neural networks that is convoluted and hard to generalize. We believe that Bayesian methods could be a straightforward alternative to incorporate prior knowledge.
+
+\hfill Word count: 107/150
 
 * Project description 
-# \raggedright
 # (1200 w)
 # Describe prior research, a comprehensible literature review of the research field, converging upon the research questions.
 # 
@@ -60,20 +106,15 @@ However, as long as we assume a distribution over the residuals, we can specify 
 In this way, we could encode prior information about the structure of the target system that matches our knowledge about how the system behaves, similarly to how textcite:cranmer2020discovsymbol do with neural networks.
 And that is the key of this research. We aim to develop a general way to specify Bayesian symbolic regression models.
 
-[And ideally a package with a nice API for general use if it works nicely.]
-
 # Now state the key questions, the essence of the proposal. Here, the intended research should be connected to prior research. Testable hypotheses should be derived from the key question, and the relation between theory and research hypotheses should be clearly specified.
  
 # - Formulate a general relevant research question based on previous research.
 # - Translate the general research question in a clear manner into a specific research question.
 # - Translate the specific research questions into testable research hypotheses.
 
-\hfill Word count: 542/1200
+\hfill Word count: 531/1200
 
 * Procedure 
-
-[We expect this section to change significantly on the final report. For now it describes the steps that we plan to follow in the following months.]
-
 # (1000 w)
 # ** Operationalization
 # - Operationalize the research questions in a clear manner into a research design/strategy. 
@@ -117,7 +158,7 @@ where \(\Psi_F\) denotes the mathematical expression that the algorithm needs to
 # ** Data analysis
 # Indicate for each research question separately, how it is translated into a statistical prediction. For example: “In a repeated measures ANOVA we expect an interaction effect of the between factor x and the within factor y on the dependent variable z. Also indicate how you will correct for multiple comparisons. Only the analyses proposed here can be described as confirmatory analyses in your research report. All other have to be mentioned as exploratory. 
  
-\hfill Word count: 480/1000
+\hfill Word count: 465/1000
  
 * Intended results 
 # (250 w)
@@ -149,6 +190,21 @@ If we encounter delays in our planning we could cut down on the number of models
 
 We plan on only using either synthetic or publicly available datasets. We are keeping and will keep all project files under version control, with physical and remote daily backups.
 
-\hfill Word count: 191/500
+\hfill Word count: 192/500
 
 \printbibliography
+
+* Further steps
+Make sure your supervisor submits an Ethics Checklist for your intended research to the Ethics Review Board of the Department of Psychology at https://www.lab.uva.nl/lab/ethics/ .
+
+* Signatures
+- [ ] I hereby declare that both this proposal, and its resulting internship, will only contain original material and is free of plagiarism (cf. Teaching and Examination Regulation in the research master’s course catalogue).
+- [ ] I hereby declare that the results section of the internship report will consist of two subsections, one entitled “confirmatory analyses” and one entitled “exploratory analyses” (one of the two subsections may be empty):
+  1) The confirmatory analysis section reports exactly the analyses proposed in Section 4 of this proposal
+  2) The exploratory analysis section contains not previously specified, and thus exploratory, analyses.
+  
+\centering
+*Location:* \hspace{1cm} *Student’s signature:* \hspace{1cm} *Supervisor’s signature:*
+
+\raggedright
+\hspace{1.5cm} Amsterdam
