@@ -1,9 +1,0 @@
-* To-do for the meeting
-** Code
-*** Translate manual test into proper ones
-- Tests
-  - Safetestset
-** Write proposal
-* Next meeting
-** Feedback proposal
-** Functions to modify trees

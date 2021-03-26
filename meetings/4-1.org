@@ -1,0 +1,7 @@
+* To-do for the meeting
+** Code
+*** Trees
+* Topics to discuss
+** Done since last meeting
+*** Translate manual test into proper ones
+** Research proposal
