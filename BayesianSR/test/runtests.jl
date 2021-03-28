@@ -47,10 +47,10 @@ fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
     @test maximum(full_operators) == maximum(default_operators)
 end
 
+
 @testset "Tree generation" begin
     Random.seed!(2)
     tree = BayesianSR.EqTree(fullgrammar)
-
     table = BayesianSR.tableforeval(x, 3, fullgrammar)
     @test x[3, 1] == table[:x1]
     @test x[3, 2] == table[:x2]
@@ -60,7 +60,7 @@ end
     answ = Core.eval(table, eq)
     @test length(answ) == 1
     @test isreal(answ)
-    @test answ ≈ -0.14072391771625423
+    @test answ ≈ 2.239413477153907
 
     treex = BayesianSR.evaltree(tree, x, fullgrammar)
     @test length(treex) == size(x)[1]
