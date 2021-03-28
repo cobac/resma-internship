@@ -11,7 +11,7 @@ mutable struct EqTree
     #   Θ::Thetas
 end 
 
-EqTree(grammar) = EqTree(rand(RuleNode, grammar, :Real, 20))
+EqTree(grammar::Grammar) = EqTree(rand(RuleNode, grammar, :Real, 20))
 
 # TODO: Implement lt()
 # struct Thetas
@@ -23,7 +23,7 @@ mutable struct Sample#{k}
     trees::Vector{EqTree}
     β::Vector{Float64}
 end 
-Sample(k, grammar) = Sample([EqTree(grammar) for i in 1:k], zeros(k+1))
+Sample(k::Real, grammar::Grammar) = Sample([EqTree(grammar) for i in 1:k], zeros(k+1))
 
 mutable struct Chain
     samples::Vector{Sample}
