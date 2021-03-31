@@ -18,6 +18,6 @@ function growtree!(node::RuleNode, grammar::Grammar, d::Int)
     return node
 end 
 
+growtree!(grammar::Grammar, d::Int) = growtree!(RuleNode(0), grammar, d)
 growtree!(node::RuleNode, grammar::Grammar) = growtree!(node, grammar, 1)
 growtree!(grammar::Grammar) = growtree!(RuleNode(0), grammar, 1)
-growtree!(grammar::Grammar, d::Int) = growtree!(RuleNode(0), grammar, d)
