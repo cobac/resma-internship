@@ -66,6 +66,10 @@ end
     nodes = BayesianSR.flatten(tree)
     @test length(nodes) == BayesianSR.n_operators(tree, fullgrammar) +
         BayesianSR.n_terminals(tree, fullgrammar)
+    root = RuleNode(3)
+    @test BayesianSR.n_operators(root, fullgrammar) == 1
+    @test BayesianSR.n_terminals(root, fullgrammar) == 0
+    @test BayesianSR.n_candidates(root, fullgrammar) == 0
 end 
 
 @testset "Samples" begin
