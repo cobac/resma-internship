@@ -1,7 +1,31 @@
-* To-do for the meeting
-** Code
-*** Trees
 * Topics to discuss
+** Research proposal
+*** Approval on /Speedgrader/
+*** I don't think we are going to be able to do everything
+- Structure /Bayesianly/ could be with genetic algorithm too
 ** Done since last meeting
 *** Translate manual test into proper ones
-** Research proposal
+*** Code 
+Doesn't feel very elegant.
+Probably major refactors once the structure of the whole program is clearer.
+****  Tree grows
+-  \(\alpha\) and \(\beta\) priors, depth of trees
+**** Utility functions
+- Rejection sampling
+** I'm working on generating a tree proposal
+*** Now crossroads about how to implement the whole thing
+**** Generate proposals from the whole chain
+- With some kind of =step!()= function
+- Keep track of last sampled tree on the Chain
+**** Use a function that generates N samples
+- Keeps track of the last trees on the state of the function
+**** Other option... idk
+** [[file:../../../../../../Brain/guimera2020bayesmachin.org][Roger Guimer`a et al.: A bayesian machine scientist to aid in the solution of challenging scientific problems]]
+*** They use different (simmilar) movements
+*** Main thing is that they calculate priors per operator
+Meh 
+* TO-DO for next week
+** Keep coding
+*** Hopefully all code to generate proposals
+* Notes
+
