@@ -1,5 +1,4 @@
-using BayesianSR
-using Test
+using BayesianSR, Test
 
 using ExprRules, Random, LinearAlgebra, Distributions
 #using ExprTools
@@ -20,7 +19,7 @@ end
 fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
 
 @testset "Grammars" begin
-    var_operators = BayesianSR.operatortypes(vargrammar)
+    var_operators = BayesianSR.nodetypes(vargrammar)
     @test length(var_operators) == 3
     @test in(0, var_operators)
     @test maximum(var_operators) == 0
@@ -33,13 +32,13 @@ fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
     @test vargrammar.rules == xgrammar.rules
     @test vargrammar.types == xgrammar.types
 
-    default_operators = BayesianSR.operatortypes(BayesianSR.defaultgrammar)
+    default_operators = BayesianSR.nodetypes(BayesianSR.defaultgrammar)
     @test length(default_operators) == 6
     @test in(0, default_operators) == false
     @test in(1, default_operators)
     @test maximum(default_operators) == 2
 
-    full_operators = BayesianSR.operatortypes(fullgrammar)
+    full_operators = BayesianSR.nodetypes(fullgrammar)
     @test length(full_operators) == length(var_operators) + length(default_operators)
     @test maximum(full_operators) == maximum(default_operators)
 end
@@ -47,7 +46,7 @@ end
 
 @testset "Tree generation" begin
     Random.seed!(5)
-    tree = BayesianSR.EqTree(fullgrammar)
+    tree = EqTree(fullgrammar)
     table = BayesianSR.tableforeval(x, 3, fullgrammar)
     @test x[3, 1] == table[:x1]
     @test x[3, 2] == table[:x2]
@@ -62,10 +61,17 @@ end
     @test length(treex) == size(x)[1]
 end
 
+@testset "Describe trees" begin
+    tree = EqTree(fullgrammar).S
+    nodes = BayesianSR.flatten(tree)
+    @test length(nodes) == BayesianSR.n_operators(tree, fullgrammar) +
+        BayesianSR.n_terminals(tree, fullgrammar)
+end 
+
 @testset "Samples" begin
     Random.seed!(3)
     k = 3
-    model = BayesianSR.Sample(k, fullgrammar)
+    model = Sample(k, fullgrammar)
     @test maximum(model.β) == 0
     @test length(model.β) == k+1
     @test length(model.trees) == k
