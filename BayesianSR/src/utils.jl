@@ -1,5 +1,5 @@
 function flatten(node::RuleNode)
-    out = []
+    out = Int[]
     queue = [node]
     while !isempty(queue)
         push!(out, queue[1].ind)
