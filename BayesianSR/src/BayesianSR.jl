@@ -37,5 +37,6 @@ include("grammars.jl")
 include("evaltree.jl")
 include("modifytree.jl")
 include("growtree.jl")
+include("describetree.jl")
 
 end # module
