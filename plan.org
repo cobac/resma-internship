@@ -1,13 +1,8 @@
 * Pending tasks
-** WAITING Check what's up with the ethics thing
-** TODO [#A] Research proposal
-DEADLINE: <2021-03-18 Thu>
-- Resmas deadline :: 25.3
 ** TODO [#A] Final report
 DEADLINE: <2021-06-18 Fri>
 - Resmas deadline :: 30.6
-** Learn about tests in Julia
-** Learn about parallelization in julia
+** TODO Something parallelization (?)
 
 * Completed tasks
 ** DONE Study Bayesian SR
@@ -19,7 +14,13 @@ CLOSED: [2021-02-16 Tue 19:43]
 *** Abstracttrees.jl ?
 *** SymbolicRegression.jl?
 *** ExprRules.jl !!
-
+** DONE Learn about tests in Julia
+CLOSED: [2021-03-26 Fri 14:42]
+** DONE Check what's up with the ethics thing
+CLOSED: [2021-03-26 Fri 14:42]
+** DONE [#A] Research proposal
+CLOSED: [2021-03-26 Fri 14:42] DEADLINE: <2021-03-18 Thu>
+- Resmas deadline :: 25.3
 * Notes
 ** Can be reuse tooling from...
 *** Turing?
