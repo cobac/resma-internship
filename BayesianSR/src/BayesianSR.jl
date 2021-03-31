@@ -11,7 +11,7 @@ mutable struct EqTree
     #   Θ::Thetas
 end 
 
-EqTree(grammar::Grammar) = EqTree(rand(RuleNode, grammar, :Real, 20))
+EqTree(grammar::Grammar) = EqTree(growtree!(grammar))
 
 # TODO: Implement lt()
 # struct Thetas
@@ -36,13 +36,6 @@ end
 include("grammars.jl")
 include("evaltree.jl")
 include("modifytree.jl")
-
-#------------------------ To move:
-function operatortypes(grammar=defaultgrammar)
-    #= Classifies operators into unary-binary-terminal =#
-    types = [ExprRules.nchildren(grammar, i)
-             for i in 1:length(grammar.rules)]
-    return types
-end 
+include("growtree.jl")
 
 end # module

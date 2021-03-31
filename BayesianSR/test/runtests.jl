@@ -1,12 +1,9 @@
 using BayesianSR
 using Test
 
-using ExprRules
-using Random
+using ExprRules, Random, LinearAlgebra, Distributions
 #using ExprTools
 #using AbstractTrees
-using LinearAlgebra
-using Distributions
 
 Random.seed!(2)
 n = 30
@@ -49,7 +46,7 @@ end
 
 
 @testset "Tree generation" begin
-    Random.seed!(2)
+    Random.seed!(5)
     tree = BayesianSR.EqTree(fullgrammar)
     table = BayesianSR.tableforeval(x, 3, fullgrammar)
     @test x[3, 1] == table[:x1]
@@ -60,8 +57,7 @@ end
     answ = Core.eval(table, eq)
     @test length(answ) == 1
     @test isreal(answ)
-    @test answ ≈ 2.239413477153907
-
+    @test answ ≈ 0.8910314500261972
     treex = BayesianSR.evaltree(tree, x, fullgrammar)
     @test length(treex) == size(x)[1]
 end
@@ -77,3 +73,5 @@ end
     @test length(model.β) == k+1
     @test in(0, model.β) == false
 end 
+
+
