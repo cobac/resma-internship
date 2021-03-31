@@ -72,6 +72,16 @@ end
     @test BayesianSR.n_candidates(root, fullgrammar) == 0
 end 
 
+@testset "Node sampling" begin
+    tree = EqTree(fullgrammar).S
+    terminal = BayesianSR.sampleterminal(tree, fullgrammar)
+    operator = BayesianSR.sampleoperator(tree, fullgrammar)
+    terminal = get(tree, terminal).ind
+    operator = get(tree, operator).ind
+    @test nchildren(fullgrammar, terminal) == 0
+    @test in(nchildren(fullgrammar, operator), [1,2])
+end 
+
 @testset "Samples" begin
     Random.seed!(3)
     k = 3
