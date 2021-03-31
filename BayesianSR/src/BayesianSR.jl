@@ -6,7 +6,7 @@ using ExprRules
 using Distributions
 using Random
 
-mutable struct EqTree
+struct EqTree
     S::RuleNode
     #   Θ::Thetas
 end 
@@ -25,7 +25,7 @@ mutable struct Sample#{k}
 end 
 Sample(k::Real, grammar::Grammar) = Sample([EqTree(grammar) for i in 1:k], zeros(k+1))
 
-mutable struct Chain
+struct Chain
     samples::Vector{Sample}
     operators::Grammar
     y::Vector{Float64}
