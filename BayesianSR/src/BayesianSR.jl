@@ -1,10 +1,7 @@
 module BayesianSR
 export EqTree, Sample, Chain, nodetypes, ols, tableforeval, evaltree, optimβ!
 
-using ExprRules
-# using AbstractTrees
-using Distributions
-using Random
+using ExprRules, Distributions, Random
 
 struct EqTree
     S::RuleNode
