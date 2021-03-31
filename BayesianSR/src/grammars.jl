@@ -21,3 +21,9 @@ function variablestogrammar(x)
     grammar = Grammar(rules, types, isterminal, iseval, bytype, childtypes)
     return grammar
 end 
+
+function nodetypes(grammar::Grammar)
+    types = [ExprRules.nchildren(grammar, i)
+             for i in 1:length(grammar.rules)]
+    return types
+end 

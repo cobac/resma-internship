@@ -1,5 +1,5 @@
 module BayesianSR
-export EqTree, Sample, Chain, operatortypes, ols, tableforeval, evaltree, optimβ!
+export EqTree, Sample, Chain, nodetypes, ols, tableforeval, evaltree, optimβ!
 
 using ExprRules
 # using AbstractTrees
@@ -31,6 +31,7 @@ mutable struct Chain
     y::Vector{Float64}
     x::Matrix{Float64}
     # ... hyperparams, statistics
+    # TODO: I think a dictionary Prior with all hyperparameters and prios
 end 
 
 include("grammars.jl")
@@ -38,5 +39,6 @@ include("evaltree.jl")
 include("modifytree.jl")
 include("growtree.jl")
 include("describetree.jl")
+include("utils.jl")
 
 end # module
