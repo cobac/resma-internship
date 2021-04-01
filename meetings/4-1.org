@@ -2,7 +2,8 @@
 ** Research proposal
 *** Approval on /Speedgrader/
 *** I don't think we are going to be able to do everything
-- Structure /Bayesianly/ could be with genetic algorithm too
+*** I'm still not convinced of the advantages of doing it /Bayesianly/
+- Structure could be added with genetic algorithm too
 ** Done since last meeting
 *** Translate manual test into proper ones
 *** Code 
@@ -14,14 +15,18 @@ Probably major refactors once the structure of the whole program is clearer.
 - Rejection sampling
 ** I'm working on generating a tree proposal
 *** Now crossroads about how to implement the whole thing
-**** Generate proposals from the whole chain
+**** Sampling
+***** Generate proposals from the whole chain
 - With some kind of =step!()= function
 - Keep track of last sampled tree on the Chain
-**** Use a function that generates N samples
+***** Use a function that generates N samples
 - Keeps track of the last trees on the state of the function
-**** Other option... idk
+***** Other option... idk
+**** Interface to the program
+***** With a type?
+***** Options in a function?
 ** [[file:../../../../../../Brain/guimera2020bayesmachin.org][Roger Guimer`a et al.: A bayesian machine scientist to aid in the solution of challenging scientific problems]]
-*** They use different (simmilar) movements
+*** They use different (similar) movements
 *** Main thing is that they calculate priors per operator
 Meh 
 * TO-DO for next week
