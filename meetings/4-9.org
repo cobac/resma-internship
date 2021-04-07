@@ -1,0 +1,8 @@
+* Topics to discuss
+** Quicktest testing
+- tests
+- safetests
+** Code
+*** I thought multiple movements, but just one
+- Probabilities add to 1
+
