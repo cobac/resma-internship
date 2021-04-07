@@ -1,14 +1,14 @@
 module BayesianSR
 export EqTree, Sample, Chain, nodetypes, ols, tableforeval, evaltree, optimβ!
 
-using ExprRules, Distributions, Random
+using ExprRules, Distributions, Random, StatsBase
 
 struct EqTree
     S::RuleNode
     #   Θ::Thetas
 end 
 
-EqTree(grammar::Grammar) = EqTree(growtree!(grammar))
+EqTree(grammar::Grammar) = EqTree(growtree(grammar))
 
 # TODO: Implement lt()
 # struct Thetas
@@ -33,10 +33,11 @@ end
 
 include("grammars.jl")
 include("evaltree.jl")
-include("modifytree.jl")
-include("growtree.jl")
 include("describetree.jl")
 include("utils.jl")
+include("ols.jl")
+include("growtree.jl")
+# include("sampletree.jl")
 # include("sampling.jl")
 
 end # module

@@ -1,5 +1,7 @@
-function growtree!(node::RuleNode, grammar::Grammar, d::Int)
+
+function growtree(grammar::Grammar, d::Int)
     node_types = nodetypes(grammar)
+    node = RuleNode(0)
     
     # Hyper: α, β = 2, 1
     # Prior: Uniform for operators and parameters
@@ -8,7 +10,7 @@ function growtree!(node::RuleNode, grammar::Grammar, d::Int)
         # Node = operator
         node.ind = sample(findall(x -> x==1 || x==2, node_types))
         for child in 1:node_types[node.ind]
-            push!(node.children, growtree!(grammar, d+1))
+            push!(node.children, growtree(grammar, d+1))
         end 
     else
         # Node = terminal
@@ -18,6 +20,4 @@ function growtree!(node::RuleNode, grammar::Grammar, d::Int)
     return node
 end 
 
-growtree!(grammar::Grammar, d::Int) = growtree!(RuleNode(0), grammar, d)
-growtree!(node::RuleNode, grammar::Grammar) = growtree!(node, grammar, 1)
-growtree!(grammar::Grammar) = growtree!(RuleNode(0), grammar, 1)
+growtree(grammar::Grammar) = growtree(grammar, 1)
