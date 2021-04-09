@@ -1,11 +1,6 @@
 struct TreeProposal
-    # k::Int ?? probably doesn't make sense here
     sample::Sample
-    movements::Symbol[]
-end 
-
-function generateproposal()
-    
+    movement::Symbol
 end 
 
 function proposetree(tree::RuleNode, grammar)
@@ -49,6 +44,9 @@ function proposetree(tree::RuleNode, grammar)
     return (tree = tree, movement = mov)
 end 
 
+function proposeparameters()
+    nothing
+end 
 
 
 
