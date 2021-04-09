@@ -37,7 +37,7 @@ include("describetree.jl")
 include("utils.jl")
 include("ols.jl")
 include("growtree.jl")
-# include("sampletree.jl")
+include("sampletree.jl")
 # include("sampling.jl")
 # include("mcmc.jl")
 
