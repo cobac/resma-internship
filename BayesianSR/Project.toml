@@ -4,6 +4,7 @@ authors = ["Coba <coba@cobac.eu>"]
 version = "0.1.0"
 
 [deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 ExprRules = "e7058ba0-a568-556c-b31a-209ee9d855a8"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
