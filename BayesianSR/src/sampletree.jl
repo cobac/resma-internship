@@ -19,7 +19,12 @@ function delete!(node::RuleNode, grammar::Grammar)
     target = get(node, loc)
     n_children = length(target.children)
     if n_children == 1
-        insert!(node, loc, target.children[1])
+        # Why is this if-statement necessary?
+        if loc.i == 0 
+            node = target.children[1]
+        else 
+            insert!(node, loc, target.children[1])
+        end 
     elseif target != node # no unary and no root = binary no root
         insert!(node, loc, sample(target.children))
     else # only binary root left
@@ -28,7 +33,6 @@ function delete!(node::RuleNode, grammar::Grammar)
         ind_children = [child.ind for child in target.children]
         ind_operator = findall(x -> in(x, operator_is), ind_children)
         node = target.children[sample(ind_operator)]
-        # insert!(node, loc, target.children[sample(ind_operator)])
     end 
     return node 
 end 
@@ -40,16 +44,18 @@ function insert_node!(node::RuleNode, grammar::Grammar)
     old = get(node, loc)
     new = RuleNode(sample(operator_is))
     type = node_types[new.ind]
-    println("old is ", old)
-    println("new is ", new)
-    println("Type is ", type)
     if type == 2
         d = node_depth(node, old)
         new.children = [old, growtree(grammar, d)]
     else # type == 1
         push!(new.children, old)
     end 
-    insert!(node, loc, new)
+    # Why is this if-statement necessary?
+    if loc.i == 0
+        node = new
+    else 
+        node = insert!(node, loc, new)
+    end 
     return node
 end 
 
