@@ -73,7 +73,7 @@ function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     grammar = append!(deepcopy(operators), variablestogrammar(x))
     sample = Sample(k, grammar, ν, λ)
     optimβ!(sample, x, y, grammar)
-    stats = Dict([(:lastk, 0),
+    stats = Dict([(:lastj, 0),
                   (:proposals, 0)])
     Chain([sample], grammar, x, y, stats, hyper)
 end 
