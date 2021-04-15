@@ -22,6 +22,6 @@ end
 
 function nodetypes(grammar::Grammar)
     types = [ExprRules.nchildren(grammar, i)
-             for i in 1:length(grammar.rules)]
+             for i in 1:length(grammar)]
     return types
 end 

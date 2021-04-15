@@ -9,6 +9,8 @@ function flatten(node::RuleNode)
     return out
 end
 
+Base.length(grammar::Grammar) = length(grammar.rules)
+
 function sampleterminal(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = findall(x -> x==1 || x==2, node_types)
@@ -62,7 +64,7 @@ function iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
     end 
 end 
 
-length(chain::Chain) = length(chain.samples)
+Base.length(chain::Chain) = length(chain.samples)
 no_trees(chain::Chain) = length(chain.samples[1].trees)
 
 function n_operators(node::RuleNode, grammar::Grammar)
