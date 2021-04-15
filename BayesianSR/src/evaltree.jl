@@ -1,5 +1,5 @@
 
-function evaltree(tree, x, grammar)
+function evaltree(tree::EqTree, x, grammar::Grammar)
     #= Evaluates a tree into a vector for every variable x_j =#
     n = size(x)[1]
     out = Vector{Float64}(undef, n)
