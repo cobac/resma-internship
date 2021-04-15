@@ -7,8 +7,6 @@ const defaultgrammar = ExprRules.@grammar begin
     Real = sin(Real) 
 end
 
-# TODO: Ask for custom grammar
-
 function variablestogrammar(x)
     k = size(x)[2]
     rules = [Symbol("x", i) for i in 1:k]
