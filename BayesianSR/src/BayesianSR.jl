@@ -1,7 +1,14 @@
 module BayesianSR
-export EqTree, Sample, Chain, nodetypes, ols, tableforeval, evaltree, optimβ!
+using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
+export EqTree,
+    Sample,
+    Chain,
+    nodetypes,
+    ols,
+    tableforeval,
+    evaltree,
+    optimβ!
 
-using ExprRules, Distributions, Random, StatsBase, AbstractTrees
 
 struct EqTree
     S::RuleNode
@@ -22,33 +29,50 @@ mutable struct Sample
 end 
 Sample(k::Real, grammar::Grammar) = Sample([EqTree(grammar) for i in 1:k], zeros(k + 1))
 
+@with_kw struct Hyperparams
+    k = 3
+    ν = 1
+    λ = 1
+end 
+
 struct Chain
     samples::Vector{Sample}
     grammar::Grammar
     x::Matrix{Float64}
     y::Vector{Float64}
     stats::Dict
-    # ... hyperparams, statistics
-    # TODO: I think a dictionary Prior with all hyperparameters and prios
+    hyper::Hyperparams
+end 
+
+function Chain(x::Matrix, y::Vector)
+    hyper = Hyperparams()
+    grammar = deepcopy(defaultgrammar)
+    Chain(x, y, grammar, hyper)
 end 
 
 function Chain(x::Matrix, y::Vector, k::Int)
+    hyper = Hyperparams(k = k)
     grammar = deepcopy(defaultgrammar)
-    Chain(x, y, grammar, k)
+    Chain(x, y, grammar, hyper)
 end 
 
-function Chain(x::Matrix, y::Vector, operators::Grammar, k::Int)
+function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
+    grammar = deepcopy(defaultgrammar)
+    Chain(x, y, grammar, hyper)
+end 
+
+function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
+    @unpack k = hyper
     grammar = append!(deepcopy(operators), variablestogrammar(x))
     sample = Sample(k, grammar)
     optimβ!(sample, x, y, grammar)
     stats = Dict([(:lastk, 0),
                   (:proposals, 0)])
-    Chain([sample], grammar, x, y, stats)
+    Chain([sample], grammar, x, y, stats, hyper)
 end 
 
 include("grammars.jl")
 include("evaltree.jl")
-include("describetree.jl")
 include("utils.jl")
 include("ols.jl")
 include("growtree.jl")
