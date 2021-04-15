@@ -11,7 +11,15 @@ function evaltree(tree::EqTree, x, grammar::Grammar)
     return out
 end 
 
-function tableforeval(x, i, grammar)
+function evalsample(sample::Sample, x, grammar::Grammar)
+    out = Matrix{Float64}(undef, size(x)[1], length(sample.trees))
+    for j in 1:length(sample.trees)
+        out[:, j] = evaltree(sample.trees[j], x, grammar)
+    end 
+    return out
+end 
+
+function tableforeval(x, i, grammar::Grammar)
     #= Generates a symbol table ready for evaluation for x_i =#
     symboltable = ExprRules.SymbolTable(grammar)
     k = size(x)[2]
