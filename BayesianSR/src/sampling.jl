@@ -1,10 +1,10 @@
 struct TreeProposal
-    sample::Sample
+    eqtree::EqTree
     movement::Symbol
 end 
 
-function proposetree(tree::RuleNode, grammar)
-    tree = deepcopy(tree)
+function proposetree(tree::EqTree, grammar)
+    tree = deepcopy(tree.S)
     nₒ = n_operators(tree, grammar)
     n_cand = n_candidates(tree, grammar)
     # TODO: modify after implementing =lt()= operators
@@ -28,20 +28,20 @@ function proposetree(tree::RuleNode, grammar)
     if mov == :stay
         nothing
     elseif mov == :grow
-        tree = grow!(tree)
+        tree = grow!(tree, grammar)
     elseif mov == :prune
-        tree = prune!(tree)
+        tree = prune!(tree, grammar)
     elseif mov == :delete
-        tree = delete!(tree)
+        tree = delete!(tree, grammar)
     elseif mov == :insert
-        tree = insert_node!(tree)
+        tree = insert_node!(tree, grammar)
     elseif mov == :re_operator
-        tree = re_operator!(tree)
+        tree = re_operator!(tree, grammar)
     elseif mov == :re_feature
-        tree = re_feature!(tree)
+        tree = re_feature!(tree, grammar)
     end 
 
-    return (tree = tree, movement = mov)
+    return TreeProposal(EqTree(tree), mov)
 end 
 
 function proposeparameters()
