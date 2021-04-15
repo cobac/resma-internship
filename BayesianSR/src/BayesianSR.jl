@@ -26,8 +26,15 @@ EqTree(grammar::Grammar) = EqTree(growtree(grammar))
 mutable struct Sample
     trees::Vector{EqTree}
     β::Vector{Float64}
+    σ²::Float64
 end 
-Sample(k::Real, grammar::Grammar) = Sample([EqTree(grammar) for i in 1:k], zeros(k + 1))
+
+Sample(k::Real,
+       grammar::Grammar,
+       ν::Number,
+       λ::Number) = Sample([EqTree(grammar) for i in 1:k],
+                           zeros(k + 1),
+                           rand(InverseGamma(ν/2, ν*λ/2)))
 
 @with_kw struct Hyperparams
     k = 3
@@ -62,9 +69,9 @@ function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
 end 
 
 function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
-    @unpack k = hyper
+    @unpack k, ν, λ = hyper
     grammar = append!(deepcopy(operators), variablestogrammar(x))
-    sample = Sample(k, grammar)
+    sample = Sample(k, grammar, ν, λ)
     optimβ!(sample, x, y, grammar)
     stats = Dict([(:lastk, 0),
                   (:proposals, 0)])
