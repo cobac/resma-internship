@@ -1,11 +1,11 @@
-function optimβ!(model, y, x, grammar)
-    #= Minimizes model.β by OLS =#
+function optimβ!(sample, x, y, grammar)
+    #= Minimizes sample.β by OLS =#
     n = size(x)[1]
-    xs = Matrix{Float64}(undef, (n, length(model.trees)))
-    for k in 1:length(model.trees)
-        xs[:, k] = evaltree(model.trees[k], x, grammar)
+    xs = Matrix{Float64}(undef, (n, length(sample.trees)))
+    for k in 1:length(sample.trees)
+        xs[:, k] = evaltree(sample.trees[k], x, grammar)
     end 
-    model.β = ols(y, xs)
+    sample.β = ols(y, xs)
     return nothing
 end 
 

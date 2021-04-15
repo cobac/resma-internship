@@ -33,19 +33,17 @@ struct Chain
 end 
 
 function Chain(x::Matrix, y::Vector, k::Int)
-    grammar = append!(deepcopy(defaultgrammar), variablestogrammar(x))
-    sample = [Sample(k, grammar)]
-    stats = Dict([(:lastk, 0),
-                  (:proposals, 0)])
-    Chain(sample, grammar, x, y, stats)
+    grammar = deepcopy(defaultgrammar)
+    Chain(x, y, grammar, k)
 end 
 
 function Chain(x::Matrix, y::Vector, operators::Grammar, k::Int)
-    grammar = append!(operators, variablestogrammar(x))
-    sample = [Sample(k, grammar)]
+    grammar = append!(deepcopy(operators), variablestogrammar(x))
+    sample = Sample(k, grammar)
+    optimβ!(sample, x, y, grammar)
     stats = Dict([(:lastk, 0),
                   (:proposals, 0)])
-    Chain(sample, grammar, x, y, stats)
+    Chain([sample], grammar, x, y, stats)
 end 
 
 include("grammars.jl")
@@ -55,7 +53,7 @@ include("utils.jl")
 include("ols.jl")
 include("growtree.jl")
 include("sampletree.jl")
-# include("sampling.jl")
-# include("mcmc.jl")
+include("sampling.jl")
+include("mcmc.jl")
 
 end # module
