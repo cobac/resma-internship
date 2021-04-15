@@ -94,4 +94,7 @@ end
     @test in(0, model.β) == false
 end 
 
-
+# TODO: Chain initialization
+# TODO: Tree movements
+# TODO: Tree sampling
+# TODO: mcmc
