@@ -22,8 +22,6 @@ function step!(chain::Chain)
     σ²_prior = InverseGamma(ν / 2, ν * λ / 2)
     proposal.σ² = rand(σ²_prior)
 
-    # TODO: fix floating errors
-    # TODO: add f(S) and q(S | S)
     # Calculate R
     tree_x_proposal = evalsample(proposal, chain.x, chain.grammar)
     X_proposal = [ones(size(tree_x_proposal)[1]) tree_x_proposal]
