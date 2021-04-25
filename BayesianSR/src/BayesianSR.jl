@@ -1,5 +1,6 @@
 module BayesianSR
 using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
+# TODO: Only export main functions
 export EqTree,
     Sample,
     Chain,
