@@ -39,9 +39,12 @@ end
 
 function samplecandidate(node::RuleNode, grammar::Grammar)
     out = sample(NodeLoc, node)
+    count = 0
     # if node is not candidate,  resample
     target = get(node, out)
     while !iscandidate(target, node, grammar)
+        count += 1
+        count >= 1000 && error("`samplecandidate()` got stuck in an infinite loop.")
         out = sample(NodeLoc, node)
         target = get(node, out)
     end 
