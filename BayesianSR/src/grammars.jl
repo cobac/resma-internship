@@ -25,3 +25,6 @@ function nodetypes(grammar::Grammar)
              for i in 1:length(grammar)]
     return types
 end 
+
+
+# TODO: Define this functions: operator_is, terminal_is
