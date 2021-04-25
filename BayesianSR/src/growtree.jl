@@ -4,7 +4,7 @@ function growtree(grammar::Grammar, d::Int)
     node = RuleNode(0)
     
     # Hyper: α, β = 2, 1
-    # Prior: Uniform for operators and parameters
+    # Prior: Uniform for operators and features
     p₁ = 2/(1+d)
     if p₁ > rand()
         # Node = operator
