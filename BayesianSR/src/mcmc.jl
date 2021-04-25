@@ -7,8 +7,8 @@ function step!(chain::Chain)
     @unpack ν, λ = chain.hyper
 
     # Initialize new sample
-    old_sample = chain.samples[end]
-    proposal = chain.samples[end]
+    old_sample = deepcopy(chain.samples[end])
+    proposal = deepcopy(chain.samples[end])
 
     # Propose a new tree
     proposal_tree = proposetree(proposal.trees[j], chain.grammar)
