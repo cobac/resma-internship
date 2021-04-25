@@ -19,7 +19,7 @@ function step!(chain::Chain)
     # Update new sample
     proposal.trees[j] = proposal_tree.eqtree
     optimβ!(proposal, chain.x, chain.y, chain.grammar)
-    σ²_prior = InverseGamma(ν/2, ν*λ/2)
+    σ²_prior = InverseGamma(ν / 2, ν * λ / 2)
     proposal.σ² = rand(σ²_prior)
 
     # TODO: fix floating errors
