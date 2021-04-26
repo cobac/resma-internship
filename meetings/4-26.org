@@ -14,15 +14,27 @@
   - Less stable at the beginning
 - Sometimes non-invertible matrix for OLS
   - No idea yet
+- Most of movements = grow!() at the beginning
+  - Makes sense without =lt()=
 - ~5 ms per step
 - ~40% of acceptance rate
 *** Messy code
   - Separate into multiple functions
   - I think the design is OK
   - Hyper scalars into prior
-** Numerical testing
+** Testing
+- Parallel property-based
+- Numerical testing?
 ** Showcase & code review
 ** =lt()=
+- New type MyNode :> AbstractNode
+  - RuleNode :> AbstractNode
+  - I like the grammar and eval functionality
+  - Should not be hard to modify the rest
+- Using the =_val= field and custom =lt()= operator
+  - Messes with their eval implementation
+- I don't see a straightforward way of not modifying functionality from ExprRules
+- I'll think more about it
 * TO-DO next meeting
 - Tests
 - Bug reports
