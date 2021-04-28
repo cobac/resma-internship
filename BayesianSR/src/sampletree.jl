@@ -26,7 +26,7 @@ end
 struct DeletedTree
     tree::RuleNode
     changed_node::Union{Nothing, RuleNode}
-    d::Int64 # Union{Nothing, Int64}
+    d::Int64 
     p_child::Float64
 end 
 
@@ -68,7 +68,7 @@ end
 struct InsertedTree
     tree::RuleNode
     new_branch::Union{Nothing, RuleNode}
-    d::Int64 # Union{Nothing, Int64}
+    d::Int64 
 end 
 
 function insert_node!(node::RuleNode, grammar::Grammar)
