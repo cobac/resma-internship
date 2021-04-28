@@ -11,6 +11,7 @@ end
 
 function ols(y, x)
     X = [ones(size(x)[1]) x]
-    β = inv(X' * X) * X' * y
+    # QR decomposition
+    β = X \ y
     return β
 end 
