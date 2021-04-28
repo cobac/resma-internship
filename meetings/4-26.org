@@ -42,3 +42,14 @@
 - Refactor hyperparams into priors
 - Refactor sampling functions
 - Design idea for =lt()=
+* Notes
+- Use QR decomposition in OLS
+  - https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/33
+  - Second line they give
+- Numerical testing for consistency with a snapshot script
+  - =@inferred= what is this?
+  - For type stability
+  - =record()=
+- For =lt()= check discourse or slack or issues
+- Jacobian for =lt()= in emailed papers
+- Monday 3rd, 10
