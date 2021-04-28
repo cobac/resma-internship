@@ -85,11 +85,11 @@ end
 @testset "Samples" begin
     Random.seed!(3)
     k = 3
-    model = Sample(k, fullgrammar)
+    model = Sample(k, fullgrammar, 1, 1)
     @test maximum(model.β) == 0
     @test length(model.β) == k+1
     @test length(model.trees) == k
-    BayesianSR.optimβ!(model, y, x, fullgrammar)
+    BayesianSR.optimβ!(model, x, y, fullgrammar)
     @test length(model.β) == k+1
     @test in(0, model.β) == false
 end 
