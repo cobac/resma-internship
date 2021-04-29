@@ -4,7 +4,7 @@ function step!(chain::Chain)
     chain.stats[:lastj] = j
     chain.stats[:proposals] += 1
 
-    @unpack ν, λ = chain.hyper
+    @unpack σ²_prior = chain.hyper
 
     # Initialize new sample
     old_sample = deepcopy(chain.samples[end])
@@ -24,7 +24,6 @@ function step!(chain::Chain)
         println("Got an eval error!")
         return NaN
     end 
-    σ²_prior = InverseGamma(ν / 2, ν * λ / 2)
     proposal.σ² = rand(σ²_prior)
 
     # Calculate R

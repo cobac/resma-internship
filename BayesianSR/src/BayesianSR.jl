@@ -4,6 +4,11 @@ import ExprRules: RuleNodeAndCount
 
 export Chain
 
+@with_kw struct Hyperparams
+    k = 3::Int
+    σ²_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution
+end 
+
 struct EqTree
     S::RuleNode
     #   Θ::Thetas
@@ -23,17 +28,15 @@ mutable struct Sample
     σ²::Float64
 end 
 
-Sample(k::Real,
-       grammar::Grammar,
-       ν::Number,
-       λ::Number) = Sample([EqTree(grammar) for i in 1:k],
-                           zeros(k + 1),
-                           rand(InverseGamma(ν/2, ν*λ/2)))
+function Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
+    @unpack σ²_prior = hyper
+    Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(σ²_prior))
+end 
 
-@with_kw struct Hyperparams
-    k = 3
-    ν = 1
-    λ = 1
+function Sample(k::Real, grammar::Grammar)
+    hyper = Hyperparams()
+    @unpack σ²_prior = hyper
+    Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(σ²_prior))
 end 
 
 struct Chain
@@ -67,9 +70,9 @@ function Chain(x::Matrix, y::Vector, grammar::Grammar)
 end 
 
 function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
-    @unpack k, ν, λ = hyper
+    @unpack k, σ²_prior = hyper
     grammar = append!(deepcopy(operators), variablestogrammar(x))
-    sample = Sample(k, grammar, ν, λ)
+    sample = Sample(k, grammar, σ²_prior)
     optimβ!(sample, x, y, grammar)
     stats = Dict([(:lastj, 0),
                   (:proposals, 0)])

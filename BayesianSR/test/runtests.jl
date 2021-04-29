@@ -85,7 +85,7 @@ end
 @testset "Samples" begin
     Random.seed!(3)
     k = 3
-    model = BayesianSR.Sample(k, fullgrammar, 1, 1)
+    model = BayesianSR.Sample(k, fullgrammar)
     @test maximum(model.β) == 0
     @test length(model.β) == k+1
     @test length(model.trees) == k
