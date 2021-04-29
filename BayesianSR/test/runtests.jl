@@ -18,19 +18,22 @@ vargrammar = @grammar begin
 end 
 fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
 
-@testset "Hyperparameters" begin
-    hyper = Hyperparams()
-    names = hyper |> typeof |> fieldnames
-    @test  length(names) == 2
-    @test :k in names
-    @test :σ²_prior in names
-    @unpack k, σ²_prior = hyper
-    @test typeof(k) <: Int
-    @test typeof(σ²_prior) <: UnivariateDistribution
-    @test typeof(rand(σ²_prior)) <: AbstractFloat
+
+function test_hyperparams(hyper::Hyperparams)
+    @testset "Hyperparameters" begin
+        names = hyper |> typeof |> fieldnames
+        @test  length(names) == 2
+        @test :k in names
+        @test :σ²_prior in names
+        @unpack k, σ²_prior = hyper
+        @test typeof(k) <: Int
+        @test typeof(σ²_prior) <: UnivariateDistribution
+        @test typeof(rand(σ²_prior)) <: AbstractFloat
+    end 
 end 
 
 hyper = Hyperparams()
+test_hyperparams(hyper)
 
 @testset "Grammars" begin
     var_operators = BayesianSR.nodetypes(vargrammar)
@@ -86,33 +89,63 @@ end
     @test BayesianSR.n_candidates(root, fullgrammar) == 0
 end 
 
-@testset "Node sampling" begin
-    tree = BayesianSR.EqTree(fullgrammar).S
-    terminal = BayesianSR.sampleterminal(tree, fullgrammar)
-    operator = BayesianSR.sampleoperator(tree, fullgrammar)
-    terminal = get(tree, terminal).ind
-    operator = get(tree, operator).ind
-    @test nchildren(fullgrammar, terminal) == 0
-    @test in(nchildren(fullgrammar, operator), [1,2])
+function test_tree(tree::RuleNode)
+    @testset "Node sampling" begin
+        terminal = BayesianSR.sampleterminal(tree, fullgrammar)
+        operator = BayesianSR.sampleoperator(tree, fullgrammar)
+        terminal = get(tree, terminal).ind
+        operator = get(tree, operator).ind
+        @test nchildren(fullgrammar, terminal) == 0
+        @test in(nchildren(fullgrammar, operator), [1,2])
+    end 
 end 
 
-@testset "Samples" begin
+@testset "Random node sampling" begin
+    tree = BayesianSR.EqTree(fullgrammar).S
+    test_tree(tree)
+end 
+
+function test_sample(sample::BayesianSR.Sample)
+    @testset "Samples" begin
+        @test length(sample.trees) == k
+        for tree in sample.trees
+            test_tree(tree.S)
+        end 
+        @test length(sample.β) == k+1
+        @test typeof(sample.σ²) <: AbstractFloat
+    end 
+end 
+
+@testset "Random sample" begin
     @unpack σ²_prior = hyper
     Random.seed!(3)
     k = 3
-    model = BayesianSR.Sample(k, fullgrammar, σ²_prior)
-    @test maximum(model.β) == 0
-    @test length(model.β) == k+1
-    @test length(model.trees) == k
-    BayesianSR.optimβ!(model, x, y, fullgrammar)
-    @test length(model.β) == k+1
-    @test in(0, model.β) == false
+    sample = BayesianSR.Sample(k, fullgrammar, σ²_prior)
+    test_sample(sample)
+    @test maximum(sample.β) == 0
+    BayesianSR.optimβ!(sample, x, y, fullgrammar)
+    @test length(sample.β) == k+1
+    @test in(0, sample.β) == false
 end 
 
-@testset "Chain initialization" begin
+@testset "Random Chain initialization" begin
     k = 3
     chain = Chain(x, y)
 
+    @test length(chain) == 1
+    @test length(chain) == length(chain.samples)
+    @test chain.samples[1] == chain.samples[end]
+    test_sample(chain.samples[1])
+
+    @test chain.x == x
+    @test chain.y == y
+
+    stat_keys = keys(chain.stats)
+    @test length(stat_keys) == 2
+    @test :lastj in stat_keys
+    @test :proposals in stat_keys
+
+    test_hyperparams(chain.hyper)
 end 
 
 # TODO: Chain initialization
