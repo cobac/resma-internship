@@ -18,7 +18,6 @@ vargrammar = @grammar begin
 end 
 fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
 
-
 function test_hyperparams(hyper::Hyperparams)
     @testset "Hyperparameters" begin
         names = hyper |> typeof |> fieldnames
@@ -60,7 +59,6 @@ test_hyperparams(hyper)
     @test maximum(full_operators) == maximum(default_operators)
 end
 
-
 @testset "Tree generation" begin
     Random.seed!(5)
     tree = BayesianSR.EqTree(fullgrammar)
@@ -100,7 +98,7 @@ function test_tree(tree::RuleNode)
     end 
 end 
 
-@testset "Random node sampling" begin
+@testset "Random node initialization" begin
     tree = BayesianSR.EqTree(fullgrammar).S
     test_tree(tree)
 end 
@@ -116,7 +114,7 @@ function test_sample(sample::BayesianSR.Sample)
     end 
 end 
 
-@testset "Random sample" begin
+@testset "Random sample initialization" begin
     @unpack σ²_prior = hyper
     Random.seed!(3)
     k = 3
@@ -128,27 +126,28 @@ end
     @test in(0, sample.β) == false
 end 
 
-@testset "Random Chain initialization" begin
-    k = 3
-    chain = Chain(x, y)
-
+function test_chain(chain::Chain)
     @test length(chain) == 1
     @test length(chain) == length(chain.samples)
     @test chain.samples[1] == chain.samples[end]
     test_sample(chain.samples[1])
 
-    @test chain.x == x
-    @test chain.y == y
-
     stat_keys = keys(chain.stats)
     @test length(stat_keys) == 2
     @test :lastj in stat_keys
+    @test chain.stats[:lastj] <= chain.hyper.k
     @test :proposals in stat_keys
+    @test chain.stats[:proposals]+1 >= length(chain)
 
     test_hyperparams(chain.hyper)
 end 
 
-# TODO: Chain initialization
+@testset "Random Chain initialization" begin
+    k = 3
+    chain = Chain(x, y)
+    test_chain(chain)
+end 
+
 # TODO: Tree movements
 # TODO: Tree sampling
 # TODO: mcmc
