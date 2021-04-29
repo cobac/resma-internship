@@ -1,6 +1,6 @@
 using BayesianSR, Test
 
-using ExprRules, Random, LinearAlgebra, Distributions
+using ExprRules, Random, LinearAlgebra, Distributions, Parameters
 #using ExprTools
 #using AbstractTrees
 
@@ -17,6 +17,20 @@ vargrammar = @grammar begin
     Real = x1 | x2 | x3
 end 
 fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
+
+@testset "Hyperparameters" begin
+    hyper = Hyperparams()
+    names = hyper |> typeof |> fieldnames
+    @test  length(names) == 2
+    @test :k in names
+    @test :σ²_prior in names
+    @unpack k, σ²_prior = hyper
+    @test typeof(k) <: Int
+    @test typeof(σ²_prior) <: UnivariateDistribution
+    @test typeof(rand(σ²_prior)) <: AbstractFloat
+end 
+
+hyper = Hyperparams()
 
 @testset "Grammars" begin
     var_operators = BayesianSR.nodetypes(vargrammar)
@@ -83,15 +97,22 @@ end
 end 
 
 @testset "Samples" begin
+    @unpack σ²_prior = hyper
     Random.seed!(3)
     k = 3
-    model = BayesianSR.Sample(k, fullgrammar)
+    model = BayesianSR.Sample(k, fullgrammar, σ²_prior)
     @test maximum(model.β) == 0
     @test length(model.β) == k+1
     @test length(model.trees) == k
     BayesianSR.optimβ!(model, x, y, fullgrammar)
     @test length(model.β) == k+1
     @test in(0, model.β) == false
+end 
+
+@testset "Chain initialization" begin
+    k = 3
+    chain = Chain(x, y)
+
 end 
 
 # TODO: Chain initialization

@@ -2,7 +2,7 @@ module BayesianSR
 using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
 import ExprRules: RuleNodeAndCount
 
-export Chain
+export Chain, Hyperparams
 
 @with_kw struct Hyperparams
     k = 3::Int
