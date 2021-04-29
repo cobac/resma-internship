@@ -28,15 +28,8 @@ mutable struct Sample
     σ²::Float64
 end 
 
-function Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
-    @unpack σ²_prior = hyper
-    Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(σ²_prior))
-end 
-
-function Sample(k::Real, grammar::Grammar)
-    hyper = Hyperparams()
-    @unpack σ²_prior = hyper
-    Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(σ²_prior))
+function Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
+    Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(prior))
 end 
 
 struct Chain
