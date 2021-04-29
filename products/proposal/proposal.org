@@ -83,7 +83,6 @@ easy to use Bayesian Symbolic Regression framework and to compare its performanc
 #     - How SR can be a tool to explore patterns in the data
 #     - Used to explore possible models 
 
-# TODO: New transition
 The space of possible mathematical expressions is infinitely large, and therefore it is not viable to explore it exhaustively.
 The most common approach to perform symbolic regression is to do a targeted search using evolutionary algorithms, which 
 work by mimicking the evolution of a population of candidate expressions. An example of this approach is the 
