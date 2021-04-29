@@ -53,6 +53,8 @@ function step!(chain::Chain)
     if (rand() < α)
         println("Updating! Movement = ", proposal_tree.movement)
         push!(chain.samples, proposal)
+    else 
+        println("Not updating! Movement = ", proposal_tree.movement)
     end 
 
     return R
