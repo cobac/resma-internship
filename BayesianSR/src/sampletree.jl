@@ -55,11 +55,7 @@ function delete!(node::RuleNode, grammar::Grammar)
         ind_operator = findall(x -> in(x, operator_is), ind_children)
         p_child = 1/length(ind_operator)
         i = sample(ind_operator)
-        if length(ind_operator) == 2
-            changed_node = target.children[i == 1 ? 2 : 1]
-        else
-            changed_node = nothing
-        end 
+        changed_node = target.children[i == 1 ? 2 : 1]
         node = target.children[i]
     end 
     return DeletedTree(node, changed_node, d, p_child)
