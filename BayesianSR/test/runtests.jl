@@ -120,7 +120,6 @@ function test_sample(sample::BayesianSR.Sample)
             test_tree(tree.S)
         end 
         @test length(sample.β) == k+1
-        @test typeof(sample.σ²) <: AbstractFloat
     end 
 end 
 
@@ -209,6 +208,84 @@ end
     end 
 end 
 
-# TODO: Tree movements
+@testset "Tree movements" begin
+    @testset "grow!()" begin
+        node = BayesianSR.EqTree(fullgrammar).S
+        old_length = length(BayesianSR.flatten(node))
+        proposal = BayesianSR.grow!(node, fullgrammar)
+        new_length = length(BayesianSR.flatten(proposal.tree))
+        @test new_length >= old_length
+        test_tree(proposal.tree)
+        @test proposal.changed_node.ind in BayesianSR.terminal_indices(fullgrammar)
+    end 
+
+    @testset "prune!()" begin
+        node = BayesianSR.EqTree(fullgrammar).S
+        old_length = length(BayesianSR.flatten(node))
+        proposal = BayesianSR.prune!(node, fullgrammar)
+        new_length = length(BayesianSR.flatten(proposal.tree))
+        @test new_length < old_length
+        test_tree(proposal.tree)
+        @test proposal.changed_node.ind in BayesianSR.operator_indices(fullgrammar)
+    end 
+
+     @testset "delete!()" begin
+         function new_deleteable_node()
+             node = BayesianSR.EqTree(fullgrammar).S
+             try BayesianSR.samplecandidate(node, fullgrammar)
+             catch e
+                 node = new_node()
+             end 
+             return node
+         end 
+         node = new_deleteable_node()
+         old_length = length(BayesianSR.flatten(node))
+         proposal = BayesianSR.delete!(node, fullgrammar)
+         new_length = length(BayesianSR.flatten(proposal.tree))
+         @test new_length < old_length
+         test_tree(proposal.tree)
+         for i in 1:10
+             node2 = RuleNode(1, [RuleNode(2, [RuleNode(8), RuleNode(8)]), RuleNode(9)])
+             proposal2 = BayesianSR.delete!(node2, fullgrammar)
+             if proposal2.changed_node == RuleNode(8)
+                 @test proposal2.p_child == 0.5
+             else 
+                 @test proposal2.p_child == 1
+             end 
+         end 
+         node3 = RuleNode(1, [RuleNode(2, [RuleNode(9), RuleNode(9)]),
+                              RuleNode(3, [RuleNode(9), RuleNode(9)])])
+         proposal3 = BayesianSR.delete!(node3, fullgrammar)
+         @test proposal3.p_child == 0.5
+     end 
+
+    @testset "insert_node!()" begin
+        node = BayesianSR.EqTree(fullgrammar).S
+        old_length = length(BayesianSR.flatten(node))
+        proposal = BayesianSR.insert_node!(node, fullgrammar)
+        new_length = length(BayesianSR.flatten(proposal.tree))
+        @test new_length > old_length
+        test_tree(proposal.tree)
+    end 
+
+    @testset "re_operator!()" begin
+        node = BayesianSR.EqTree(fullgrammar).S
+        old_length = length(BayesianSR.flatten(node))
+        node = BayesianSR.re_operator!(node, fullgrammar)
+        new_length = length(BayesianSR.flatten(node))
+        @test new_length == old_length
+        test_tree(node)
+    end 
+
+    @testset "re_feature!()" begin
+        node = BayesianSR.EqTree(fullgrammar).S
+        old_length = length(BayesianSR.flatten(node))
+        node = BayesianSR.re_operator!(node, fullgrammar)
+        new_length = length(BayesianSR.flatten(node))
+        @test new_length == old_length
+        test_tree(node)
+    end 
+end 
+
 # TODO: Tree sampling
 # TODO: mcmc
