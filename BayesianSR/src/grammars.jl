@@ -26,6 +26,18 @@ function nodetypes(grammar::Grammar)
     return types
 end 
 
+function operator_indices(grammar::Grammar)
+    node_types = nodetypes(grammar)
+    is = findall(x -> x==1 || x==2, node_types)
+    return is
+end 
+
+function terminal_indices(grammar::Grammar)
+    node_types = nodetypes(grammar)
+    is = findall(x -> x==0, node_types)
+    return is
+end 
+
 function Base.append!(grammar1::Grammar, grammar2::Grammar)
     N = length(grammar1.rules)
     append!(grammar1.rules, grammar2.rules)
@@ -39,4 +51,3 @@ function Base.append!(grammar1::Grammar, grammar2::Grammar)
     grammar1
 end
 
-# TODO: Define this functions: operator_is, terminal_is
