@@ -62,6 +62,10 @@ function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
     Chain(x, y, grammar, hyper)
 end 
 
+function Chain(x::Matrix, y::Vector, grammar::Grammar)
+    Chain(x, y, grammar, Hyperparams())
+end 
+
 function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     @unpack k, ν, λ = hyper
     grammar = append!(deepcopy(operators), variablestogrammar(x))
