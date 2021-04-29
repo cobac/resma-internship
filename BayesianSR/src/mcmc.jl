@@ -18,7 +18,12 @@ function step!(chain::Chain)
 
     # Update new sample
     proposal.trees[j] = proposal_tree.eqtree
-    optimβ!(proposal, chain.x, chain.y, chain.grammar)
+    try 
+        optimβ!(proposal, chain.x, chain.y, chain.grammar)
+    catch e 
+        println("Got an eval error!")
+        return NaN
+    end 
     σ²_prior = InverseGamma(ν / 2, ν * λ / 2)
     proposal.σ² = rand(σ²_prior)
 
