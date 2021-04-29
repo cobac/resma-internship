@@ -2,16 +2,7 @@ module BayesianSR
 using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
 import ExprRules: RuleNodeAndCount
 
-# TODO: Only export main functions
-export EqTree,
-    Sample,
-    Chain,
-    nodetypes,
-    ols,
-    tableforeval,
-    evaltree,
-    optimβ!
-
+export Chain
 
 struct EqTree
     S::RuleNode

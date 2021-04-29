@@ -46,7 +46,7 @@ end
 
 @testset "Tree generation" begin
     Random.seed!(5)
-    tree = EqTree(fullgrammar)
+    tree = BayesianSR.EqTree(fullgrammar)
     table = BayesianSR.tableforeval(x, 3, fullgrammar)
     @test x[3, 1] == table[:x1]
     @test x[3, 2] == table[:x2]
@@ -62,7 +62,7 @@ end
 end
 
 @testset "Describe trees" begin
-    tree = EqTree(fullgrammar).S
+    tree = BayesianSR.EqTree(fullgrammar).S
     nodes = BayesianSR.flatten(tree)
     @test length(nodes) == BayesianSR.n_operators(tree, fullgrammar) +
         BayesianSR.n_terminals(tree, fullgrammar)
@@ -73,7 +73,7 @@ end
 end 
 
 @testset "Node sampling" begin
-    tree = EqTree(fullgrammar).S
+    tree = BayesianSR.EqTree(fullgrammar).S
     terminal = BayesianSR.sampleterminal(tree, fullgrammar)
     operator = BayesianSR.sampleoperator(tree, fullgrammar)
     terminal = get(tree, terminal).ind
@@ -85,7 +85,7 @@ end
 @testset "Samples" begin
     Random.seed!(3)
     k = 3
-    model = Sample(k, fullgrammar, 1, 1)
+    model = BayesianSR.Sample(k, fullgrammar, 1, 1)
     @test maximum(model.β) == 0
     @test length(model.β) == k+1
     @test length(model.trees) == k
