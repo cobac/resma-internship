@@ -34,6 +34,16 @@ end
 hyper = Hyperparams()
 test_hyperparams(hyper)
 
+@testset "Grammars utils" begin
+    node_types = BayesianSR.nodetypes(fullgrammar)
+    @test length(node_types) == length(fullgrammar)
+    operator_is = findall(x -> x==1 || x==2, node_types)
+    terminal_is = findall(x -> x==0, node_types)
+    @test length(operator_is) + length(terminal_is) == length(node_types)
+    @test BayesianSR.operator_indices(fullgrammar) == operator_is
+    @test BayesianSR.terminal_indices(fullgrammar) == terminal_is
+end 
+
 @testset "Grammars" begin
     var_operators = BayesianSR.nodetypes(vargrammar)
     @test length(var_operators) == 3
@@ -146,6 +156,57 @@ end
     k = 3
     chain = Chain(x, y)
     test_chain(chain)
+end 
+
+@testset "Utils" begin 
+    @testset "flatten()" begin
+        node = RuleNode(1, [RuleNode(1, [RuleNode(1), RuleNode(1)])])
+        flat = BayesianSR.flatten(node)
+        @test length(flat) == 4
+        @test 1 in flat 
+        @test findall(x -> x == 1, flat) |> length == length(flat)
+    end 
+    @testset "sampleterminal()" begin
+        for i in 1:20
+            node = BayesianSR.EqTree(fullgrammar).S
+            loc = BayesianSR.sampleterminal(node, fullgrammar)
+            node = get(node, loc)
+            @test node.ind in BayesianSR.terminal_indices(fullgrammar)
+        end 
+    end 
+    @testset "sampleoperator()" begin
+        for i in 1:20
+            node = BayesianSR.EqTree(fullgrammar).S
+            loc = BayesianSR.sampleoperator(node, fullgrammar)
+            node = get(node, loc)
+            @test node.ind in BayesianSR.operator_indices(fullgrammar)
+        end 
+    end 
+    @testset "iscandidate()" begin
+        node1 = RuleNode(1, [RuleNode(9), RuleNode(9)])
+        @test BayesianSR.iscandidate(node1, node1, fullgrammar) == false
+        node2 = RuleNode(1, [RuleNode(1, [RuleNode(9), RuleNode(9)]), RuleNode(9)])
+        @test BayesianSR.iscandidate(node2, node2, fullgrammar)
+        node3 = RuleNode(1, [RuleNode(1, [RuleNode(9), RuleNode(9)]),
+                             RuleNode(1, [RuleNode(9), RuleNode(9)])])
+        @test BayesianSR.iscandidate(node3, node3, fullgrammar)
+        @test BayesianSR.iscandidate(RuleNode(9), node3, fullgrammar) == false
+        @test BayesianSR.iscandidate(RuleNode(1, [RuleNode(9), RuleNode(9)]), node3, fullgrammar)
+    end
+
+    @testset "samplecandidate()" begin
+        node1 = RuleNode(1, [RuleNode(9), RuleNode(9)])
+        @test_throws ErrorException BayesianSR.samplecandidate(node1, fullgrammar)
+        node2 = RuleNode(1, [RuleNode(1, [RuleNode(9), RuleNode(9)]), RuleNode(9)])
+        for i in 1:10
+            @test BayesianSR.samplecandidate(node2, fullgrammar).i in [0, 1]
+        end 
+        node3 = RuleNode(1, [RuleNode(1, [RuleNode(9), RuleNode(9)]),
+                             RuleNode(1, [RuleNode(9), RuleNode(9)])])
+        for i in 1:10
+            @test BayesianSR.samplecandidate(node3, fullgrammar).i in [0, 1, 2]
+        end 
+    end 
 end 
 
 # TODO: Tree movements
