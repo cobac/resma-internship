@@ -3,7 +3,7 @@
 
 Steps the `Chain` one MCMC iteration.
 """
-function step!(chain::Chain)
+function step!(chain::Chain; verbose::Bool = false)
     j = chain.stats[:lastj] + 1
     j == no_trees(chain) + 1 ? j = 1 : nothing
     chain.stats[:lastj] = j
@@ -26,7 +26,7 @@ function step!(chain::Chain)
     try 
         optimβ!(proposal, chain.x, chain.y, chain.grammar)
     catch e 
-        println("Got an eval error!")
+        verbose && println("Got an eval error!")
         return NaN
     end 
     proposal.σ² = rand(σ²_prior)
@@ -59,10 +59,10 @@ function step!(chain::Chain)
     # Update chain
     α = min(1, R)
     if (rand() < α)
-        println("Updating! Movement = ", proposal_tree.movement)
+        verbose && println("Updating! Movement = ", proposal_tree.movement)
         push!(chain.samples, proposal)
     else 
-        println("Not updating! Movement = ", proposal_tree.movement)
+        verbose && println("Not updating! Movement = ", proposal_tree.movement)
     end 
 
     return R
