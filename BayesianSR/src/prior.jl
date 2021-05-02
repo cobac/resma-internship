@@ -19,9 +19,8 @@ flatten_with_depth(node::RuleNode) = flatten_with_depth(node, 1)
 
 function tree_p(node::RuleNode, d::Int64, grammar::Grammar)
     nodes = flatten_with_depth(node, d)
-    node_types = nodetypes(grammar)
-    operator_is = findall(x -> x==1 || x==2, node_types)
-    terminal_is = findall(x -> x==0, node_types)
+    operator_is = operator_indices(grammar)
+    terminal_is = terminal_indices(grammar)
     p = 0
     for node in nodes
         # Hyper: α, β = 2, 1
