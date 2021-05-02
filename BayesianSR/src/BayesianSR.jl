@@ -2,7 +2,7 @@ module BayesianSR
 using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
 import ExprRules: RuleNodeAndCount
 
-export Chain, Hyperparams
+export Chain, Hyperparams, step!, no_trees
 
 """
     Hyperparams(k = 3::Int, σ²_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution)
