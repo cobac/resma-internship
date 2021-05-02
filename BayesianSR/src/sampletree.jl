@@ -110,7 +110,7 @@ function delete!(node::RuleNode, grammar::Grammar)
 end 
 
 """
-    Inserted tree(tree::RuleNode,
+    InsertedTree(tree::RuleNode,
     new_branch::Union{Nothing, RuleNode},
     d::Int64)
 
@@ -160,6 +160,38 @@ function insert_node!(node::RuleNode, grammar::Grammar)
     return InsertedTree(node, new_branch, d)
 end 
 
+"""
+    ReassignedTree(tree::RuleNode,
+    changed_node::Union{Nothing, RuleNode},
+    d::Int64,
+    transition::Symbol)
+
+Type with the information required to calculate the transition probabilities of reassigning an operator node.
+
+- `tree`: Is the new tree.
+- `changed_node`: Maybe a new branch, or a dropped branch.
+- `d`: Depth of the changed branch.
+- `transition`: `:un2bin`, `:bin2un` or `:same`.
+
+See also: `insert_node!`
+"""
+struct ReassignedTree
+    tree::RuleNode
+    changed_node::Union{Nothing, RuleNode}
+    d::Int64
+    transition::Symbol
+end 
+
+"""
+    re_operator!(node::RuleNode, grammar::Grammar)
+
+Tree movement reassign operator.
+Selects a random operator node and replaces it with another one.
+If the old node was unary and the new node is binary,
+we sample its second children from the tree prior.
+If the old node was binary and the new node is unary,
+we drop its second children.
+"""
 function re_operator!(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = findall(x -> x==1 || x==2, node_types)
@@ -167,6 +199,7 @@ function re_operator!(node::RuleNode, grammar::Grammar)
     target = get(node, loc)
     old_ind = target.ind
     old_type = node_types[old_ind]
+    d = node_depth(node, target)
     # Remove old index from the pool of operators
     operator_rm = findfirst(isequal(target.ind), operator_is)
     deleteat!(operator_is, operator_rm)
@@ -176,15 +209,19 @@ function re_operator!(node::RuleNode, grammar::Grammar)
     new = RuleNode(new_ind)
     target.ind = new_ind
     if new_type == 2 && old_type == 1
-        d = node_depth(node, target)
-        push!(target.children, growtree(grammar, d))
+        transition = :bin2un
+        changed_node = growtree(grammar, d)
+        push!(target.children, changed_node)
     elseif new_type == 1 && old_type == 2
+        transition = :un2bin
+        changed_node = target.children[2]
         deleteat!(target.children, 2)
     else # new_type == old_type
-        nothing
+        transition = :same
+        changed_node = nothing
     end 
-    insert!(node, loc, target)
-    return node
+    node = insert!(node, loc, target)
+    return ReassignedTree(node, changed_node, d, transition)
 end 
 
 """

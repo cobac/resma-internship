@@ -115,10 +115,20 @@ function proposetree(tree::EqTree, grammar::Grammar)
             p_inv += log(1/2)
         end 
     elseif mov == :re_operator
-        tree = re_operator!(tree, grammar)
+        reassigned_tree = re_operator!(tree, grammar)
+        tree = reassigned_tree.tree
         p = p_inv = log(p_ro) + # P of movement = reassign operator
             log(1/nₒ) + # P of selecting this operator node
             log(1/(length(operator_is) - 1)) # P of choosing the new operator
+        if reassigned_tree.transition == :un2bin
+            # P of growing the new branch
+            p += tree_p(reassigned_tree.changed_node, reassigned_tree.d, grammar)
+        elseif reassigned_tree.transition == :bin2un
+            # P of growing the new branch
+            p_inv += tree_p(reassigned_tree.changed_node, reassigned_tree.d, grammar)
+        else # reassigned_tree.transition == :same
+            nothing 
+        end 
     elseif mov == :re_feature
         tree = re_feature!(tree, grammar)
         p = p_inv = log(p_rf) + # P of movement = reassign feature

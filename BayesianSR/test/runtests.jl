@@ -268,21 +268,25 @@ end
         test_tree(proposal.tree)
     end 
 
-   ## @testset "re_operator!()" begin
-   ##     node = BayesianSR.EqTree(fullgrammar).S
-    ##     old_length = length(BayesianSR.flatten(node))
-    ##     node = BayesianSR.re_operator!(node, fullgrammar)
-    ##     new_length = length(BayesianSR.flatten(node))
-    ##     @test new_length XXXX old_length
-    ##     test_tree(node)
-    ## end 
+    @testset "re_operator!()" begin
+        node = BayesianSR.EqTree(fullgrammar).S
+        old_node = deepcopy(node)
+        old_length = length(BayesianSR.flatten(node))
+        proposal = BayesianSR.re_operator!(node, fullgrammar)
+        node = proposal.tree
+        new_length = length(BayesianSR.flatten(node))
+        @test node != old_node
+        test_tree(node)
+    end 
 
     @testset "re_feature!()" begin
         node = BayesianSR.EqTree(fullgrammar).S
+        old_node = deepcopy(node)
         old_length = length(BayesianSR.flatten(node))
         node = BayesianSR.re_feature!(node, fullgrammar)
         new_length = length(BayesianSR.flatten(node))
         @test new_length == old_length
+        @test node != old_node
         test_tree(node)
     end 
 end 
