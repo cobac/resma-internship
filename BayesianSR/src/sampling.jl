@@ -90,11 +90,11 @@ function proposetree(tree::EqTree, grammar::Grammar)
         new_p_i = (1-new_p_0)/3 - new_p_d
         p_inv = log(new_p_i) + # P of movement = insert
             log(1/length(flatten(tree))) + # P of selecting this node
-            log(1/length(operator_is)) + # P of inserting this operator
-            if !isnothing(deleted_tree.dropped_node)
-                # If we had to grow a new branch, P of growing that branch
-                p_inv += tree_p(deleted_tree.dropped_node, deleted_tree.d, grammar)
-            end 
+            log(1/length(operator_is))  # P of inserting this operator
+        if !isnothing(deleted_tree.dropped_node)
+            # If we had to grow a new branch, P of growing that branch
+            p_inv += tree_p(deleted_tree.dropped_node, deleted_tree.d, grammar)
+        end 
     elseif mov == :insert
         inserted_tree = insert_node!(tree, grammar)
         tree = inserted_tree.tree
