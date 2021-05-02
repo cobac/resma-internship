@@ -1,4 +1,10 @@
+"""
+    growtree(grammar::Grammar, d::Int)
 
+Samples a branch from the prior distribution.
+`d` is the depth of the branch in a tree.
+The root node is at `d = 1`.
+"""
 function growtree(grammar::Grammar, d::Int)
     node_types = nodetypes(grammar)
     node = RuleNode(0)
@@ -20,4 +26,9 @@ function growtree(grammar::Grammar, d::Int)
     return node
 end 
 
+"""
+    growtree(grammar::Grammar) = growtree(grammar, 1)   
+
+Samples a new tree.
+"""
 growtree(grammar::Grammar) = growtree(grammar, 1)

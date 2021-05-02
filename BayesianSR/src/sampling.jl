@@ -1,12 +1,26 @@
+"""
+    TreeProposal(eqtree::EqTree, movement::Symbol, p_mov::Float64, p_mov_inv::Float64)
+
+A proposal generated in one MCMC iteration.
+
+- `eqtree`: the new proposed tree.
+- `movement`: a symbol indicating the movement that was performed.
+- `p_mov`: the probability of jumping from the old tree to the proposal.
+- `p_mov_inv`: the probability of jumping from the proposal to the old tree.
+"""
 struct TreeProposal
     eqtree::EqTree
     movement::Symbol
     p_mov::Float64
-    # movement_inv::Symbol
     p_mov_inv::Float64
 end 
 
-function proposetree(tree::EqTree, grammar)
+"""
+    proposetree(tree::EqTree, grammar::Grammar)
+
+Generates a `TreeProposal`.
+"""
+function proposetree(tree::EqTree, grammar::Grammar)
     tree = deepcopy(tree.S)
     nₒ = n_operators(tree, grammar)
     nₜ = n_terminals(tree, grammar)
@@ -77,10 +91,10 @@ function proposetree(tree::EqTree, grammar)
         p_inv = log(new_p_i) + # P of movement = insert
             log(1/length(flatten(tree))) + # P of selecting this node
             log(1/length(operator_is)) + # P of inserting this operator
-        if !isnothing(deleted_tree.changed_node)
-            # If we had to grow a new branch, P of growing that branch
-            p_inv += tree_p(deleted_tree.changed_node, deleted_tree.d, grammar)
-        end 
+            if !isnothing(deleted_tree.dropped_node)
+                # If we had to grow a new branch, P of growing that branch
+                p_inv += tree_p(deleted_tree.dropped_node, deleted_tree.d, grammar)
+            end 
     elseif mov == :insert
         inserted_tree = insert_node!(tree, grammar)
         tree = inserted_tree.tree
@@ -114,6 +128,10 @@ function proposetree(tree::EqTree, grammar)
     return TreeProposal(EqTree(tree), mov, p, p_inv)
 end 
 
+"""
+    proposeparameters()
+Generates a set of new parameters for the linear operators.
+"""
 function proposeparameters()
     nothing
 end 

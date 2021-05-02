@@ -1,3 +1,8 @@
+"""
+    flatten(node::RuleNode)
+
+Flattens a `RuleNode` as a vector of indices.
+"""
 function flatten(node::RuleNode)
     out = Int[]
     queue = [node]
@@ -9,8 +14,18 @@ function flatten(node::RuleNode)
     return out
 end
 
+"""
+    length(grammar::Grammar) = length(grammar.rules)
+
+Number of indices in a `Grammar`.
+"""
 Base.length(grammar::Grammar) = length(grammar.rules)
 
+"""
+    sampleterminal(node::RuleNode, grammar::Grammar)
+
+Samples a random terminal node via rejection sampling.
+"""
 function sampleterminal(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
@@ -24,6 +39,11 @@ function sampleterminal(node::RuleNode, grammar::Grammar)
     return out
 end 
 
+"""
+    sampleoperator(node::RuleNode, grammar::Grammar)
+
+Samples a random operator node via rejection sampling.
+"""
 function sampleoperator(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = terminal_indices(grammar)
@@ -37,6 +57,13 @@ function sampleoperator(node::RuleNode, grammar::Grammar)
     return out
 end 
 
+"""
+    samplecandidate(node::RuleNode, grammar::Grammar)
+
+Samples a random candidate for deletion node via rejection sampling.
+
+See also: `iscandidate`
+"""
 function samplecandidate(node::RuleNode, grammar::Grammar)
     out = sample(NodeLoc, node)
     count = 0
@@ -51,6 +78,14 @@ function samplecandidate(node::RuleNode, grammar::Grammar)
     return out
 end 
 
+"""
+    iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
+
+Checks whether a node is a candidate for deletion.
+
+Candidate nodes are operator nodes.
+The root node can only be a candidate for deletion if it has operator children.
+"""
 function iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = terminal_indices(grammar)
@@ -67,9 +102,24 @@ function iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
     end 
 end 
 
+"""
+    length(chain::Chain) = length(chain.samples)
+
+Number of samples in a `Chain`.
+"""
 Base.length(chain::Chain) = length(chain.samples)
+"""
+    no_trees(chain::Chain) = length(chain.samples[1].trees)
+
+Number of `EqTree` per `Sample` of a `Chain`.
+"""
 no_trees(chain::Chain) = length(chain.samples[1].trees)
 
+"""
+    n_operators(node::RuleNode, grammar::Grammar)
+
+Number of operator nodes in a `RuleNode`.
+"""
 function n_operators(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
@@ -78,6 +128,11 @@ function n_operators(node::RuleNode, grammar::Grammar)
     return out
 end
 
+"""
+    n_terminals(node::RuleNode, grammar::Grammar)
+
+Number of terminal nodes in a `RuleNode`.
+"""
 function n_terminals(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = terminal_indices(grammar)
@@ -86,6 +141,13 @@ function n_terminals(node::RuleNode, grammar::Grammar)
     return out
 end
 
+"""
+    n_candidates(node::RuleNode, grammar::Grammar)
+
+Number of candidate for deletion nodes in a `RuleNode`.
+
+See also: `iscandidate`
+"""
 function n_candidates(node::RuleNode, grammar::Grammar)
     n = n_operators(node, grammar)
     node_types = nodetypes(grammar)

@@ -247,7 +247,7 @@ end
          for i in 1:10
              node2 = RuleNode(1, [RuleNode(2, [RuleNode(8), RuleNode(8)]), RuleNode(9)])
              proposal2 = BayesianSR.delete!(node2, fullgrammar)
-             if proposal2.changed_node == RuleNode(8)
+             if proposal2.dropped_node == RuleNode(8)
                  @test proposal2.p_child == 0.5
              else 
                  @test proposal2.p_child == 1
@@ -268,19 +268,19 @@ end
         test_tree(proposal.tree)
     end 
 
-    @testset "re_operator!()" begin
-        node = BayesianSR.EqTree(fullgrammar).S
-        old_length = length(BayesianSR.flatten(node))
-        node = BayesianSR.re_operator!(node, fullgrammar)
-        new_length = length(BayesianSR.flatten(node))
-        @test new_length == old_length
-        test_tree(node)
-    end 
+   ## @testset "re_operator!()" begin
+   ##     node = BayesianSR.EqTree(fullgrammar).S
+    ##     old_length = length(BayesianSR.flatten(node))
+    ##     node = BayesianSR.re_operator!(node, fullgrammar)
+    ##     new_length = length(BayesianSR.flatten(node))
+    ##     @test new_length XXXX old_length
+    ##     test_tree(node)
+    ## end 
 
     @testset "re_feature!()" begin
         node = BayesianSR.EqTree(fullgrammar).S
         old_length = length(BayesianSR.flatten(node))
-        node = BayesianSR.re_operator!(node, fullgrammar)
+        node = BayesianSR.re_feature!(node, fullgrammar)
         new_length = length(BayesianSR.flatten(node))
         @test new_length == old_length
         test_tree(node)

@@ -1,3 +1,8 @@
+"""
+    step!(chain::Chain)
+
+Steps the `Chain` one MCMC iteration.
+"""
 function step!(chain::Chain)
     j = chain.stats[:lastj] + 1
     j == no_trees(chain) + 1 ? j = 1 : nothing
@@ -31,18 +36,22 @@ function step!(chain::Chain)
     X_proposal = [ones(size(tree_x_proposal)[1]) tree_x_proposal]
     ε_proposal = chain.y - X_proposal * proposal.β
     L_proposal = sum(log.(pdf(Normal(0, √proposal.σ²), ε_proposal)))
-    numerator = L_proposal +
-        log(pdf(σ²_prior, proposal.σ²)) +
+    numerator = L_proposal + # Likelihood
+        log(pdf(σ²_prior, proposal.σ²)) + # σ² prior
+        # Trees prior
         sum([tree_p(eqtree.S, chain.grammar) for eqtree in proposal.trees]) +
+        # Probability of tree jump
         proposal_tree.p_mov
 
     tree_x_old_sample = evalsample(old_sample, chain.x, chain.grammar)
     X_old_sample = [ones(size(tree_x_old_sample)[1]) tree_x_old_sample]
     ε_old_sample = chain.y - X_old_sample * old_sample.β
     L_old_sample = sum(log.(pdf(Normal(0, √old_sample.σ²), ε_old_sample)))
-    denominator = L_old_sample +
-        log(pdf(σ²_prior, old_sample.σ²)) +
+    denominator = L_old_sample + # Likelihood
+        log(pdf(σ²_prior, old_sample.σ²)) + # σ² prior 
+        # Trees prior
         sum([tree_p(eqtree.S, chain.grammar) for eqtree in old_sample.trees]) +
+        # Probability of tree jump
         proposal_tree.p_mov_inv
     
     R = exp(numerator - denominator)

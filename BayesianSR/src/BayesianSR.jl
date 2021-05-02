@@ -4,16 +4,33 @@ import ExprRules: RuleNodeAndCount
 
 export Chain, Hyperparams
 
+"""
+    Hyperparams(k = 3::Int, σ²_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution)
+
+Hyperparameters of a `Chain`.
+"""
 @with_kw struct Hyperparams
     k = 3::Int
     σ²_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution
 end 
 
+"""
+    EqTree(S::RuleNode)
+
+A symbolic tree.
+"""
 struct EqTree
     S::RuleNode
     #   Θ::Thetas
 end 
 
+"""
+    EqTree(grammar::Grammar)
+
+Samples a random `EqTree` from the prior distribution with a `Grammar`.
+
+See also: `growtree`
+"""
 EqTree(grammar::Grammar) = EqTree(growtree(grammar))
 
 # TODO: Implement lt()
@@ -22,16 +39,48 @@ EqTree(grammar::Grammar) = EqTree(growtree(grammar))
 #     b::Vector{Float64}
 # end 
 
+"""
+    Sample(trees::Vector{EqTree}, β::Vector{Float64}, σ²::Float64)
+
+Each sample of a `Chain` is one equation.
+
+- `trees`: Vector with all `EqTree`.
+- `β`: Vector with the linear coefficients.
+  - `β[1]`: Intercept.
+- `σ²`: Variance of the residuals.
+
+"""
 mutable struct Sample
     trees::Vector{EqTree}
     β::Vector{Float64}
     σ²::Float64
 end 
 
+"""
+    Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
+
+- `k` is the number of `EqTree` that are added in each equation.
+- `prior` is the prior distribution of σ².
+"""
 function Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
     Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(prior))
 end 
 
+"""
+    Chain
+
+A chain of samples from the posterior space.
+
+- `samples`: Vector will all the samples.
+- `grammar`: The complete `Grammar` with all operators and features.
+- `x`: Matrix of the features.
+- `y`: Vector of the outcome values.
+- `stats`: `Dict` with statistics about the `Chain`.
+  - `:lastj`: Index of the last `EqTree` that was sampled during MCMC.
+  - `:proposals`: Number of proposed jumps in posterior space.
+- `hyper`: `Hyperparameters` of the `Chain`.
+
+"""
 struct Chain
     samples::Vector{Sample}
     grammar::Grammar
@@ -41,27 +90,11 @@ struct Chain
     hyper::Hyperparams
 end 
 
-function Chain(x::Matrix, y::Vector)
-    hyper = Hyperparams()
-    grammar = deepcopy(defaultgrammar)
-    Chain(x, y, grammar, hyper)
-end 
+"""
+    Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
 
-function Chain(x::Matrix, y::Vector, k::Int)
-    hyper = Hyperparams(k = k)
-    grammar = deepcopy(defaultgrammar)
-    Chain(x, y, grammar, hyper)
-end 
-
-function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
-    grammar = deepcopy(defaultgrammar)
-    Chain(x, y, grammar, hyper)
-end 
-
-function Chain(x::Matrix, y::Vector, grammar::Grammar)
-    Chain(x, y, grammar, Hyperparams())
-end 
-
+Initialize a `Chain`.
+"""
 function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     @unpack k, σ²_prior = hyper
     grammar = append!(deepcopy(operators), variablestogrammar(x))
@@ -71,6 +104,48 @@ function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
                   (:proposals, 0)])
     Chain([sample], grammar, x, y, stats, hyper)
 end 
+
+"""
+    Chain(x::Matrix, y::Vector)
+
+Initialize a `Chain` with default values.
+"""
+function Chain(x::Matrix, y::Vector)
+    hyper = Hyperparams()
+    operators = deepcopy(defaultgrammar)
+    Chain(x, y, operators, hyper)
+end 
+
+"""
+    Chain(x::Matrix, y::Vector, k::Int)
+
+Initialize a `Chain` with `k` `EqTree` per `Sample`.
+"""
+function Chain(x::Matrix, y::Vector, k::Int)
+    hyper = Hyperparams(k = k)
+    operators = deepcopy(defaultgrammar)
+    Chain(x, y, operators, hyper)
+end 
+
+"""
+    Chain(x::Matrix, y::Vector, hyper::Hyperparams)
+
+Initialize a `Chain` with custom `Hyperparameters`.
+"""
+function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
+    operators = deepcopy(defaultgrammar)
+    Chain(x, y, operators, hyper)
+end 
+
+"""
+    Chain(x::Matrix, y::Vector, grammar::Grammar)
+
+Initialize a `Chain` with a custom `Grammar`.
+"""
+function Chain(x::Matrix, y::Vector, operators::Grammar)
+    Chain(x, y, operators, Hyperparams())
+end 
+
 
 include("grammars.jl")
 include("evaltree.jl")

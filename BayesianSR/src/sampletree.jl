@@ -1,9 +1,28 @@
+"""
+    ChangedTree(tree::RuleNode, changed_node::RuleNode, d::Int64)
+
+Type with the information required to calculate the transition probabilities of growing or pruning a tree.
+
+- `tree`: The new tree
+- `changed_node`: The new branch or the pruned branch.
+- `d`: The depth of `changed_node`.
+
+See also: `grow!`, `prune!`
+"""
 struct ChangedTree
     tree::RuleNode
     changed_node::RuleNode
     d::Int64
 end 
 
+"""
+    grow!(node::RuleNode, grammar::Grammar)
+
+Tree movement grow.
+Selects a random terminal node and replaces it with a new branch from the tree prior.
+
+See also: `growtree`
+"""
 function grow!(node::RuleNode, grammar::Grammar)
     loc = sampleterminal(node, grammar)
     old_node = get(node, loc)
@@ -13,6 +32,12 @@ function grow!(node::RuleNode, grammar::Grammar)
     return ChangedTree(node, new_node, d)
 end 
 
+"""
+    prune!(node::RuleNode, grammar::Grammar)
+
+Tree movement prune.
+Selects a random operator node and replaces it with a terminal node.
+"""
 function prune!(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = findall(x -> x==0, node_types)
@@ -23,13 +48,36 @@ function prune!(node::RuleNode, grammar::Grammar)
     return ChangedTree(node, old_node, d)
 end 
 
+"""
+    DeletedTree(tree::RuleNode,
+    changed_node::Union{Nothing, RuleNode},
+    d::Int64,
+    p_child::Float64)
+
+Type with the information required to calculate the transition probabilities of deleting a node.
+
+- `tree`: Is the new tree.
+- `dropped_node`: Maybe a dropped branch. If we delete a binary operator we only keep one of its children.
+- `d`: Depth of the deleted node.
+- `p_child`: Probability of selecting the child that replaces the parent node.
+
+See also: `delete!`
+"""
 struct DeletedTree
     tree::RuleNode
-    changed_node::Union{Nothing, RuleNode}
+    dropped_node::Union{Nothing, RuleNode}
     d::Int64 
     p_child::Float64
 end 
 
+"""
+    delete!(node::RuleNode, grammar::Grammar)
+
+Tree movement delete.
+Selects a random candidate for deletion node and replaces it with one of its children.
+
+See also: `iscandidate`
+"""
 function delete!(node::RuleNode, grammar::Grammar)
     loc = samplecandidate(node, grammar)
     target = get(node, loc)
@@ -37,7 +85,7 @@ function delete!(node::RuleNode, grammar::Grammar)
     n_children = length(target.children)
     if n_children == 1
         p_child = 1
-        changed_node = nothing
+        dropped_node = nothing
         if loc.i == 0 
             node = target.children[1]
         else 
@@ -46,7 +94,7 @@ function delete!(node::RuleNode, grammar::Grammar)
     elseif target != node # no unary and no root = binary no root
         p_child = 0.5
         i = sample(1:2)
-        changed_node = target.children[i == 1 ? 2 : 1]
+        dropped_node = target.children[i == 1 ? 2 : 1]
         insert!(node, loc, target.children[i])
     else # only binary root left
         node_types = nodetypes(grammar)
@@ -55,18 +103,40 @@ function delete!(node::RuleNode, grammar::Grammar)
         ind_operator = findall(x -> in(x, operator_is), ind_children)
         p_child = 1/length(ind_operator)
         i = sample(ind_operator)
-        changed_node = target.children[i == 1 ? 2 : 1]
+        dropped_node = target.children[i == 1 ? 2 : 1]
         node = target.children[i]
     end 
-    return DeletedTree(node, changed_node, d, p_child)
+    return DeletedTree(node, dropped_node, d, p_child)
 end 
 
+"""
+    Inserted tree(tree::RuleNode,
+    new_branch::Union{Nothing, RuleNode},
+    d::Int64)
+
+Type with the information required to calculate the transition probabilities of inserting a node.
+
+- `tree`: Is the new tree.
+- `new_branch`: Maybe a new branch.
+- `d`: Depth of the deleted node.
+
+See also: `insert_node!`
+"""
 struct InsertedTree
     tree::RuleNode
     new_branch::Union{Nothing, RuleNode}
     d::Int64 
 end 
 
+"""
+    insert_node!(node::RuleNode, grammar::Grammar)
+
+Tree movement insert.
+Select a random node and insert a new operator node between it and its parent.
+If the new operator is binary we grow the second children from the tree prior.
+
+See also: `growtree`
+"""
 function insert_node!(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = findall(x -> x==1 || x==2, node_types)
@@ -117,6 +187,12 @@ function re_operator!(node::RuleNode, grammar::Grammar)
     return node
 end 
 
+"""
+    re_feature!(node::RuleNode, grammar::Grammar)
+
+Tree movement reassign feature.
+Selects a random terminal node and replaces it with another one.
+"""
 function re_feature!(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = findall(x -> x==0, node_types)
