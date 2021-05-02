@@ -99,7 +99,11 @@ function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     @unpack k, σ²_prior = hyper
     grammar = append!(deepcopy(operators), variablestogrammar(x))
     sample = Sample(k, grammar, σ²_prior)
-    optimβ!(sample, x, y, grammar)
+    try 
+        optimβ!(sample, x, y, grammar)
+    catch e 
+        sample.β = zeros(k+1)
+    end 
     stats = Dict([(:lastj, 0),
                   (:proposals, 0)])
     Chain([sample], grammar, x, y, stats, hyper)
