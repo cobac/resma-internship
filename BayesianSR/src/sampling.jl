@@ -40,62 +40,77 @@ function proposetree(tree::EqTree, grammar)
     elseif mov == :grow
         changed_tree = grow!(tree, grammar)
         tree = changed_tree.tree
-        p = log(p_g) + log(1/nₜ) + tree_p(changed_tree.changed_node, changed_tree.d, grammar)
+        p = log(p_g) + # P of movement = grow
+            log(1/nₜ) + # P of selecting this terminal node
+            # P of growing this specific branch
+            tree_p(changed_tree.changed_node, changed_tree.d, grammar)
         new_nₒ = n_operators(tree, grammar)
         new_p_0 = 0
         new_p_g = (1 - new_p_0)/3 * min(1, 8/(new_nₒ+2))
         new_p_p = (1-new_p_0)/3-new_p_g
-        p_inv = log(new_p_p) +
-            log(1/new_nₒ) +
-            log(1/length(terminal_is))
+        p_inv = log(new_p_p) + # P of movement = prune
+            log(1/new_nₒ) + #P of selecting this operator node
+            log(1/length(terminal_is)) # P of selecting this terminal
     elseif mov == :prune
         changed_tree = prune!(tree, grammar)
         tree = changed_tree.tree
-        p = log(p_p) + log(1/nₒ) + log(1/length(terminal_is))
+        p = log(p_p) + # P of movement = prune
+            log(1/nₒ) + # P of selecting this operator node
+            log(1/length(terminal_is)) # P of selecting this terminal
         new_nₒ = n_operators(tree, grammar)
         new_p_0 = 0
         new_p_g = (1 - new_p_0)/3 * min(1, 8/(new_nₒ+2))
-        p_inv = log(new_p_g) +
-            log(1/n_terminals(tree, grammar)) +
+        p_inv = log(new_p_g) + # P of movement = grow
+            log(1/n_terminals(tree, grammar)) + # P of selecting this terminal node
+            # P of growing this specific branch
             tree_p(changed_tree.changed_node, changed_tree.d, grammar)
     elseif mov == :delete
         deleted_tree = delete!(tree, grammar)
         tree = deleted_tree.tree
-        p = log(p_d) + log(1/n_cand) + log(deleted_tree.p_child)
+        p = log(p_d) + # P of movement = delete
+            log(1/n_cand) + # P of selecting this candidate node
+            log(deleted_tree.p_child) # P of selecting this specific child
         new_n_cand = n_candidates(tree, grammar)
         new_p_0 = 0
         new_p_d = (1-p_0)/3 * new_n_cand/(new_n_cand+3)
         new_p_i = (1-new_p_0)/3 - new_p_d
-        p_inv = log(new_p_i) +
-            log(1/length(flatten(tree))) +
-            log(1/length(operator_is)) +
-            log(deleted_tree.p_child)
+        p_inv = log(new_p_i) + # P of movement = insert
+            log(1/length(flatten(tree))) + # P of selecting this node
+            log(1/length(operator_is)) + # P of inserting this operator
         if !isnothing(deleted_tree.changed_node)
+            # If we had to grow a new branch, P of growing that branch
             p_inv += tree_p(deleted_tree.changed_node, deleted_tree.d, grammar)
         end 
     elseif mov == :insert
         inserted_tree = insert_node!(tree, grammar)
         tree = inserted_tree.tree
-        p = log(p_i) + log(1/length(flatten(tree))) +
-            log(1/length(operator_is))
+        p = log(p_i) + # P of movement = insert
+            log(1/length(flatten(tree))) + # P of selecting this node
+            log(1/length(operator_is)) # P of inserting this operator
         if !isnothing(inserted_tree.new_branch)
+            # If we had to grow a new branch, P of growing that branch
             p += tree_p(inserted_tree.new_branch, inserted_tree.d, grammar)
         end 
         new_n_cand = n_candidates(tree, grammar)
         new_p_0 = 0
         new_p_d = (1-p_0)/3 * new_n_cand/(new_n_cand+3)
-        p_inv = log(new_p_d) + log(1/new_n_cand)
+        p_inv = log(new_p_d) + # P of movement = delete
+            log(1/new_n_cand) # P of selecting this candidate node
         if !isnothing(inserted_tree.new_branch)
+            # If we had to grow a new branch, P of deleting it
             p_inv += log(1/2)
         end 
     elseif mov == :re_operator
         tree = re_operator!(tree, grammar)
-        p = p_inv = log(p_ro) + log(1/nₒ) + log(1/(length(operator_is) - 1))
+        p = p_inv = log(p_ro) + # P of movement = reassign operator
+            log(1/nₒ) + # P of selecting this operator node
+            log(1/(length(operator_is) - 1)) # P of choosing the new operator
     elseif mov == :re_feature
         tree = re_feature!(tree, grammar)
-        p = p_inv = log(p_rf) + log(1/nₜ) + log(1/(length(terminal_is) - 1))
+        p = p_inv = log(p_rf) + # P of movement = reassign feature
+            log(1/nₜ) + # P of selecting this terminal node
+            log(1/(length(terminal_is) - 1)) # P of choosing this new feature
     end 
-
     return TreeProposal(EqTree(tree), mov, p, p_inv)
 end 
 
