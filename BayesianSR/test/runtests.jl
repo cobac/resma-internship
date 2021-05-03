@@ -1,13 +1,13 @@
 using BayesianSR, Test
 
 using ExprRules, Random, LinearAlgebra, Distributions, Parameters
-#using ExprTools
-#using AbstractTrees
+# using ExprTools
+# using AbstractTrees
 
 Random.seed!(2)
 n = 30
 k = 3
-β = rand(Uniform(-2, 2), k+1)
+β = rand(Uniform(-2, 2), k + 1)
 x = rand(Uniform(-10, 10), (n, k))
 X = [ones(size(x)[1]) x]
 ε = rand(Normal(0, 2), n)
@@ -37,8 +37,8 @@ test_hyperparams(hyper)
 @testset "Grammars utils" begin
     node_types = BayesianSR.nodetypes(fullgrammar)
     @test length(node_types) == length(fullgrammar)
-    operator_is = findall(x -> x==1 || x==2, node_types)
-    terminal_is = findall(x -> x==0, node_types)
+    operator_is = findall(x -> x == 1 || x == 2, node_types)
+    terminal_is = findall(x -> x == 0, node_types)
     @test length(operator_is) + length(terminal_is) == length(node_types)
     @test BayesianSR.operator_indices(fullgrammar) == operator_is
     @test BayesianSR.terminal_indices(fullgrammar) == terminal_is
@@ -119,7 +119,7 @@ function test_sample(sample::BayesianSR.Sample)
         for tree in sample.trees
             test_tree(tree.S)
         end 
-        @test length(sample.β) == k+1
+        @test length(sample.β) == k + 1
     end 
 end 
 
@@ -131,7 +131,7 @@ end
     test_sample(sample)
     @test maximum(sample.β) == 0
     BayesianSR.optimβ!(sample, x, y, fullgrammar)
-    @test length(sample.β) == k+1
+    @test length(sample.β) == k + 1
     @test in(0, sample.β) == false
 end 
 
@@ -146,7 +146,7 @@ function test_chain(chain::Chain)
     @test :lastj in stat_keys
     @test chain.stats[:lastj] <= chain.hyper.k
     @test :proposals in stat_keys
-    @test chain.stats[:proposals]+1 >= length(chain)
+    @test chain.stats[:proposals] + 1 >= length(chain)
 
     test_hyperparams(chain.hyper)
 end 
@@ -229,35 +229,35 @@ end
         @test proposal.changed_node.ind in BayesianSR.operator_indices(fullgrammar)
     end 
 
-     @testset "delete!()" begin
-         function new_deleteable_node()
-             node = BayesianSR.EqTree(fullgrammar).S
-             try BayesianSR.samplecandidate(node, fullgrammar)
-             catch e
-                 node = new_node()
-             end 
-             return node
-         end 
-         node = new_deleteable_node()
-         old_length = length(BayesianSR.flatten(node))
-         proposal = BayesianSR.delete!(node, fullgrammar)
-         new_length = length(BayesianSR.flatten(proposal.tree))
-         @test new_length < old_length
-         test_tree(proposal.tree)
-         for i in 1:10
-             node2 = RuleNode(1, [RuleNode(2, [RuleNode(8), RuleNode(8)]), RuleNode(9)])
-             proposal2 = BayesianSR.delete!(node2, fullgrammar)
-             if proposal2.dropped_node == RuleNode(8)
-                 @test proposal2.p_child == 0.5
-             else 
-                 @test proposal2.p_child == 1
-             end 
-         end 
-         node3 = RuleNode(1, [RuleNode(2, [RuleNode(9), RuleNode(9)]),
-                              RuleNode(3, [RuleNode(9), RuleNode(9)])])
-         proposal3 = BayesianSR.delete!(node3, fullgrammar)
-         @test proposal3.p_child == 0.5
-     end 
+    @testset "delete!()" begin
+        function new_deleteable_node()
+            node = BayesianSR.EqTree(fullgrammar).S
+            try BayesianSR.samplecandidate(node, fullgrammar)
+            catch e
+                node = new_node()
+            end 
+            return node
+        end 
+        node = new_deleteable_node()
+        old_length = length(BayesianSR.flatten(node))
+        proposal = BayesianSR.delete!(node, fullgrammar)
+        new_length = length(BayesianSR.flatten(proposal.tree))
+        @test new_length < old_length
+        test_tree(proposal.tree)
+        for i in 1:10
+            node2 = RuleNode(1, [RuleNode(2, [RuleNode(8), RuleNode(8)]), RuleNode(9)])
+            proposal2 = BayesianSR.delete!(node2, fullgrammar)
+            if proposal2.dropped_node == RuleNode(8)
+                @test proposal2.p_child == 0.5
+            else 
+                @test proposal2.p_child == 1
+            end 
+        end 
+        node3 = RuleNode(1, [RuleNode(2, [RuleNode(9), RuleNode(9)]),
+                             RuleNode(3, [RuleNode(9), RuleNode(9)])])
+        proposal3 = BayesianSR.delete!(node3, fullgrammar)
+        @test proposal3.p_child == 0.5
+    end 
 
     @testset "insert_node!()" begin
         node = BayesianSR.EqTree(fullgrammar).S
@@ -291,13 +291,13 @@ end
     end 
 end 
 
- @testset "MCMC" begin
-     chain = Chain(x, y)
-     n = 10
-     for i in 1:n
-         R = BayesianSR.step!(chain)
-         @test R >=0 || isnan(R)
-         test_chain(chain)
-         @test chain.stats[:proposals] == i
-     end 
- end 
+@testset "MCMC" begin
+    chain = Chain(x, y)
+    n = 10
+    for i in 1:n
+        R = BayesianSR.step!(chain)
+        @test R >= 0 || isnan(R)
+        test_chain(chain)
+        @test chain.stats[:proposals] == i
+    end 
+end 
