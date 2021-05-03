@@ -1,15 +1,19 @@
 * Things to discuss
 ** Re-implementation with custom types
 - If I had to start over I wouldn't use ExprRules
-- Comfortable to learn the language
+- Comfortable way to learn the language
 - I don't think it's worth to rewrite
   - Parser/interpreter
+    - At the end a custom eval-table should be faster than dispatching with indexing (?)
   - Sampling
   - Location-accessing with hashes
   - Util functions
 ** Housekeeping
 - Tests
 - Docstrings
+** Tried to separate p, p_inv calculation, but passing too many parameters
+- =proposetree()= in =sampling.jl=
+- Although better for testing 
 ** Bugs in movements
 - Reassign operator
 - Delete
@@ -17,15 +21,17 @@
 ** try-catch error to avoid non-proper equations
 - In =step!()=
 - In =Chain= initialization
+- Overhead but.. works
+  - In =SymbolicRegression.jl= they return a =Bool=
+  - Their parser is different
 ** Simplifying equations
-- Symbolics.jl
-- Need to implement a translation from equation to tree
-** Tried to separate p, p_inv calculation, but passing too many parameters
-- =proposetree()= in =sampling.jl=
+- =Symbolics.jl=
+- Can simplify it
+- Need to implement a parser from equation to tree
+- Or translate the AST to a =RuleNode=
 ** Showcase
 - Wonky output
 - Idk Pluto
-- From my playground code
 - Non-stable solutions
   - Jin et al. say 10k to stability
   - =lt()= missing
@@ -36,3 +42,8 @@
   - Reversible jump
 - User-facing functions
 - ExprRules bug reports
+** Later...
+- Check performance
+- Compare to other methods
+- ... Maybe something else D:
+- Write up the report
