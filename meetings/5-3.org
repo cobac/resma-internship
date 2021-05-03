@@ -47,3 +47,11 @@
 - Compare to other methods
 - ... Maybe something else D:
 - Write up the report
+* Notes
+- Check functions graphically
+  - Or divergence
+- Sum by folding on mcmc, for tree and =log.pdf=
+  - =logpdf= works best
+  - Folding ended up allocating the Distribution at every step
+  - =mapreduce= same
+- Monday 10, same link zoom
