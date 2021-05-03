@@ -39,8 +39,7 @@ Tree movement prune.
 Selects a random operator node and replaces it with a terminal node.
 """
 function prune!(node::RuleNode, grammar::Grammar)
-    node_types = nodetypes(grammar)
-    terminal_is = findall(x -> x==0, node_types)
+    terminal_is = terminal_indices(grammar)
     loc = sampleoperator(node, grammar)
     old_node = get(node, loc)
     d = node_depth(node, old_node)
@@ -97,8 +96,7 @@ function delete!(node::RuleNode, grammar::Grammar)
         dropped_node = target.children[i == 1 ? 2 : 1]
         insert!(node, loc, target.children[i])
     else # only binary root left
-        node_types = nodetypes(grammar)
-        operator_is = findall(x -> x==1 || x==2, node_types)
+        operator_is = operator_indices(grammar)
         ind_children = [child.ind for child in target.children]
         ind_operator = findall(x -> in(x, operator_is), ind_children)
         p_child = 1/length(ind_operator)
@@ -139,7 +137,7 @@ See also: `growtree`
 """
 function insert_node!(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
-    operator_is = findall(x -> x==1 || x==2, node_types)
+    operator_is = operator_indices(grammar)
     loc = sample(NodeLoc, node)
     old = get(node, loc)
     new = RuleNode(sample(operator_is))
@@ -194,7 +192,7 @@ we drop its second children.
 """
 function re_operator!(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
-    operator_is = findall(x -> x==1 || x==2, node_types)
+    operator_is = operator_indices(grammar)
     loc = sampleoperator(node, grammar)
     target = get(node, loc)
     old_ind = target.ind
@@ -231,8 +229,7 @@ Tree movement reassign feature.
 Selects a random terminal node and replaces it with another one.
 """
 function re_feature!(node::RuleNode, grammar::Grammar)
-    node_types = nodetypes(grammar)
-    terminal_is = findall(x -> x==0, node_types)
+    terminal_is = terminal_indices(grammar)
     loc = sampleterminal(node, grammar)
     target = get(node, loc)
     # Remove old index from the pool of terminals
