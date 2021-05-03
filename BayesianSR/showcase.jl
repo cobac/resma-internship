@@ -5,7 +5,9 @@ using BayesianSR,
     AbstractTrees,
     LinearAlgebra,
     Distributions,
-    BenchmarkTools
+    BenchmarkTools,
+    Profile,
+    PProf
 
 Random.seed!(2)
 n = 100 # no. observations
@@ -68,14 +70,19 @@ chain₁.hyper
 
 # @btime step!(chain₁) # 5ms
 
-no_iter = 1000
-for i in 1:no_iter
-    i%%100 == 0 && println("Iteration no. ", i)
-    step!(chain₁)
-    step!(chain₄)
-    step!(chain₅)
-    step!(chain₆)
+function stepchains(no_iter = 1000)
+    for i in 1:no_iter
+        i%100 == 0 && println("Iteration no. ", i)
+        step!(chain₁)
+        step!(chain₄)
+        step!(chain₅)
+        step!(chain₆)
+    end 
 end 
+
+@pprof stepchains()
+pprof()
+# Tree evaluation functions are the most expensive
 
 length(chain₁) / chain₁.stats[:proposals] # 12%
 length(chain₄) / chain₄.stats[:proposals] # 30%
