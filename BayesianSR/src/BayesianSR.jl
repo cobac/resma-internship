@@ -112,7 +112,7 @@ function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     end 
     stats = Dict([(:lastj, 0),
                   (:proposals, 0)])
-    Chain([sample], grammar, x, y, stats, hyper)
+    return Chain([sample], grammar, x, y, stats, hyper)
 end 
 
 """
@@ -123,7 +123,7 @@ Initialize a `Chain` with default values.
 function Chain(x::Matrix, y::Vector)
     hyper = Hyperparams()
     operators = deepcopy(defaultgrammar)
-    Chain(x, y, operators, hyper)
+    return Chain(x, y, operators, hyper)
 end 
 
 """
@@ -134,7 +134,7 @@ Initialize a `Chain` with `k` `RuleNode` per `Sample`.
 function Chain(x::Matrix, y::Vector, k::Int)
     hyper = Hyperparams(k = k)
     operators = deepcopy(defaultgrammar)
-    Chain(x, y, operators, hyper)
+    return Chain(x, y, operators, hyper)
 end 
 
 """
@@ -144,7 +144,7 @@ Initialize a `Chain` with custom `Hyperparameters`.
 """
 function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
     operators = deepcopy(defaultgrammar)
-    Chain(x, y, operators, hyper)
+    return Chain(x, y, operators, hyper)
 end 
 
 """
