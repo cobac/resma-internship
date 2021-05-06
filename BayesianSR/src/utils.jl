@@ -111,7 +111,7 @@ Base.length(chain::Chain) = length(chain.samples)
 """
     no_trees(chain::Chain) = length(chain.samples[1].trees)
 
-Number of `EqTree` per `Sample` of a `Chain`.
+Number of `RuleNode` per `Sample` of a `Chain`.
 """
 no_trees(chain::Chain) = length(chain.samples[1].trees)
 

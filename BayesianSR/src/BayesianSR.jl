@@ -1,6 +1,6 @@
 module BayesianSR
 using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
-import ExprRules: RuleNodeAndCount
+import ExprRules: RuleNodeAndCount, RuleNode
 
 export Chain, Hyperparams, step!, no_trees
 
@@ -15,23 +15,16 @@ Hyperparameters of a `Chain`.
 end 
 
 """
-    EqTree(S::RuleNode)
+    RuleNode(grammar::Grammar)
 
-A symbolic tree.
-"""
-struct EqTree
-    S::RuleNode
-    #   Θ::Thetas
-end 
-
-"""
-    EqTree(grammar::Grammar)
-
-Samples a random `EqTree` from the prior distribution with a `Grammar`.
+Samples a random `RuleNode` from the tree prior distribution with a `Grammar`.
 
 See also: `growtree`
 """
-EqTree(grammar::Grammar) = EqTree(growtree(grammar))
+ExprRules.RuleNode(grammar::Grammar) = growtree(grammar)
+
+
+"""
 
 # TODO: Implement lt()
 # struct Thetas
@@ -40,18 +33,18 @@ EqTree(grammar::Grammar) = EqTree(growtree(grammar))
 # end 
 
 """
-    Sample(trees::Vector{EqTree}, β::Vector{Float64}, σ²::Float64)
+    Sample(trees::Vector{RuleNode}, β::Vector{Float64}, σ²::Float64)
 
 Each sample of a `Chain` is one equation.
 
-- `trees`: Vector with all `EqTree`.
+- `trees`: Vector with all `RuleNode`.
 - `β`: Vector with the linear coefficients.
   - `β[1]`: Intercept.
 - `σ²`: Variance of the residuals.
 
 """
 mutable struct Sample
-    trees::Vector{EqTree}
+    trees::Vector{RuleNode}
     β::Vector{Float64}
     σ²::Float64
 end 
@@ -59,11 +52,11 @@ end
 """
     Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
 
-- `k` is the number of `EqTree` that are added in each equation.
+- `k` is the number of `RuleNode` that are added in each equation.
 - `prior` is the prior distribution of σ².
 """
 function Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
-    Sample([EqTree(grammar) for i in 1:k], zeros(k + 1), rand(prior))
+    Sample([RuleNode(grammar) for i in 1:k], zeros(k + 1), rand(prior))
 end 
 
 """
@@ -76,7 +69,7 @@ A chain of samples from the posterior space.
 - `x`: Matrix of the features.
 - `y`: Vector of the outcome values.
 - `stats`: `Dict` with statistics about the `Chain`.
-  - `:lastj`: Index of the last `EqTree` that was sampled during MCMC.
+  - `:lastj`: Index of the last `RuleNode` that was sampled during MCMC.
   - `:proposals`: Number of proposed jumps in posterior space.
 - `hyper`: `Hyperparameters` of the `Chain`.
 
@@ -123,7 +116,7 @@ end
 """
     Chain(x::Matrix, y::Vector, k::Int)
 
-Initialize a `Chain` with `k` `EqTree` per `Sample`.
+Initialize a `Chain` with `k` `RuleNode` per `Sample`.
 """
 function Chain(x::Matrix, y::Vector, k::Int)
     hyper = Hyperparams(k = k)

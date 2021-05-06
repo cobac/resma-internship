@@ -71,13 +71,13 @@ end
 
 @testset "Tree generation" begin
     Random.seed!(5)
-    tree = BayesianSR.EqTree(fullgrammar)
+    tree = RuleNode(fullgrammar)
     table = BayesianSR.tableforeval(x, 3, fullgrammar)
     @test x[3, 1] == table[:x1]
     @test x[3, 2] == table[:x2]
     @test x[3, 3] == table[:x3]
 
-    eq = get_executable(tree.S, fullgrammar)
+    eq = get_executable(tree, fullgrammar)
     answ = Core.eval(table, eq)
     @test length(answ) == 1
     @test isreal(answ)
@@ -87,7 +87,7 @@ end
 end
 
 @testset "Describe trees" begin
-    tree = BayesianSR.EqTree(fullgrammar).S
+    tree = RuleNode(fullgrammar)
     nodes = BayesianSR.flatten(tree)
     @test length(nodes) == BayesianSR.n_operators(tree, fullgrammar) +
         BayesianSR.n_terminals(tree, fullgrammar)
@@ -109,7 +109,7 @@ function test_tree(tree::RuleNode)
 end 
 
 @testset "Random node initialization" begin
-    tree = BayesianSR.EqTree(fullgrammar).S
+    tree = RuleNode(fullgrammar)
     test_tree(tree)
 end 
 
@@ -117,7 +117,7 @@ function test_sample(sample::BayesianSR.Sample)
     @testset "Samples" begin
         @test length(sample.trees) == k
         for tree in sample.trees
-            test_tree(tree.S)
+            test_tree(tree)
         end 
         @test length(sample.β) == k + 1
     end 
@@ -167,7 +167,7 @@ end
     end 
     @testset "sampleterminal()" begin
         for i in 1:20
-            node = BayesianSR.EqTree(fullgrammar).S
+            node = RuleNode(fullgrammar)
             loc = BayesianSR.sampleterminal(node, fullgrammar)
             node = get(node, loc)
             @test node.ind in BayesianSR.terminal_indices(fullgrammar)
@@ -175,7 +175,7 @@ end
     end 
     @testset "sampleoperator()" begin
         for i in 1:20
-            node = BayesianSR.EqTree(fullgrammar).S
+            node = RuleNode(fullgrammar)
             loc = BayesianSR.sampleoperator(node, fullgrammar)
             node = get(node, loc)
             @test node.ind in BayesianSR.operator_indices(fullgrammar)
@@ -210,7 +210,7 @@ end
 
 @testset "Tree movements" begin
     @testset "grow!()" begin
-        node = BayesianSR.EqTree(fullgrammar).S
+        node = RuleNode(fullgrammar)
         old_length = length(BayesianSR.flatten(node))
         proposal = BayesianSR.grow!(node, fullgrammar)
         new_length = length(BayesianSR.flatten(proposal.tree))
@@ -220,7 +220,7 @@ end
     end 
 
     @testset "prune!()" begin
-        node = BayesianSR.EqTree(fullgrammar).S
+        node = RuleNode(fullgrammar)
         old_length = length(BayesianSR.flatten(node))
         proposal = BayesianSR.prune!(node, fullgrammar)
         new_length = length(BayesianSR.flatten(proposal.tree))
@@ -231,7 +231,7 @@ end
 
     @testset "delete!()" begin
         function new_deleteable_node()
-            node = BayesianSR.EqTree(fullgrammar).S
+            node = BayesianSR.RuleNode(fullgrammar)
             try BayesianSR.samplecandidate(node, fullgrammar)
             catch e
                 node = new_node()
@@ -260,7 +260,7 @@ end
     end 
 
     @testset "insert_node!()" begin
-        node = BayesianSR.EqTree(fullgrammar).S
+        node = BayesianSR.RuleNode(fullgrammar)
         old_length = length(BayesianSR.flatten(node))
         proposal = BayesianSR.insert_node!(node, fullgrammar)
         new_length = length(BayesianSR.flatten(proposal.tree))
@@ -269,7 +269,7 @@ end
     end 
 
     @testset "re_operator!()" begin
-        node = BayesianSR.EqTree(fullgrammar).S
+        node = BayesianSR.RuleNode(fullgrammar)
         old_node = deepcopy(node)
         old_length = length(BayesianSR.flatten(node))
         proposal = BayesianSR.re_operator!(node, fullgrammar)
@@ -280,7 +280,7 @@ end
     end 
 
     @testset "re_feature!()" begin
-        node = BayesianSR.EqTree(fullgrammar).S
+        node = BayesianSR.RuleNode(fullgrammar)
         old_node = deepcopy(node)
         old_length = length(BayesianSR.flatten(node))
         node = BayesianSR.re_feature!(node, fullgrammar)
