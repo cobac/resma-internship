@@ -1,7 +1,7 @@
 """
 `Grammar` with default operators.
 """
-const defaultgrammar = ExprRules.@grammar begin
+const defaultgrammar = @grammar begin
     Real = Real + Real
     Real = Real - Real
     Real = Real * Real 
@@ -37,7 +37,7 @@ Returns a vector with the types of possible nodes from a `Grammar`.
 - 0: terminal node
 """
 function nodetypes(grammar::Grammar)
-    types = [ExprRules.nchildren(grammar, i)
+    types = [nchildren(grammar, i)
              for i in 1:length(grammar)]
     return types
 end 
