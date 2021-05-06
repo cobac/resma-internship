@@ -11,6 +11,25 @@ const defaultgrammar = @grammar begin
 end
 
 """
+`Grammar` with the components of the linear operator `lt()`.
+"""
+const lineargrammar = @grammar begin
+    Theta = _(LinearCoef())
+    Real = lt(Theta, Real)
+end 
+
+"""
+    lt(θ::Theta, x)
+
+Linear operator.
+
+See also: `θ`
+"""
+function lt(θ::LinearCoef, x)
+    θ.a + θ.b * x
+end
+
+"""
     variablestogrammar(x)
 
 Creates a `Grammar` with all the features in `x`.

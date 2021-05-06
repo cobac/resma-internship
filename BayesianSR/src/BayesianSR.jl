@@ -12,6 +12,8 @@ Hyperparameters of a `Chain`.
 @with_kw struct Hyperparams
     k = 3::Int
     σ²_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution
+    σ²_a_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution
+    σ²_b_prior = InverseGamma(0.5, 0.5)::UnivariateDistribution
 end 
 
 """
@@ -23,14 +25,24 @@ See also: `growtree`
 """
 ExprRules.RuleNode(grammar::Grammar) = growtree(grammar)
 
-
 """
+    LinearCoef(a::Float64, b::Float64)
 
-# TODO: Implement lt()
-# struct Thetas
-#     a::Vector{Float64}
-#     b::Vector{Float64}
-# end 
+Coefficients of a linear operator `a + b*x`.
+"""
+struct LinearCoef
+    a::Float64
+    b::Float64
+end 
+
+function LinearCoef(hyper::Hyperparams) 
+    @unpack σ²_a_prior , σ²_b_prior = hyper
+    σ²_a = rand(σ²_a_prior)
+    σ²_b = rand(σ²_b_prior)
+    a = rand(Normal(1, σ²_a))
+    b = rand(Normal(1, σ²_b))
+    return LinearCoef(a, b)
+end 
 
 """
     Sample(trees::Vector{RuleNode}, β::Vector{Float64}, σ²::Float64)
@@ -90,6 +102,7 @@ Initialize a `Chain`.
 """
 function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     @unpack k, σ²_prior = hyper
+    #grammar = append!(deepcopy(lineargrammar), append!(deepcopy(operators), variablestogrammar(x)))
     grammar = append!(deepcopy(operators), variablestogrammar(x))
     sample = Sample(k, grammar, σ²_prior)
     try 

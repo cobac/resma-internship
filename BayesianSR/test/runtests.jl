@@ -21,13 +21,25 @@ fullgrammar = append!(deepcopy(BayesianSR.defaultgrammar), vargrammar)
 function test_hyperparams(hyper::Hyperparams)
     @testset "Hyperparameters" begin
         names = hyper |> typeof |> fieldnames
-        @test  length(names) == 2
+        @test  length(names) == 4
         @test :k in names
         @test :σ²_prior in names
-        @unpack k, σ²_prior = hyper
+        @test :σ²_a_prior in names
+        @test :σ²_b_prior in names
+        @unpack k, σ²_prior, σ²_a_prior, σ²_b_prior = hyper
         @test typeof(k) <: Int
         @test typeof(σ²_prior) <: UnivariateDistribution
-        @test typeof(rand(σ²_prior)) <: AbstractFloat
+        @test typeof(σ²_a_prior) <: UnivariateDistribution
+        @test typeof(σ²_b_prior) <: UnivariateDistribution
+        σ² = rand(σ²_prior)
+        @test typeof(σ²) <: AbstractFloat
+        @test σ² >= 0
+        σ²_a = rand(σ²_a_prior)
+        @test typeof(σ²_a) <: AbstractFloat
+        @test σ²_a >= 0
+        σ²_b = rand(σ²_a_prior)
+        @test typeof(σ²_b) <: AbstractFloat
+        @test σ²_b >= 0
     end 
 end 
 
@@ -68,6 +80,13 @@ end
     @test length(full_operators) == length(var_operators) + length(default_operators)
     @test maximum(full_operators) == maximum(default_operators)
 end
+
+@testset "LinearCoef generation" begin
+    lc = BayesianSR.LinearCoef(hyper)
+    @test length(fieldnames(typeof(lc))) == 2
+    @test typeof(lc.a) <: Float64
+    @test typeof(lc.b) <: Float64
+end 
 
 @testset "Tree generation" begin
     Random.seed!(5)
