@@ -1,0 +1,22 @@
+* Things to discuss
+** =lt()=
+- Got a nice answer from one of the maintainers of =ExprRules.jl=.
+  - https://github.com/sisl/ExprRules.jl/issues/32
+  - No need to modify their code.
+- Store =LinearCoef= on each linear operator node.
+- =EqTree= becomes just a =RuleNode=.
+- Modify tree prior to work with =lt()= nodes.
+  - =tree_p()= and =growtree()=.
+- Modifying / adding new tree util functions to work with =lt()= notes.
+- Way of iterating through all linear operator nodes.
+  - To update =a= and =b= on each proposal.
+  - To get =a=s and =b=s into a vector to calculate probabilities.
+** Ratio calculation
+* TO-DO
+** User facing functions
+- Interface function
+- Input validation
+  - Datasets
+  - Hyperparams (non-negative prior variances, etc)
+  - Operators (no collisions with linear type etc)
+- Output summary, statistics
