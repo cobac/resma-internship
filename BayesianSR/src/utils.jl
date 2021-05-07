@@ -1,7 +1,8 @@
 """
     flatten(node::RuleNode)
 
-Flattens a `RuleNode` as a vector of indices.
+Flattens a `RuleNode` as a vector of indices,
+excluding nodes containing the coefficients of the linear operators.
 """
 function flatten(node::RuleNode)
     out = Int[]
@@ -11,6 +12,8 @@ function flatten(node::RuleNode)
         append!(queue, queue[1].children)
         deleteat!(queue, 1)
     end
+    # Delete Theta nodes
+    filter!(i -> i != 1, out)
     return out
 end
 
@@ -30,9 +33,9 @@ function sampleterminal(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
     out = sample(NodeLoc, node)
-    # if node is operator, resample
+    # if node is operator or Theta, resample
     target = get(node, out)
-    while in(target.ind, operator_is)
+    while in(target.ind, push!(operator_is, 1))
         out = sample(NodeLoc, node)
         target = get(node, out)
     end 
@@ -48,9 +51,9 @@ function sampleoperator(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = terminal_indices(grammar)
     out = sample(NodeLoc, node)
-    # if node is terminal, resample
+    # if node is terminal or Theta, resample
     target = get(node, out)
-    while in(target.ind, terminal_is)
+    while in(target.ind, push!(terminal_is, 1))
         out = sample(NodeLoc, node)
         target = get(node, out)
     end 
@@ -91,7 +94,10 @@ function iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
     terminal_is = terminal_indices(grammar)
     operator_is = operator_indices(grammar)
     inds = [child.ind for child in target.children]
-    if in(target.ind, terminal_is)
+    if target.ind == 1
+        # Theta
+        return false
+    elseif in(target.ind, terminal_is)
         # terminal node == false
         return false
     elseif target == root && count(i -> in(i, operator_is), inds) == 0
