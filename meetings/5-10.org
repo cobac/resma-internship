@@ -20,3 +20,11 @@
   - Hyperparams (non-negative prior variances, etc)
   - Operators (no collisions with linear type etc)
 - Output summary, statistics
+** Documentation
+- Lot's of things that are only on the source code
+  - Not easy to understand
+  - Last big one: SymbolTable
+    - Define the module of evaluation for symbols, don't include prefix
+      - They are not defined on =Main=
+    - But include prefix on the =_val= nodes
+      - Because the get evaluated at =Main=
