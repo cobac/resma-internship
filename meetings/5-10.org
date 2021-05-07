@@ -4,14 +4,21 @@
   - https://github.com/sisl/ExprRules.jl/issues/32
   - No need to modify their code.
 - Store =LinearCoef= on each linear operator node.
-- =EqTree= becomes just a =RuleNode=.
-- Modify tree prior to work with =lt()= nodes.
+  - Clutters the grammar with 1 extra rule
+    - Need to make util functions more complex
+    - Tons of weird quirks for evaluation
+    - Probably worth the trade-off
+  - [ ] Initialize them as (0, 0) instead of from the prior
+    - To set/recover them we need to iterate throughout the tree
+    - We need to do that either way to get the parameters to calculate probabilities
+- [X] =EqTree= becomes just a =RuleNode=.
+- [ ] Modify tree prior to work with =lt()= nodes.
   - =tree_p()= and =growtree()=.
-- Modifying / adding new tree util functions to work with =lt()= notes.
-- Way of iterating through all linear operator nodes.
-  - To update =a= and =b= on each proposal.
-  - To get =a=s and =b=s into a vector to calculate probabilities.
-** Ratio calculation
+- [X] Modifying / adding new tree util functions to work with =lt()= notes.
+- [ ] Way of iterating through all linear operator nodes.
+  - [ ] To update =a= and =b= on each proposal.
+  - [ ] To get =a=s and =b=s into a vector to calculate probabilities.
+** TODO Ratio calculation
 * TO-DO
 ** User facing functions
 - Interface function
