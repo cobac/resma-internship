@@ -35,7 +35,7 @@ end
 Generates a symbol table to evaluate the i-th observation in a `RuleNode`.
 """
 function tableforeval(x, i, grammar::Grammar)
-    symboltable = SymbolTable(grammar)
+    symboltable = SymbolTable(grammar, BayesianSR)
     k = size(x)[2]
     @inbounds for m in 1:k
         symboltable[Symbol("x", m)] = x[i, m]

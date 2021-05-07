@@ -102,8 +102,8 @@ Initialize a `Chain`.
 """
 function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     @unpack k, σ²_prior = hyper
-    #grammar = append!(deepcopy(lineargrammar), append!(deepcopy(operators), variablestogrammar(x)))
-    grammar = append!(deepcopy(operators), variablestogrammar(x))
+    grammar = append!(deepcopy(lineargrammar),
+                      append!(deepcopy(operators), variablestogrammar(x)))
     sample = Sample(k, grammar, σ²_prior)
     try 
         optimβ!(sample, x, y, grammar)
