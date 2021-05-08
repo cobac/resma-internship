@@ -55,7 +55,6 @@ Returns a vector with the types of possible nodes from a `Grammar`.
 - 1: unary operator
 - 2: binary operator
 - 0: terminal node
-- 99999999999999: coefficients of the linear operator
 """
 function raw_nodetypes(grammar::Grammar)
     types = [nchildren(grammar, i)
@@ -70,15 +69,15 @@ Returns a vector with the types of possible nodes from a BayesianSR `Grammar`.
 - 1: unary operator
 - 2: binary operator
 - 0: terminal node
-- 99999999999999: coefficients of the linear operator
+- -1: coefficients of the linear operator
 """
-    function nodetypes(grammar::Grammar)
-        types = raw_nodetypes(grammar)
-        # Theta is not considered a node
-        types[1] = 99999999999999
-        # Linear operator is unary
-        types[2] = 1
-        return types
+function nodetypes(grammar::Grammar)
+    types = raw_nodetypes(grammar)
+    # Theta is not considered a node
+    types[1] = -1
+    # Linear operator is unary
+    types[2] = 1
+    return types
 end 
 
 """

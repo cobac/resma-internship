@@ -80,14 +80,15 @@ end
 
     linear_operators = BayesianSR.nodetypes(BayesianSR.lineargrammar)
     @test length(linear_operators) == 2
-    @test linear_operators[1] == 99999999999999
+    @test linear_operators[1] == -1
     @test linear_operators[2] == 1
 
     full_operators = BayesianSR.nodetypes(fullgrammar)
     @test length(full_operators) == length(var_operators) +
         length(default_operators) +
         length(linear_operators)
-    @test maximum(full_operators) == 99999999999999
+    @test maximum(full_operators) == 2
+    @test minimum(full_operators) == -1
 end
 
 @testset "LinearCoef generation" begin
