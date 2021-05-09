@@ -162,10 +162,9 @@ end
     sample = BayesianSR.Sample(k, fullgrammar, hyper)
     test_sample(sample)
     @test maximum(sample.β) == 0
-    # TODO: Choose a seed that works once growtree works with lt()
-    # BayesianSR.optimβ!(sample, x, y, fullgrammar)
-    # @test length(sample.β) == k + 1
-    # @test in(0, sample.β) == false
+    BayesianSR.optimβ!(sample, x, y, fullgrammar)
+    @test length(sample.β) == k + 1
+    @test in(0, sample.β) == false
 end 
 
 function test_chain(chain::Chain)
