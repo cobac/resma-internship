@@ -139,16 +139,16 @@ If the new operator is binary we grow the second children from the tree prior.
 
 See also: `growtree`
 """
-function insert_node!(node::RuleNode, grammar::Grammar)
+function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
     loc = sample(NodeLoc, node)
     old = get(node, loc)
-    new = RuleNode(sample(operator_is))
+    new = new_operator(grammar, hyper)
     type = node_types[new.ind]
     d = node_depth(node, old)
     if type == 2
-        new_branch = growtree(grammar, d)
+        new_branch = growtree(grammar, hyper, d)
         new.children = [old, new_branch]
     else # type == 1
         push!(new.children, old)
