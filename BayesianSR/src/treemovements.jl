@@ -39,11 +39,10 @@ Tree movement prune.
 Selects a random operator node and replaces it with a terminal node.
 """
 function prune!(node::RuleNode, grammar::Grammar)
-    terminal_is = terminal_indices(grammar)
     loc = sampleoperator(node, grammar)
     old_node = get(node, loc)
     d = node_depth(node, old_node)
-    insert!(node, loc, RuleNode(sample(terminal_is)))
+    node = insert!(node, loc, new_terminal(grammar))
     return ChangedTree(node, old_node, d)
 end 
 
