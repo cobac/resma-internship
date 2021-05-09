@@ -17,13 +17,13 @@ Hyperparameters of a `Chain`.
 end 
 
 """
-    RuleNode(grammar::Grammar)
+    RuleNode(grammar::Grammar, hyper::Hyperparams)
 
 Samples a random `RuleNode` from the tree prior distribution with a `Grammar`.
 
 See also: `growtree`
 """
-ExprRules.RuleNode(grammar::Grammar) = growtree(grammar)
+ExprRules.RuleNode(grammar::Grammar, hyper::Hyperparams) = growtree(grammar, hyper)
 
 """
     LinearCoef(a::Float64, b::Float64)
