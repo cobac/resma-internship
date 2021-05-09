@@ -4,19 +4,38 @@
   - https://github.com/sisl/ExprRules.jl/issues/32
   - No need to modify their code.
 - Store =LinearCoef= on each linear operator node.
+  - Clutters the grammar with 1 extra rule
+    - We don't want to treat that rule as a real node
+    - Need to make util functions more complex
+    - Tons of weird quirks for evaluation
+      - Function gets evaluated in Main
+        - Need to prefix with BayesianSR
+      - =lt()= collides with some function in =Base::Ordering.jl=
+      - But to create the look-up table needs to look at Module BayesianSR
+    - Tree movements have more weird cases
+    - ...Probably worth the trade-off
+    - To recover them we need to iterate throughout the tree
 - =EqTree= becomes just a =RuleNode=.
 - Modify tree prior to work with =lt()= nodes.
   - =tree_p()= and =growtree()=.
-- Modifying / adding new tree util functions to work with =lt()= notes.
 - Way of iterating through all linear operator nodes.
   - To update =a= and =b= on each proposal.
   - To get =a=s and =b=s into a vector to calculate probabilities.
-** Ratio calculation
+** Bug on reassign-operator movement
 * TO-DO
+** Ratio calculation
 ** User facing functions
 - Interface function
 - Input validation
   - Datasets
   - Hyperparams (non-negative prior variances, etc)
-  - Operators (no collisions with linear type etc)
+  - Operators
+    - (no collisions with linear type etc)
+    - Only unary or binary, at least for now
 - Output summary, statistics
+** Simplify thing
+** ExprRules bug-reports
+- The ones with comparing similar nodes
+** ExprRules Documentation
+- Lot's of things that are only on the source code
+- Waste of time
