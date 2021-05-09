@@ -203,15 +203,14 @@ end
             @test node.ind in BayesianSR.terminal_indices(fullgrammar)
         end 
     end 
-    # TODO: Activate once growtree works with lt()
-    #  @testset "sampleoperator()" begin
-    #      for i in 1:20
-    #          node = RuleNode(fullgrammar)
-    #          loc = BayesianSR.sampleoperator(node, fullgrammar)
-    #          node = get(node, loc)
-    #          @test node.ind in BayesianSR.operator_indices(fullgrammar)
-    #      end 
-    #  end 
+    @testset "sampleoperator()" begin
+        for i in 1:20
+            node = RuleNode(fullgrammar, hyper)
+            loc = BayesianSR.sampleoperator(node, fullgrammar)
+            node = get(node, loc)
+            @test node.ind in BayesianSR.operator_indices(fullgrammar)
+        end 
+      end 
     @testset "iscandidate()" begin
         node1 = RuleNode(3, [RuleNode(9), RuleNode(9)])
         @test BayesianSR.iscandidate(node1, node1, fullgrammar) == false
