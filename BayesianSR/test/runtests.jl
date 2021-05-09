@@ -140,6 +140,7 @@ function test_tree(tree::RuleNode)
         end 
     end 
     @testset "Linear operators and coefficients" begin
+        tree = deepcopy(tree)
         queue = [tree]
         while !isempty(queue)
             current = queue[1]
