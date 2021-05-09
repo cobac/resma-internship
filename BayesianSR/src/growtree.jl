@@ -38,7 +38,7 @@ If the node is a linear operator, the first child are the linear coefficients.
 function new_operator(grammar::Grammar, hyper::Hyperparams)
     node = RuleNode(sample(operator_indices(grammar)))
     # Linear operator
-    if  node.ind == 2
+    if node.ind == 2
         θ = RuleNode(1, LinearCoef(hyper))
         push!(node.children, θ)
     end 
