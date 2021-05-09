@@ -67,8 +67,9 @@ end
 - `k` is the number of `RuleNode` that are added in each equation.
 - `prior` is the prior distribution of σ².
 """
-function Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
-    Sample([RuleNode(grammar) for i in 1:k], zeros(k + 1), rand(prior))
+function Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
+    @unpack σ²_prior = hyper
+    Sample([RuleNode(grammar, hyper) for i in 1:k], zeros(k + 1), rand(σ²_prior))
 end 
 
 """
@@ -104,7 +105,7 @@ function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     @unpack k, σ²_prior = hyper
     grammar = append!(deepcopy(lineargrammar),
                       append!(deepcopy(operators), variablestogrammar(x)))
-    sample = Sample(k, grammar, σ²_prior)
+    sample = Sample(k, grammar, hyper)
     try 
         optimβ!(sample, x, y, grammar)
     catch e 
