@@ -129,11 +129,13 @@ end
 function test_tree(tree::RuleNode)
     @testset "Node sampling" begin
         terminal = BayesianSR.sampleterminal(tree, fullgrammar)
-        operator = BayesianSR.sampleoperator(tree, fullgrammar)
         terminal = get(tree, terminal).ind
-        operator = get(tree, operator).ind
         @test nchildren(fullgrammar, terminal) == 0
-        @test in(nchildren(fullgrammar, operator), [1,2])
+        if length(BayesianSR.flatten(tree)) > 1
+            operator = BayesianSR.sampleoperator(tree, fullgrammar)
+            operator = get(tree, operator).ind
+            @test in(nchildren(fullgrammar, operator), [1,2])
+        end 
     end 
     # TODO: test for order of linear operators and LinearCoef
 end 
