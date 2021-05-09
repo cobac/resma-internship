@@ -194,7 +194,7 @@ we sample its second children from the tree prior.
 If the old node was binary and the new node is unary,
 we drop its second children.
 """
-function re_operator!(node::RuleNode, grammar::Grammar)
+function re_operator!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
     loc = sampleoperator(node, grammar)
@@ -206,23 +206,55 @@ function re_operator!(node::RuleNode, grammar::Grammar)
     operator_rm = findfirst(isequal(target.ind), operator_is)
     deleteat!(operator_is, operator_rm)
     # Sample new operator
-    new_ind = sample(operator_is)
-    new_type = node_types[new_ind]
-    new = RuleNode(new_ind)
-    target.ind = new_ind
-    if new_type == 2 && old_type == 1
-        transition = :bin2un
-        changed_node = growtree(grammar, d)
-        push!(target.children, changed_node)
-    elseif new_type == 1 && old_type == 2
-        transition = :un2bin
-        changed_node = target.children[2]
-        deleteat!(target.children, 2)
-    else # new_type == old_type
-        transition = :same
-        changed_node = nothing
+    new = new_operator(grammar, hyper)
+    new_ind = new.ind
+    while !in(new_ind, operator_is)
+        new = new_operator(grammar, hyper)
+        new_ind = new.ind
     end 
-    node = insert!(node, loc, target)
+    new_type = node_types[new_ind]
+    # Reassign the operator
+    target.ind = new_ind
+    # Cases with linear operators
+    if old_ind == 2 
+        if new_type == 2 # Linear operator -> Binary
+            transition = :un2bin
+            changed_node = growtree(grammar, hyper, d)
+            popfirst!(target.children) # Remove LinearCoef
+            push!(target.children, changed_node)
+        else # Linear operator -> Unary
+            transition = :same
+            changed_node = nothing
+            popfirst!(target.children) # Remove LinearCoef
+        end 
+        node = insert!(node, loc, target)
+    elseif new_ind == 2 
+        if old_type == 2 # Binary -> Linear operator
+            transition = :bin2un
+            changed_node = target.children[2]
+            deleteat!(target.children, 2)
+            pushfirst!(target.children, RuleNode(1, LinearCoef(hyper)))
+        else # Unary -> Linear operator
+            transition = :same
+            changed_node = nothing
+            pushfirst!(target.children, RuleNode(1, LinearCoef(hyper))) # Add LinearCoef
+        end 
+        node = insert!(node, loc, target)
+    else # No linear operator involved
+        if new_type == 2 && old_type == 1
+            transition = :un2bin
+            changed_node = growtree(grammar, hyper, d)
+            push!(target.children, changed_node)
+        elseif new_type == 1 && old_type == 2
+            transition = :bin2un
+            changed_node = target.children[2]
+            deleteat!(target.children, 2)
+        else # new_type == old_type
+            transition = :same
+            changed_node = nothing
+        end 
+        node = insert!(node, loc, target)
+    end 
     return ReassignedTree(node, changed_node, d, transition)
 end 
 
