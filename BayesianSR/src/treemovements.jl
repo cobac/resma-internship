@@ -141,9 +141,12 @@ See also: `growtree`
 """
 function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
-    operator_is = operator_indices(grammar)
     loc = sample(NodeLoc, node)
     old = get(node, loc)
+    while old.ind == 1
+        loc = sample(NodeLoc, node)
+        old = get(node, loc)
+    end 
     new = new_operator(grammar, hyper)
     type = node_types[new.ind]
     d = node_depth(node, old)
