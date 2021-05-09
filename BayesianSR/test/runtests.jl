@@ -139,7 +139,22 @@ function test_tree(tree::RuleNode)
             @test in(nchildren(fullgrammar, operator), [1,2])
         end 
     end 
-    # TODO: test for order of linear operators and LinearCoef
+    @testset "Linear operators and coefficients" begin
+        queue = [tree]
+        while !isempty(queue)
+            current = queue[1]
+            # No loose coefficients
+            @test current.ind != 1
+            # All linear operator has coefficients
+            if current.ind == 2
+                @test current.children[1].ind == 1                
+                @test typeof(current.children[1]._val) <: BayesianSR.LinearCoef
+                popfirst!(current.children)
+            end 
+            append!(queue, current.children)
+            deleteat!(queue, 1)
+        end
+    end 
 end 
 
 @testset "Random node initialization" begin
