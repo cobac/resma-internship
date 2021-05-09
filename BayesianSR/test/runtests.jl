@@ -1,5 +1,7 @@
 using BayesianSR, Test
 
+N_TEST = 20
+
 using ExprRules, Random, LinearAlgebra, Distributions, Parameters
 # using ExprTools
 # using AbstractTrees
@@ -156,8 +158,7 @@ function test_sample(sample::BayesianSR.Sample)
 end 
 
 @testset "Random sample initialization" begin
-    Random.seed!(3)
-    k = 3
+    Random.seed!(1)
     sample = BayesianSR.Sample(k, fullgrammar, hyper)
     test_sample(sample)
     @test maximum(sample.β) == 0
@@ -198,7 +199,7 @@ end
         @test all(in.(2:5, flat))
     end 
     @testset "sampleterminal()" begin
-        for i in 1:20
+        for i in 1:N_TEST
             node = RuleNode(fullgrammar, hyper)
             loc = BayesianSR.sampleterminal(node, fullgrammar)
             node = get(node, loc)
@@ -206,7 +207,7 @@ end
         end 
     end 
     @testset "sampleoperator()" begin
-        for i in 1:20
+        for i in 1:N_TEST
             node = RuleNode(fullgrammar, hyper)
             loc = BayesianSR.sampleoperator(node, fullgrammar)
             node = get(node, loc)
@@ -243,23 +244,26 @@ end
 @testset "Tree movements" begin
     #TODO: Test edge cases with linear coef
     @testset "grow!()" begin
-        node = RuleNode(fullgrammar, hyper)
-        old_length = length(BayesianSR.flatten(node))
-        proposal = BayesianSR.grow!(node, fullgrammar, hyper)
-        new_length = length(BayesianSR.flatten(proposal.tree))
-        @test new_length >= old_length
-        test_tree(proposal.tree)
-        @test proposal.changed_node.ind in BayesianSR.terminal_indices(fullgrammar)
+        for _ in 1:N_TEST
+            node = RuleNode(fullgrammar, hyper)
+            old_length = length(BayesianSR.flatten(node))
+            proposal = BayesianSR.grow!(node, fullgrammar, hyper)
+            new_length = length(BayesianSR.flatten(proposal.tree))
+            @test new_length >= old_length
+            test_tree(proposal.tree)
+        end 
     end 
 
     @testset "prune!()" begin
-        node = RuleNode(fullgrammar, hyper)
-        old_length = length(BayesianSR.flatten(node))
-        proposal = BayesianSR.prune!(node, fullgrammar)
-        new_length = length(BayesianSR.flatten(proposal.tree))
-        @test new_length < old_length
-        test_tree(proposal.tree)
-        @test proposal.changed_node.ind in BayesianSR.operator_indices(fullgrammar)
+        for _ in 1:N_TEST
+            node = RuleNode(fullgrammar, hyper)
+            old_length = length(BayesianSR.flatten(node))
+            proposal = BayesianSR.prune!(node, fullgrammar)
+            new_length = length(BayesianSR.flatten(proposal.tree))
+            @test new_length < old_length
+            test_tree(proposal.tree)
+            @test proposal.changed_node.ind in BayesianSR.operator_indices(fullgrammar)
+        end 
     end 
 
     @testset "delete!()" begin
@@ -293,34 +297,40 @@ end
     end 
 
     @testset "insert_node!()" begin
-        node = BayesianSR.RuleNode(fullgrammar, hyper)
-        old_length = length(BayesianSR.flatten(node))
-        proposal = BayesianSR.insert_node!(node, fullgrammar, hyper)
-        new_length = length(BayesianSR.flatten(proposal.tree))
-        @test new_length > old_length
-        test_tree(proposal.tree)
+        for _ in 1:N_TEST
+            node = BayesianSR.RuleNode(fullgrammar, hyper)
+            old_length = length(BayesianSR.flatten(node))
+            proposal = BayesianSR.insert_node!(node, fullgrammar, hyper)
+            new_length = length(BayesianSR.flatten(proposal.tree))
+            @test new_length > old_length
+            test_tree(proposal.tree)
+        end 
     end 
 
     @testset "re_operator!()" begin
-        node = BayesianSR.RuleNode(fullgrammar, hyper)
-        old_node = deepcopy(node)
-        old_length = length(BayesianSR.flatten(node))
-        proposal = BayesianSR.re_operator!(node, fullgrammar, hyper)
-        node = proposal.tree
-        new_length = length(BayesianSR.flatten(node))
-        @test node != old_node
-        test_tree(node)
+        for _ in 1:N_TEST
+            node = BayesianSR.RuleNode(fullgrammar, hyper)
+            old_node = deepcopy(node)
+            old_length = length(BayesianSR.flatten(node))
+            proposal = BayesianSR.re_operator!(node, fullgrammar, hyper)
+            node = proposal.tree
+            new_length = length(BayesianSR.flatten(node))
+            @test node != old_node
+            test_tree(node)
+        end 
     end 
 
     @testset "re_feature!()" begin
-        node = BayesianSR.RuleNode(fullgrammar, hyper)
-        old_node = deepcopy(node)
-        old_length = length(BayesianSR.flatten(node))
-        node = BayesianSR.re_feature!(node, fullgrammar)
-        new_length = length(BayesianSR.flatten(node))
-        @test new_length == old_length
-        @test node != old_node
-        test_tree(node)
+        for _ in 1:N_TEST
+            node = BayesianSR.RuleNode(fullgrammar, hyper)
+            old_node = deepcopy(node)
+            old_length = length(BayesianSR.flatten(node))
+            node = BayesianSR.re_feature!(node, fullgrammar)
+            new_length = length(BayesianSR.flatten(node))
+            @test new_length == old_length
+            @test node != old_node
+            test_tree(node)
+        end 
     end 
 end 
 
