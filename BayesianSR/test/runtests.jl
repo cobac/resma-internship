@@ -135,10 +135,11 @@ function test_tree(tree::RuleNode)
         @test nchildren(fullgrammar, terminal) == 0
         @test in(nchildren(fullgrammar, operator), [1,2])
     end 
+    # TODO: test for order of linear operators and LinearCoef
 end 
 
 @testset "Random node initialization" begin
-    tree = RuleNode(fullgrammar)
+    tree = RuleNode(fullgrammar, hyper)
     test_tree(tree)
 end 
 
