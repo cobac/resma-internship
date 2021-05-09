@@ -272,7 +272,10 @@ function re_feature!(node::RuleNode, grammar::Grammar)
     terminal_rm = findfirst(isequal(target.ind), terminal_is)
     deleteat!(terminal_is, terminal_rm)
     # Sample new terminal
-    target.ind = sample(terminal_is)
-    insert!(node, loc, target)
+    new = new_terminal(grammar)
+    while !in(new.ind, terminal_is)
+        new = new_terminal(grammar)
+    end 
+    node = insert!(node, loc, new)
     return node
 end 
