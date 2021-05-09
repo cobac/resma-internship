@@ -81,7 +81,11 @@ function delete!(node::RuleNode, grammar::Grammar)
     target = get(node, loc)
     d = node_depth(node, target)
     n_children = length(target.children)
-    if n_children == 1
+    if target.ind == 2
+        p_child = 1
+        dropped_node = nothing
+        node = insert!(node, loc, target.children[2])
+    elseif n_children == 1
         p_child = 1
         dropped_node = nothing
         if loc.i == 0 
@@ -89,6 +93,7 @@ function delete!(node::RuleNode, grammar::Grammar)
         else 
             insert!(node, loc, target.children[1])
         end 
+       # Target is not a linear operator
     elseif target != node # no unary and no root = binary no root
         p_child = 0.5
         i = sample(1:2)
