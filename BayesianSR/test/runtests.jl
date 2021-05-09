@@ -239,6 +239,7 @@ end
 end 
 
 @testset "Tree movements" begin
+    #TODO: Test edge cases with linear coef
     @testset "grow!()" begin
         node = RuleNode(fullgrammar)
         old_length = length(BayesianSR.flatten(node))
