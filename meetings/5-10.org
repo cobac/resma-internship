@@ -21,9 +21,26 @@
 - Way of iterating through all linear operator nodes.
   - To update =a= and =b= on each proposal.
   - To get =a=s and =b=s into a vector to calculate probabilities.
-** Bug on reassign-operator movement
+** Feedbak
+- (thanks)
+- https://github.com/cobac/resma-internship/pull/2#issuecomment-834322652
+- https://github.com/cobac/resma-internship/pull/2#discussion_r628079987
+- https://github.com/cobac/resma-internship/pull/2#discussion_r628190626
+  - That would reduce a lot of the complexity and weirdness
 * TO-DO
+** =lt()=
+- [ ] Fix probability calculations
+- [ ] Fix tree_p
+- [ ] Way of iterating through all linear operator nodes.
+  - [ ] To update =a= and =b= on each proposal.
+  - [ ] To get =a= and =b= into a vector to calculate probabilities.
+    - Before and after modifying the tree
+** Address feedback
 ** Ratio calculation
+** Simplify thing
+- Translate linear_operator() to a+bx
+- Translate AST to RuleNode tree
+** Centered proposals
 ** User facing functions
 - Interface function
 - Input validation
@@ -33,7 +50,6 @@
     - (no collisions with linear type etc)
     - Only unary or binary, at least for now
 - Output summary, statistics
-** Simplify thing
 ** ExprRules bug-reports
 - The ones with comparing similar nodes
 ** ExprRules Documentation
