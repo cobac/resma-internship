@@ -1,5 +1,5 @@
 """
-    TreeProposal(eqtree::EqTree, movement::Symbol, p_mov::Float64, p_mov_inv::Float64)
+    TreeProposal(eqtree::RuleNode, movement::Symbol, p_mov::Float64, p_mov_inv::Float64)
 
 A proposal generated in one MCMC iteration.
 
@@ -9,19 +9,19 @@ A proposal generated in one MCMC iteration.
 - `p_mov_inv`: the probability of jumping from the proposal to the old tree.
 """
 struct TreeProposal
-    eqtree::EqTree
+    tree::RuleNode
     movement::Symbol
     p_mov::Float64
     p_mov_inv::Float64
 end 
 
 """
-    proposetree(tree::EqTree, grammar::Grammar)
+    proposetree(tree::RuleNode, grammar::Grammar)
 
 Generates a `TreeProposal`.
 """
-function proposetree(tree::EqTree, grammar::Grammar)
-    tree = deepcopy(tree.S)
+function proposetree(tree::RuleNode, grammar::Grammar)
+    tree = deepcopy(tree)
     nₒ = n_operators(tree, grammar)
     nₜ = n_terminals(tree, grammar)
     n_cand = n_candidates(tree, grammar)
@@ -135,7 +135,7 @@ function proposetree(tree::EqTree, grammar::Grammar)
             log(1/nₜ) + # P of selecting this terminal node
             log(1/(length(terminal_is) - 1)) # P of choosing this new feature
     end 
-    return TreeProposal(EqTree(tree), mov, p, p_inv)
+    return TreeProposal(tree, mov, p, p_inv)
 end 
 
 """

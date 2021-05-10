@@ -23,12 +23,12 @@ Selects a random terminal node and replaces it with a new branch from the tree p
 
 See also: `growtree`
 """
-function grow!(node::RuleNode, grammar::Grammar)
+function grow!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     loc = sampleterminal(node, grammar)
     old_node = get(node, loc)
     d = node_depth(node, old_node)
-    new_node = growtree(grammar, d)
-    insert!(node, loc, new_node)
+    new_node = growtree(grammar, hyper, d)
+    node = insert!(node, loc, new_node)
     return ChangedTree(node, new_node, d)
 end 
 
@@ -39,11 +39,10 @@ Tree movement prune.
 Selects a random operator node and replaces it with a terminal node.
 """
 function prune!(node::RuleNode, grammar::Grammar)
-    terminal_is = terminal_indices(grammar)
     loc = sampleoperator(node, grammar)
     old_node = get(node, loc)
     d = node_depth(node, old_node)
-    insert!(node, loc, RuleNode(sample(terminal_is)))
+    node = insert!(node, loc, new_terminal(grammar))
     return ChangedTree(node, old_node, d)
 end 
 
@@ -82,7 +81,11 @@ function delete!(node::RuleNode, grammar::Grammar)
     target = get(node, loc)
     d = node_depth(node, target)
     n_children = length(target.children)
-    if n_children == 1
+    if target.ind == 2
+        p_child = 1
+        dropped_node = nothing
+        node = insert!(node, loc, target.children[2])
+    elseif n_children == 1
         p_child = 1
         dropped_node = nothing
         if loc.i == 0 
@@ -90,6 +93,7 @@ function delete!(node::RuleNode, grammar::Grammar)
         else 
             insert!(node, loc, target.children[1])
         end 
+       # Target is not a linear operator
     elseif target != node # no unary and no root = binary no root
         p_child = 0.5
         i = sample(1:2)
@@ -135,16 +139,19 @@ If the new operator is binary we grow the second children from the tree prior.
 
 See also: `growtree`
 """
-function insert_node!(node::RuleNode, grammar::Grammar)
+function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
-    operator_is = operator_indices(grammar)
     loc = sample(NodeLoc, node)
     old = get(node, loc)
-    new = RuleNode(sample(operator_is))
+    while old.ind == 1
+        loc = sample(NodeLoc, node)
+        old = get(node, loc)
+    end 
+    new = new_operator(grammar, hyper)
     type = node_types[new.ind]
     d = node_depth(node, old)
     if type == 2
-        new_branch = growtree(grammar, d)
+        new_branch = growtree(grammar, hyper, d)
         new.children = [old, new_branch]
     else # type == 1
         push!(new.children, old)
@@ -190,7 +197,7 @@ we sample its second children from the tree prior.
 If the old node was binary and the new node is unary,
 we drop its second children.
 """
-function re_operator!(node::RuleNode, grammar::Grammar)
+function re_operator!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
     loc = sampleoperator(node, grammar)
@@ -202,23 +209,55 @@ function re_operator!(node::RuleNode, grammar::Grammar)
     operator_rm = findfirst(isequal(target.ind), operator_is)
     deleteat!(operator_is, operator_rm)
     # Sample new operator
-    new_ind = sample(operator_is)
-    new_type = node_types[new_ind]
-    new = RuleNode(new_ind)
-    target.ind = new_ind
-    if new_type == 2 && old_type == 1
-        transition = :bin2un
-        changed_node = growtree(grammar, d)
-        push!(target.children, changed_node)
-    elseif new_type == 1 && old_type == 2
-        transition = :un2bin
-        changed_node = target.children[2]
-        deleteat!(target.children, 2)
-    else # new_type == old_type
-        transition = :same
-        changed_node = nothing
+    new = new_operator(grammar, hyper)
+    new_ind = new.ind
+    while !in(new_ind, operator_is)
+        new = new_operator(grammar, hyper)
+        new_ind = new.ind
     end 
-    node = insert!(node, loc, target)
+    new_type = node_types[new_ind]
+    # Reassign the operator
+    target.ind = new_ind
+    # Cases with linear operators
+    if old_ind == 2 
+        if new_type == 2 # Linear operator -> Binary
+            transition = :un2bin
+            changed_node = growtree(grammar, hyper, d)
+            popfirst!(target.children) # Remove LinearCoef
+            push!(target.children, changed_node)
+        else # Linear operator -> Unary
+            transition = :same
+            changed_node = nothing
+            popfirst!(target.children) # Remove LinearCoef
+        end 
+        node = insert!(node, loc, target)
+    elseif new_ind == 2 
+        if old_type == 2 # Binary -> Linear operator
+            transition = :bin2un
+            changed_node = target.children[2]
+            deleteat!(target.children, 2)
+            pushfirst!(target.children, RuleNode(1, LinearCoef(hyper)))
+        else # Unary -> Linear operator
+            transition = :same
+            changed_node = nothing
+            pushfirst!(target.children, RuleNode(1, LinearCoef(hyper))) # Add LinearCoef
+        end 
+        node = insert!(node, loc, target)
+    else # No linear operator involved
+        if new_type == 2 && old_type == 1
+            transition = :un2bin
+            changed_node = growtree(grammar, hyper, d)
+            push!(target.children, changed_node)
+        elseif new_type == 1 && old_type == 2
+            transition = :bin2un
+            changed_node = target.children[2]
+            deleteat!(target.children, 2)
+        else # new_type == old_type
+            transition = :same
+            changed_node = nothing
+        end 
+        node = insert!(node, loc, target)
+    end 
     return ReassignedTree(node, changed_node, d, transition)
 end 
 
@@ -236,7 +275,10 @@ function re_feature!(node::RuleNode, grammar::Grammar)
     terminal_rm = findfirst(isequal(target.ind), terminal_is)
     deleteat!(terminal_is, terminal_rm)
     # Sample new terminal
-    target.ind = sample(terminal_is)
-    insert!(node, loc, target)
+    new = new_terminal(grammar)
+    while !in(new.ind, terminal_is)
+        new = new_terminal(grammar)
+    end 
+    node = insert!(node, loc, new)
     return node
 end 

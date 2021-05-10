@@ -11,6 +11,26 @@ const defaultgrammar = @grammar begin
 end
 
 """
+`Grammar` with the components of the linear operator `lt()`.
+"""
+const lineargrammar = @grammar begin
+    # Expressions get evaluated at global scope, need to export or include module
+    Theta = _(BayesianSR.LinearCoef(0, 0)) # Always ind = 1
+    Real = linear_operator(Theta, Real) # Always ind = 2
+end 
+
+"""
+    lt(θ::Theta, x)
+
+Linear operator.
+
+See also: `LinearCoef`
+"""
+function linear_operator(θ::LinearCoef, x::Real)
+    θ.a + θ.b * x
+end
+
+"""
     variablestogrammar(x)
 
 Creates a `Grammar` with all the features in `x`.
@@ -29,16 +49,34 @@ function variablestogrammar(x)
 end 
 
 """
-    nodetypes(grammar::Grammar)
+    raw_nodetypes(grammar::Grammar)
 
 Returns a vector with the types of possible nodes from a `Grammar`.
 - 1: unary operator
 - 2: binary operator
 - 0: terminal node
 """
-function nodetypes(grammar::Grammar)
+function raw_nodetypes(grammar::Grammar)
     types = [nchildren(grammar, i)
              for i in 1:length(grammar)]
+    return types
+end 
+
+"""
+    nodetypes(grammar::Grammar)
+
+Returns a vector with the types of possible nodes from a BayesianSR `Grammar`.
+- 1: unary operator
+- 2: binary operator
+- 0: terminal node
+- -1: coefficients of the linear operator
+"""
+function nodetypes(grammar::Grammar)
+    types = raw_nodetypes(grammar)
+    # Theta is not considered a node
+    types[1] = -1
+    # Linear operator is unary
+    types[2] = 1
     return types
 end 
 
@@ -78,4 +116,3 @@ function Base.append!(grammar1::Grammar, grammar2::Grammar)
     end
     grammar1
 end
-

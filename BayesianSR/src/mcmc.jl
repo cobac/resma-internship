@@ -22,7 +22,7 @@ function step!(chain::Chain; verbose::Bool = false)
     # TODO: When lt() implemented 
 
     # Update new sample
-    proposal.trees[j] = proposal_tree.eqtree
+    proposal.trees[j] = proposal_tree.tree
     try 
         optimβ!(proposal, chain.x, chain.y, chain.grammar)
     catch e 
@@ -39,7 +39,7 @@ function step!(chain::Chain; verbose::Bool = false)
     numerator = L_proposal + # Likelihood
         logpdf(σ²_prior, proposal.σ²) + # σ² prior
         # Trees prior
-        sum([tree_p(eqtree.S, chain.grammar) for eqtree in proposal.trees]) +
+        sum([tree_p(tree, chain.grammar) for tree in proposal.trees]) +
         # Probability of tree jump
         proposal_tree.p_mov
 
@@ -50,7 +50,7 @@ function step!(chain::Chain; verbose::Bool = false)
     denominator = L_old_sample + # Likelihood
         logpdf(σ²_prior, old_sample.σ²) + # σ² prior 
         # Trees prior
-        sum([tree_p(eqtree.S, chain.grammar) for eqtree in old_sample.trees]) +
+        sum([tree_p(tree, chain.grammar) for tree in old_sample.trees]) +
         # Probability of tree jump
         proposal_tree.p_mov_inv
     
@@ -67,5 +67,3 @@ function step!(chain::Chain; verbose::Bool = false)
 
     return R
 end 
-
-
