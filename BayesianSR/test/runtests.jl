@@ -352,6 +352,34 @@ end
     end 
 end 
 
+@testset "Tree prior" begin
+    node = RuleNode(7, [RuleNode(8, [RuleNode(2, [RuleNode(1), RuleNode(12)])])])
+    manual_flatten = [BayesianSR.IndAndCount(7, 1),
+                      BayesianSR.IndAndCount(8, 2),
+                      BayesianSR.IndAndCount(2, 3),
+                      BayesianSR.IndAndCount(12, 4)]
+    @test BayesianSR.flatten_with_depth(node, 1) == manual_flatten
+    manual_flatten2 = [BayesianSR.IndAndCount(7, 2),
+                       BayesianSR.IndAndCount(8, 3),
+                       BayesianSR.IndAndCount(2, 4),
+                       BayesianSR.IndAndCount(12, 5)]
+    @test BayesianSR.flatten_with_depth(node, 2) == manual_flatten2
+    manual_p = log(2/(1 + 1)) +
+        log(2/(1 + 2)) +
+        log(2/(1 + 3)) + 
+        log(1/7)*3 + 
+        log(1 - 2/(1 + 4)) + 
+        log(1/3)
+    @test BayesianSR.tree_p(node, fullgrammar) ≈ manual_p
+    manual_p2 = log(2/(1 + 2)) +
+        log(2/(1 + 3)) +
+        log(2/(1 + 4)) + 
+        log(1/7)*3 + 
+        log(1 - 2/(1 + 5)) + 
+        log(1/3)
+    @test BayesianSR.tree_p(node, 2, fullgrammar) ≈ manual_p2
+end 
+
 # TODO: Re-activate once tree_p and mcmc works
 # @testset "MCMC" begin
 #     chain = Chain(x, y)

@@ -12,8 +12,13 @@ function flatten_with_depth(node::RuleNode, d::Int64)
     out = IndAndCount[]
     queue = [RuleNodeAndCount(node, d)]
     while !isempty(queue)
-        push!(out, IndAndCount(queue[1].node.ind, queue[1].cnt))
-        append!(queue, RuleNodeAndCount.(queue[1].node.children, queue[1].cnt + 1))
+        current = queue[1].node
+        push!(out, IndAndCount(current.ind, queue[1].cnt))
+        if current.ind == 2 # If current is linear operator, ignore LinearCoef
+            push!(queue, RuleNodeAndCount(current.children[2], queue[1].cnt + 1))
+        else
+            append!(queue, RuleNodeAndCount.(current.children, queue[1].cnt + 1))
+        end 
         deleteat!(queue, 1)
     end
     return out
@@ -40,11 +45,11 @@ function tree_p(node::RuleNode, d::Int64, grammar::Grammar)
         # Hyper: α, β = 2, 1
         # Prior: Uniform for operators and features
         if node.ind in operator_is
-            p += log(2/(1 + node.cnt)) # P of inserting an operator
-            + log(1/length(operator_is)) # P of selecting this operator
+            p += log(2/(1 + node.cnt)) + # P of inserting an operator
+                log(1/length(operator_is)) # P of selecting this operator
         else 
-            p += log(1 - (2/(1 + node.cnt))) # P of inserting a terminal
-            + log(1/length(terminal_is)) # P of selecting this terminal
+            p += log(1 - (2/(1 + node.cnt))) + # P of inserting a terminal
+                log(1/length(terminal_is)) # P of selecting this terminal
         end 
     end 
     return p
