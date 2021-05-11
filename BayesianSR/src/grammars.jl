@@ -15,19 +15,19 @@ end
 """
 const lineargrammar = @grammar begin
     # Expressions get evaluated at global scope, need to export or include module
-    Theta = _(BayesianSR.LinearCoef(0, 0)) # Always ind = 1
-    Real = linear_operator(Theta, Real) # Always ind = 2
+    LinearCoef = _(BayesianSR.LinearCoef(0, 0)) # Always ind = 1
+    Real = linear_operator(LinearCoef, Real) # Always ind = 2
 end 
 
 """
-    lt(θ::Theta, x)
+    lt(lc::LinearCoef, x)
 
 Linear operator.
 
 See also: `LinearCoef`
 """
-function linear_operator(θ::LinearCoef, x::Real)
-    θ.a + θ.b * x
+function linear_operator(lc::LinearCoef, x::Real)
+    lc.a + lc.b * x
 end
 
 """
@@ -73,7 +73,7 @@ Returns a vector with the types of possible nodes from a BayesianSR `Grammar`.
 """
 function nodetypes(grammar::Grammar)
     types = raw_nodetypes(grammar)
-    # Theta is not considered a node
+    # LinearCoef is not considered a node
     types[1] = -1
     # Linear operator is unary
     types[2] = 1

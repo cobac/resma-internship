@@ -12,7 +12,7 @@ function flatten(node::RuleNode)
         append!(queue, queue[1].children)
         deleteat!(queue, 1)
     end
-    # Delete Theta nodes
+    # Delete LinearCoef nodes
     filter!(i -> i != 1, out)
     return out
 end
@@ -33,9 +33,9 @@ function sampleterminal(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
     out = sample(NodeLoc, node)
-    # if node is operator or Theta, resample
+    # if node is LinearCoef or operator, resample
     target = get(node, out)
-    while in(target.ind, push!(operator_is, 1))
+    while target.ind == 1|| in(target.ind, operator_is)
         out = sample(NodeLoc, node)
         target = get(node, out)
     end 
@@ -51,9 +51,9 @@ function sampleoperator(node::RuleNode, grammar::Grammar)
     node_types = nodetypes(grammar)
     terminal_is = terminal_indices(grammar)
     out = sample(NodeLoc, node)
-    # if node is terminal or Theta, resample
+    # if node is LinearCoef or terminal, resample
     target = get(node, out)
-    while in(target.ind, push!(terminal_is, 1))
+    while target.ind == 1 || in(target.ind, terminal_is)
         out = sample(NodeLoc, node)
         target = get(node, out)
     end 
@@ -95,7 +95,7 @@ function iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
     operator_is = operator_indices(grammar)
     inds = [child.ind for child in target.children]
     if target.ind == 1
-        # Theta
+        # LinearCoef
         return false
     elseif in(target.ind, terminal_is)
         # terminal node == false
