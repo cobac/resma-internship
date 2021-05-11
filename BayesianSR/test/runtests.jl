@@ -101,7 +101,7 @@ end
 end 
 
 @testset "Tree generation" begin
-    Random.seed!(10)
+    Random.seed!(6)
     tree = RuleNode(fullgrammar, hyper)
     table = BayesianSR.tableforeval(x, 3, fullgrammar)
     @test x[3, 1] == table[:x1]
@@ -112,7 +112,8 @@ end
     answ = Core.eval(table, eq)
     @test length(answ) == 1
     @test isreal(answ)
-    # @test answ ≈ 0.8910314500261972
+    manual_answ = cos(x[3, 2]) / (-6.159091338126841 + 1.5177556295313601*x[3,1])
+    @test answ ≈ manual_answ
     treex = BayesianSR.evaltree(tree, x, fullgrammar)
     @test length(treex) == size(x)[1]
 end
