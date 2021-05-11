@@ -23,14 +23,14 @@ Generates a `TreeProposal`.
 function proposetree(tree::RuleNode, grammar::Grammar)
     tree = deepcopy(tree)
     nₒ = n_operators(tree, grammar)
+    n_lo = n_linear_operators(tree)
     nₜ = n_terminals(tree, grammar)
     n_cand = n_candidates(tree, grammar)
     node_types = nodetypes(grammar)
     operator_is = findall(x -> x==1 || x==2, node_types)
     terminal_is = findall(x -> x==0, node_types)
-    # TODO: modify after implementing =lt()= operators
     # P_0 = P(tree stays the same)
-    p_0 = 0
+    p_0 = n_lo > 0 ? n_lo/(4*(n_lo + 3)) : 0
     # P_g = P(tree grows)
     p_g = (1 - p_0)/3 * min(1, 8/(nₒ+2))
     # P_p = P(pruning the tree)
@@ -49,7 +49,6 @@ function proposetree(tree::RuleNode, grammar::Grammar)
     # Hyper: α, β = 2, 1
     # Prior: Uniform for operators and features
     if mov == :stay
-        # Should never return until lt() are introduced
         p = p_inv = log(p_0)
     elseif mov == :grow
         changed_tree = grow!(tree, grammar)
