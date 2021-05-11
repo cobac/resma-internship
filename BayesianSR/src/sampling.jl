@@ -1,9 +1,9 @@
 """
-    TreeProposal(eqtree::RuleNode, movement::Symbol, p_mov::Float64, p_mov_inv::Float64)
+    TreeProposal(tree::RuleNode, movement::Symbol, p_mov::Float64, p_mov_inv::Float64)
 
 A proposal generated in one MCMC iteration.
 
-- `eqtree`: the new proposed tree.
+- `tree`: the new proposed tree.
 - `movement`: a symbol indicating the movement that was performed.
 - `p_mov`: the probability of jumping from the old tree to the proposal.
 - `p_mov_inv`: the probability of jumping from the proposal to the old tree.
