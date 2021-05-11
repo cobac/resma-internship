@@ -8,7 +8,7 @@ end
 Flattens a `RuleNode` as a vector of (indices, depth) starting at depth `d`.
 """
 function flatten_with_depth(node::RuleNode, d::Int64)
-    d <= 0 && error("Initial d must be greater than 0.")
+    d < 1 && error("Initial d must be greater than 1.")
     out = IndAndCount[]
     queue = [RuleNodeAndCount(node, d)]
     while !isempty(queue)
