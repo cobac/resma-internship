@@ -135,6 +135,16 @@ function n_operators(node::RuleNode, grammar::Grammar)
 end
 
 """
+    n_linear_operators(node::RuleNode)
+
+Number of linear operators in a `RuleNode`.
+"""
+function n_linear_operators(node::RuleNode)
+    nodes = flatten(node)
+    return count(i -> i==2, nodes)
+end 
+
+"""
     n_terminals(node::RuleNode, grammar::Grammar)
 
 Number of terminal nodes in a `RuleNode`.

@@ -123,10 +123,12 @@ end
     nodes = BayesianSR.flatten(tree)
     @test length(nodes) == BayesianSR.n_operators(tree, fullgrammar) +
         BayesianSR.n_terminals(tree, fullgrammar)
-    root = RuleNode(3)
-    @test BayesianSR.n_operators(root, fullgrammar) == 1
-    @test BayesianSR.n_terminals(root, fullgrammar) == 0
-    @test BayesianSR.n_candidates(root, fullgrammar) == 0
+    root = RuleNode(3, [RuleNode(2, [RuleNode(1), RuleNode(9)]),
+                        RuleNode(10)])
+    @test BayesianSR.n_operators(root, fullgrammar) == 2
+    @test BayesianSR.n_linear_operators(root) == 1
+    @test BayesianSR.n_terminals(root, fullgrammar) == 2
+    @test BayesianSR.n_candidates(root, fullgrammar) == 2
 end 
 
 function test_tree(tree::RuleNode)
