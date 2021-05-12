@@ -1,0 +1,12 @@
+* Things to discuss
+** Jin's code
+- https://github.com/ying531/MCMC-SymReg
+** Acceptance ratio calculation
+*** Standard MH
+- On Jin's paper they don't use the probability of the LinearCoef
+  - I understand not using the probability of jumping between coefficients because it is symmetric
+  - But why not use the probability of each coefficient?
+** How to select best tree?
+- Check change after n steps
+* TO-DO
+* Notes
