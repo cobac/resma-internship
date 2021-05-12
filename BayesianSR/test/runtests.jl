@@ -11,7 +11,7 @@ n = 30
 k = 3
 β = rand(Uniform(-2, 2), k + 1)
 x = rand(Uniform(-10, 10), (n, k))
-X = [ones(size(x)[1]) x]
+X = [ones(size(x, 1)) x]
 ε = rand(Normal(0, 2), n)
 y = X * β + ε
 
@@ -116,7 +116,7 @@ end
     manual_answ = cos(x[3, 2]) / (-6.159091338126841 + 1.5177556295313601*x[3,1])
     @test answ ≈ manual_answ
     treex = BayesianSR.evaltree(tree, x, fullgrammar)
-    @test length(treex) == size(x)[1]
+    @test length(treex) == size(x, 1)
 end
 
 @testset "Describe trees" begin
