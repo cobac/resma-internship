@@ -192,11 +192,11 @@ end
     @test in(0, sample.β) == false
 end 
 
-function test_chain(chain::Chain)
-    @test length(chain) == 1
+function test_chain(chain::Chain; initial = true)
+    initial && @test length(chain) == 1
     @test length(chain) == length(chain.samples)
-    @test chain.samples[1] == chain.samples[end]
-    test_sample(chain.samples[1])
+    initial && @test chain.samples[1] == chain.samples[end]
+    initial ? test_sample(chain.samples[1]) : test_sample(chain.samples[end])
 
     stat_keys = keys(chain.stats)
     @test length(stat_keys) == 1
