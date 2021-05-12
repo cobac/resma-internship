@@ -39,8 +39,8 @@ function variablestogrammar(x)
     k = size(x)[2]
     rules = [Symbol("x", i) for i in 1:k]
     types = [Symbol("Real") for i in 1:k]
-    isterminal = ones(Int64, k)
-    iseval = zeros(Int64, k)
+    isterminal = ones(Int, k)
+    iseval = zeros(Int, k)
     childtypes = [Symbol[] for i in 1:k]
     bytype = Dict(:Real => [i for i in 1:k])
     

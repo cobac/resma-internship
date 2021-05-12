@@ -1,13 +1,13 @@
 struct IndAndCount
-    ind::Int64
-    cnt::Int64
+    ind::Int
+    cnt::Int
 end 
 """
-    flatten_with_depth(node::RuleNode, d::Int64)
+    flatten_with_depth(node::RuleNode, d::Int)
 
 Flattens a `RuleNode` as a vector of (indices, depth) starting at depth `d`.
 """
-function flatten_with_depth(node::RuleNode, d::Int64)
+function flatten_with_depth(node::RuleNode, d::Int)
     d < 1 && error("Initial d must be greater than 1.")
     out = IndAndCount[]
     queue = [RuleNodeAndCount(node, d)]
@@ -32,11 +32,11 @@ Flattens a `RuleNode` as a vector of (indices, depth) starting at depth `d = 1`.
 flatten_with_depth(node::RuleNode) = flatten_with_depth(node, 1)
 
 """
-    tree_p(node::RuleNode, d::Int64, grammar::Grammar)
+    tree_p(node::RuleNode, d::Int, grammar::Grammar)
 
 Calculates the natural logarithm of the prior probability of a `RuleNode` starting at depth `d`.
 """
-function tree_p(node::RuleNode, d::Int64, grammar::Grammar)
+function tree_p(node::RuleNode, d::Int, grammar::Grammar)
     nodes = flatten_with_depth(node, d)
     operator_is = operator_indices(grammar)
     terminal_is = terminal_indices(grammar)
@@ -56,7 +56,7 @@ function tree_p(node::RuleNode, d::Int64, grammar::Grammar)
 end
 
 """
-    tree_p(node::RuleNode, d::Int64, grammar::Grammar)
+    tree_p(node::RuleNode, d::Int, grammar::Grammar)
 
 Calculates the natural logarithm of the prior probability of a `RuleNode` starting at depth `d = 1`.
 """

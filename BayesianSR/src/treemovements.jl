@@ -1,5 +1,5 @@
 """
-    ChangedTree(tree::RuleNode, changed_node::RuleNode, d::Int64)
+    ChangedTree(tree::RuleNode, changed_node::RuleNode, d::Int)
 
 Type with the information required to calculate the transition probabilities of growing or pruning a tree.
 
@@ -12,7 +12,7 @@ See also: `grow!`, `prune!`
 struct ChangedTree
     tree::RuleNode
     changed_node::RuleNode
-    d::Int64
+    d::Int
 end 
 
 """
@@ -49,7 +49,7 @@ end
 """
     DeletedTree(tree::RuleNode,
     changed_node::Union{Nothing, RuleNode},
-    d::Int64,
+    d::Int,
     p_child::Float64)
 
 Type with the information required to calculate the transition probabilities of deleting a node.
@@ -64,7 +64,7 @@ See also: `delete!`
 struct DeletedTree
     tree::RuleNode
     dropped_node::Union{Nothing, RuleNode}
-    d::Int64 
+    d::Int 
     p_child::Float64
 end 
 
@@ -114,7 +114,7 @@ end
 """
     InsertedTree(tree::RuleNode,
     new_branch::Union{Nothing, RuleNode},
-    d::Int64)
+    d::Int)
 
 Type with the information required to calculate the transition probabilities of inserting a node.
 
@@ -127,7 +127,7 @@ See also: `insert_node!`
 struct InsertedTree
     tree::RuleNode
     new_branch::Union{Nothing, RuleNode}
-    d::Int64 
+    d::Int 
 end 
 
 """
@@ -168,7 +168,7 @@ end
 """
     ReassignedTree(tree::RuleNode,
     changed_node::Union{Nothing, RuleNode},
-    d::Int64,
+    d::Int,
     transition::Symbol)
 
 Type with the information required to calculate the transition probabilities of reassigning an operator node.
@@ -183,7 +183,7 @@ See also: `insert_node!`
 struct ReassignedTree
     tree::RuleNode
     changed_node::Union{Nothing, RuleNode}
-    d::Int64
+    d::Int
     transition::Symbol
 end 
 
