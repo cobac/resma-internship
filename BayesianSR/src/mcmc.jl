@@ -25,7 +25,7 @@ function step!(chain::Chain; verbose::Bool = false)
     proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
     θ_new = propose_LinearCoef!(proposal.trees[j], σ²_a, σ²_b)
 
-    # Update new sample
+    # Update the proposal
     proposal.trees[j] = proposal_tree.tree
     try 
         optimβ!(proposal, chain.x, chain.y, chain.grammar)
@@ -33,7 +33,7 @@ function step!(chain::Chain; verbose::Bool = false)
         verbose && println("Got an eval error!")
         return NaN
     end 
-    proposal.σ² = rand(σ²_prior)
+    proposal.σ²[:σ²] = rand(σ²_prior)
 
     # Calculate R
     tree_x_proposal = evalsample(proposal, chain.x, chain.grammar)
