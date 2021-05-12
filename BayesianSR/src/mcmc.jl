@@ -62,6 +62,7 @@ function step!(chain::Chain; verbose::Bool = false)
         push!(chain.samples, proposal)
     else 
         verbose && println("Not updating! Movement = ", proposal_tree.movement)
+        push!(chain.samples, old_sample)
     end 
 
     return R
