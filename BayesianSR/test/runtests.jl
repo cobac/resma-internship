@@ -21,6 +21,8 @@ end
 fullgrammar = append!(deepcopy(BayesianSR.lineargrammar),
                       append!(deepcopy(BayesianSR.defaultgrammar), vargrammar))
 
+hyper = Hyperparams()
+
 function test_hyperparams(hyper::Hyperparams)
     @testset "Hyperparameters" begin
         names = hyper |> typeof |> fieldnames
@@ -46,7 +48,6 @@ function test_hyperparams(hyper::Hyperparams)
     end 
 end 
 
-hyper = Hyperparams()
 test_hyperparams(hyper)
 
 @testset "Grammars utils" begin
