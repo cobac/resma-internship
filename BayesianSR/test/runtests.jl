@@ -210,6 +210,12 @@ end
      k = 3
      chain = Chain(x, y)
      test_chain(chain)
+     chain = Chain(x, y, hyper = hyper)
+     test_chain(chain)
+     chain = Chain(x, y, operators = deepcopy(BayesianSR.defaultgrammar))
+     test_chain(chain)
+     chain = Chain(x, y, operators = deepcopy(BayesianSR.defaultgrammar), hyper = hyper)
+     test_chain(chain)
  end 
 
 @testset "Utils" begin 

@@ -106,11 +106,13 @@ struct Chain
 end 
 
 """
-    Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
+    Chain(x::Matrix, y::Vector; operators::Grammar = deepcopy(defaultgrammar), hyper::Hyperparams = Hyperparams())
 
 Initialize a `Chain`.
 """
-function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
+function Chain(x::Matrix, y::Vector;
+               operators::Grammar = deepcopy(defaultgrammar),
+               hyper::Hyperparams = Hyperparams())
     @unpack k, σ²_prior = hyper
     grammar = append!(deepcopy(lineargrammar),
                       append!(deepcopy(operators), variablestogrammar(x)))
@@ -123,48 +125,6 @@ function Chain(x::Matrix, y::Vector, operators::Grammar, hyper::Hyperparams)
     stats = Dict([(:lastj, 0)])
     return Chain([sample], grammar, x, y, stats, hyper)
 end 
-
-"""
-    Chain(x::Matrix, y::Vector)
-
-Initialize a `Chain` with default values.
-"""
-function Chain(x::Matrix, y::Vector)
-    hyper = Hyperparams()
-    operators = deepcopy(defaultgrammar)
-    return Chain(x, y, operators, hyper)
-end 
-
-"""
-    Chain(x::Matrix, y::Vector, k::Int)
-
-Initialize a `Chain` with `k` `RuleNode` per `Sample`.
-"""
-function Chain(x::Matrix, y::Vector, k::Int)
-    hyper = Hyperparams(k = k)
-    operators = deepcopy(defaultgrammar)
-    return Chain(x, y, operators, hyper)
-end 
-
-"""
-    Chain(x::Matrix, y::Vector, hyper::Hyperparams)
-
-Initialize a `Chain` with custom `Hyperparameters`.
-"""
-function Chain(x::Matrix, y::Vector, hyper::Hyperparams)
-    operators = deepcopy(defaultgrammar)
-    return Chain(x, y, operators, hyper)
-end 
-
-"""
-    Chain(x::Matrix, y::Vector, grammar::Grammar)
-
-Initialize a `Chain` with a custom `Grammar`.
-"""
-function Chain(x::Matrix, y::Vector, operators::Grammar)
-    Chain(x, y, operators, Hyperparams())
-end 
-
 
 include("grammars.jl")
 include("evaltree.jl")
