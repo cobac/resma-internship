@@ -11,7 +11,10 @@ function optimβ!(sample::Sample, x, y, grammar::Grammar)
     for k in 1:length(sample.trees)
         xs[:, k] = evaltree(sample.trees[k], x, grammar)
     end 
-    sample.β = ols(y, xs)
+    β = ols(y, xs)
+    for i in eachindex(sample.β)
+        sample.β[i] = β[i]
+    end 
     return nothing
 end 
 
