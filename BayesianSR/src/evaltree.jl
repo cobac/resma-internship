@@ -8,9 +8,9 @@ function evaltree(tree::RuleNode, x, grammar::Grammar)
     #= Evaluates a tree into a vector for every variable x_j =#
     n = size(x)[1]
     out = Vector{Float64}(undef, n)
+    eq = get_executable(tree, grammar)
     @inbounds for i in 1:n
         table = tableforeval(x, i, grammar) 
-        eq = get_executable(tree, grammar)
         out[i] = Core.eval(table, eq)
     end 
     return out
