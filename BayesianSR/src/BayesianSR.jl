@@ -44,6 +44,12 @@ function LinearCoef(hyper::Hyperparams)
     return LinearCoef(a, b)
 end 
 
+function LinearCoef(σ²_a::AbstractFloat, σ²_b::AbstractFloat)
+    a = rand(Normal(1, σ²_a))
+    b = rand(Normal(1, σ²_b))
+    return LinearCoef(a, b)
+end 
+
 """
     Sample(trees::Vector{RuleNode}, β::Vector{Float64}, σ²::Float64)
 
