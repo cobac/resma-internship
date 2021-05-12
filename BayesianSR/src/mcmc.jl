@@ -59,7 +59,7 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     R = rand()
     
     # Update chain
-    α = min(1, R)
+    α = min(1.0, R)
     if (rand() < α)
         verbose && println("Updating! Movement = ", proposal_tree.movement)
         return proposal
