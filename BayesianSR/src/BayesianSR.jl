@@ -61,10 +61,10 @@ Each sample of a `Chain` is one equation.
 - `σ²`: Variance of the residuals.
 
 """
-mutable struct Sample
+struct Sample
     trees::Vector{RuleNode}
     β::Vector{Float64}
-    σ²::Float64
+    σ²::Dict{Symbol, AbstractFloat}
 end 
 
 """
@@ -74,8 +74,12 @@ end
 - `prior` is the prior distribution of σ².
 """
 function Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
-    @unpack σ²_prior = hyper
-    Sample([RuleNode(grammar, hyper) for i in 1:k], zeros(k + 1), rand(σ²_prior))
+    @unpack σ²_prior, σ²_a_prior, σ²_b_prior = hyper
+    Sample([RuleNode(grammar, hyper) for i in 1:k],
+           zeros(k + 1),
+           Dict([(:σ², rand(σ²_prior)),
+                 (:σ²_a, rand(σ²_a_prior)),
+                 (:σ²_b, rand(σ²_b_prior))]))
 end 
 
 """

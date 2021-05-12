@@ -174,6 +174,11 @@ function test_sample(sample::BayesianSR.Sample)
             test_tree(tree)
         end 
         @test length(sample.β) == k + 1
+        key_names = keys(sample.σ²)
+        @test length(key_names) == 3
+        @test :σ² in key_names
+        @test :σ²_a in key_names
+        @test :σ²_b in key_names
     end 
 end 
 
