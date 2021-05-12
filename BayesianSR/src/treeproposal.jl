@@ -20,7 +20,7 @@ end
 
 Generates a `TreeProposal`.
 """
-function proposetree(tree::RuleNode, grammar::Grammar)
+function proposetree(tree::RuleNode, grammar::Grammar, hyper::Hyperparams)
     tree = deepcopy(tree)
     nₒ = n_operators(tree, grammar)
     n_lo = n_linear_operators(tree)
@@ -51,7 +51,7 @@ function proposetree(tree::RuleNode, grammar::Grammar)
     if mov == :stay
         p = p_inv = log(p_0)
     elseif mov == :grow
-        changed_tree = grow!(tree, grammar)
+        changed_tree = grow!(tree, grammar, hyper)
         tree = changed_tree.tree
         p = log(p_g) + # P of movement = grow
             log(1/nₜ) + # P of selecting this terminal node
@@ -95,7 +95,7 @@ function proposetree(tree::RuleNode, grammar::Grammar)
             p_inv += tree_p(deleted_tree.dropped_node, deleted_tree.d, grammar)
         end 
     elseif mov == :insert
-        inserted_tree = insert_node!(tree, grammar)
+        inserted_tree = insert_node!(tree, grammar, hyper)
         tree = inserted_tree.tree
         p = log(p_i) + # P of movement = insert
             log(1/length(flatten(tree))) + # P of selecting this node
@@ -114,7 +114,7 @@ function proposetree(tree::RuleNode, grammar::Grammar)
             p_inv += log(1/2)
         end 
     elseif mov == :re_operator
-        reassigned_tree = re_operator!(tree, grammar)
+        reassigned_tree = re_operator!(tree, grammar, hyper)
         tree = reassigned_tree.tree
         p = p_inv = log(p_ro) + # P of movement = reassign operator
             log(1/nₒ) + # P of selecting this operator node

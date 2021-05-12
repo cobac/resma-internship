@@ -18,7 +18,7 @@ function step!(chain::Chain; verbose::Bool = false)
     θ_old = recover_LinearCoef(proposal.trees[j])
 
     # Propose a new tree
-    proposal_tree = proposetree(proposal.trees[j], chain.grammar)
+    proposal_tree = proposetree(proposal.trees[j], chain.grammar, chain.hyper)
 
     # Propose a new set of LiearCoef parameters
     proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
