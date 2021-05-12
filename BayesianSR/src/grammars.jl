@@ -98,7 +98,7 @@ Returns a vector with the indices of all terminals in a grammar.
 """
 function terminal_indices(grammar::Grammar)
     node_types = nodetypes(grammar)
-    is = findall(x -> x==0, node_types)
+    is = findall(iszero, node_types)
     return is
 end 
 
