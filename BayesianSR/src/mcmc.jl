@@ -7,7 +7,6 @@ function step!(chain::Chain; verbose::Bool = false)
     j = chain.stats[:lastj] + 1
     j == no_trees(chain) + 1 ? j = 1 : nothing
     chain.stats[:lastj] = j
-    chain.stats[:proposals] += 1
 
     @unpack σ²_prior = chain.hyper
 

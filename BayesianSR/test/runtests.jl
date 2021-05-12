@@ -193,11 +193,9 @@ function test_chain(chain::Chain)
     test_sample(chain.samples[1])
 
     stat_keys = keys(chain.stats)
-    @test length(stat_keys) == 2
+    @test length(stat_keys) == 1
     @test :lastj in stat_keys
     @test chain.stats[:lastj] <= chain.hyper.k
-    @test :proposals in stat_keys
-    @test chain.stats[:proposals] + 1 >= length(chain)
 
     test_hyperparams(chain.hyper)
 end 
@@ -388,6 +386,6 @@ end
 #         R = BayesianSR.step!(chain)
 #         @test R >= 0 || isnan(R)
 #         test_chain(chain)
-#         @test chain.stats[:proposals] == i
+#         @test length(chain) == i + 1
 #     end 
 # end 
