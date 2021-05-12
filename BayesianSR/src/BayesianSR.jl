@@ -101,7 +101,7 @@ struct Chain
     grammar::Grammar
     x::Matrix{Float64}
     y::Vector{Float64}
-    stats::Dict
+    stats::Dict{Symbol, Int}
     hyper::Hyperparams
 end 
 
