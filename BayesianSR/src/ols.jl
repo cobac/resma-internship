@@ -7,7 +7,7 @@ See also: `ols`
 """
 function optimβ!(sample::Sample, x, y, grammar::Grammar)
     n = size(x, 1)
-    xs = Matrix{Float64}(undef, (n, length(sample.trees)))
+    xs = Matrix{Float64}(undef, n, length(sample.trees))
     for k in eachindex(sample.trees)
         xs[:, k] = evaltree(sample.trees[k], x, grammar)
     end 
