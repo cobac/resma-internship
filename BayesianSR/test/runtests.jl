@@ -405,14 +405,12 @@ end
     @test θ.b == [0.3030118349658554, -5.4827857902895625]
 end 
 
-# TODO: Re-activate once tree_p and mcmc works
-# @testset "MCMC" begin
-#     chain = Chain(x, y)
-#     n = 10
-#     for i in 1:n
-#         R = BayesianSR.step!(chain)
-#         @test R >= 0 || isnan(R)
-#         test_chain(chain)
-#         @test length(chain) == i + 1
-#     end 
-# end 
+@testset "MCMC" begin
+    chain = Chain(x, y)
+    test_chain(chain)
+    n = 10
+    mcmc!(chain, n)
+    test_chain(chain, initial = false)
+    @test length(chain) == n + 1
+    @test all([isassigned(chain.samples, i) for i in 1:length(chain)])
+end 
