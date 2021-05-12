@@ -23,7 +23,7 @@ Evaluates a `Sample`. Outputs a matrix with the evaluations of every `RuleNode`.
 """
 function evalsample(sample::Sample, x, grammar::Grammar)
     out = Matrix{Float64}(undef, size(x)[1], length(sample.trees))
-    @inbounds for j in 1:length(sample.trees)
+    @inbounds for j in eachindex(sample.trees)
         out[:, j] = evaltree(sample.trees[j], x, grammar)
     end 
     return out
