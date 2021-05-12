@@ -7,6 +7,8 @@ The root node is at `d = 1`.
 """
 function growtree(grammar::Grammar, hyper::Hyperparams, d::Int)
     node_types = nodetypes(grammar)
+    !in(0, node_types) &&
+        error("You are trying to grow a tree from a Grammar without terminal nodes.")
     # Hyper: α, β = 2, 1
     # Prior: Uniform for operators and features
     p₁ = 2/(1+d)
