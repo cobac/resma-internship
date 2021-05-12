@@ -8,17 +8,22 @@ function step!(chain::Chain; verbose::Bool = false)
     j == no_trees(chain) + 1 ? j = 1 : nothing
     chain.stats[:lastj] = j
 
-    @unpack σ²_prior = chain.hyper
+    @unpack σ²_prior, σ²_a_prior, σ²_b_prior = chain.hyper
 
     # Initialize new sample
     old_sample = deepcopy(chain.samples[end])
     proposal = deepcopy(chain.samples[end])
 
+    # Gather old LinearCoef parameters
+    θ_old = recover_LinearCoef(proposal.trees[j])
+
     # Propose a new tree
     proposal_tree = proposetree(proposal.trees[j], chain.grammar)
 
-    # Propose a new set of parameters
-    # TODO: When lt() implemented 
+    # Propose a new set of LiearCoef parameters
+    proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
+    proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
+    θ_new = propose_LinearCoef!(proposal.trees[j], σ²_a, σ²_b)
 
     # Update new sample
     proposal.trees[j] = proposal_tree.tree

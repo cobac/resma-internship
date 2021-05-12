@@ -136,11 +136,3 @@ function proposetree(tree::RuleNode, grammar::Grammar)
     end 
     return TreeProposal(tree, mov, p, p_inv)
 end 
-
-"""
-    proposeparameters()
-Generates a set of new parameters for the linear operators.
-"""
-function proposeparameters()
-    nothing
-end 

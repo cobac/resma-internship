@@ -173,7 +173,8 @@ include("ols.jl")
 include("growtree.jl")
 include("treeprior.jl")
 include("treemovements.jl")
-include("sampling.jl")
+include("treeproposal.jl")
+include("coefproposal.jl")
 include("mcmc.jl")
 
 end # module

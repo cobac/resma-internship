@@ -384,6 +384,27 @@ end
     @test BayesianSR.tree_p(node, 2, fullgrammar) ≈ manual_p2
 end 
 
+@testset "LinearCoef Proposals" begin
+    Random.seed!(1)
+    node = RuleNode(fullgrammar, hyper)
+    θ = BayesianSR.recover_LinearCoef(node)
+    @test length(θ.a) == length(θ.b) == 0
+
+    Random.seed!(2)
+    node = RuleNode(fullgrammar, hyper)
+    θ = BayesianSR.recover_LinearCoef(node)
+    @test length(θ.a) == length(θ.b) == 1
+    @test θ.a[1] ≈ 15.632280168597802
+    @test θ.b[1] ≈ 3.687852482764168
+
+    Random.seed!(104)
+    node = RuleNode(fullgrammar, hyper)
+    θ = BayesianSR.recover_LinearCoef(node)
+    @test length(θ.a) == length(θ.b) == 2
+    @test θ.a == [-0.908098317686729, 6.7865155459951945]
+    @test θ.b == [0.3030118349658554, -5.4827857902895625]
+end 
+
 # TODO: Re-activate once tree_p and mcmc works
 # @testset "MCMC" begin
 #     chain = Chain(x, y)
