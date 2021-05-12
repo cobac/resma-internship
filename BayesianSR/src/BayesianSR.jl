@@ -75,7 +75,7 @@ end
 """
 function Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
     @unpack σ²_prior, σ²_a_prior, σ²_b_prior = hyper
-    Sample([RuleNode(grammar, hyper) for i in 1:k],
+    Sample([RuleNode(grammar, hyper) for _ in 1:k],
            zeros(k + 1),
            Dict([(:σ², rand(σ²_prior)),
                  (:σ²_a, rand(σ²_a_prior)),
