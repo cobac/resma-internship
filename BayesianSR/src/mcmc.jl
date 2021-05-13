@@ -1,7 +1,9 @@
 """
-    step(chain::Chain)
+    step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
 
 Generates a new Sample of `Chain`.
+`i` is the index of the latest sample.
+`j` ∈ {1..k} is the index of the tree to be modified.
 """
 function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     @unpack σ²_prior, σ²_a_prior, σ²_b_prior = chain.hyper
@@ -69,6 +71,11 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     end 
 end 
 
+"""
+    mcmc!(chain::Chain, n_steps::Int = 100; verbose::Bool = false)
+
+Samples from the posterior space `n_steps` iterations via MCMC.
+"""
 function mcmc!(chain::Chain, n_steps::Int = 100; verbose::Bool = false)
     i₀ = length(chain)
     resize!(chain.samples, i₀ + n_steps)
