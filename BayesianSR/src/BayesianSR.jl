@@ -58,7 +58,10 @@ Each sample of a `Chain` is one equation.
 - `trees`: Vector with all `RuleNode`.
 - `β`: Vector with the linear coefficients.
   - `β[1]`: Intercept.
-- `σ²`: Variance of the residuals.
+- `σ²`: Dictionary with variances
+  - `:σ²`: of the residuals
+  - `:σ²_a`: of the LinearCoef intercepts
+  - `:σ²_b`: of the LinearCoef slopes
 
 """
 struct Sample
@@ -68,10 +71,9 @@ struct Sample
 end 
 
 """
-    Sample(k::Real, grammar::Grammar, prior::UnivariateDistribution)
+    Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
 
 - `k` is the number of `RuleNode` that are added in each equation.
-- `prior` is the prior distribution of σ².
 """
 function Sample(k::Real, grammar::Grammar, hyper::Hyperparams)
     @unpack σ²_prior, σ²_a_prior, σ²_b_prior = hyper
