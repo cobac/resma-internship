@@ -50,3 +50,21 @@ function recover_LinearCoef(tree::RuleNode)
     end
     return SetLinearCoef(a, b)
 end 
+
+"""
+    any_linear_operators(tree::RuleNode)
+
+Returns a `Bool`.
+"""
+function any_linear_operators(tree::RuleNode)
+    queue = [tree]
+    while !isempty(queue)
+        current = queue[1]
+        if current.ind == 1 # LinearCoef
+            return true
+        end 
+        append!(queue, queue[1].children)
+        deleteat!(queue, 1)
+    end
+    return false
+end 
