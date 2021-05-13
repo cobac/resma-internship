@@ -4,8 +4,12 @@
 ** Acceptance ratio calculation
 *** Standard MH
 - On Jin's paper they don't use the probability of the LinearCoef
-  - I understand not using the probability of jumping between coefficients because it is symmetric
-  - But why not use the probability of each coefficient?
+  - I understand not using the probability of jumping between coefficients
+    - Because it is symmetric (or in this case just from the prior)
+- But why not include the probability of each coefficient?
+  
+f(\Theta | S)
+
 ** Type stability
 #+BEGIN_SRC julia :eval :session :results silent :exports code
   @code_warntype BayesianSR.step(chain, 1, 1, verbose = false)
