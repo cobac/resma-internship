@@ -414,7 +414,7 @@ end
 @testset "MCMC" begin
     chain = Chain(x, y)
     test_chain(chain)
-    n = 10
+    n = 100
     mcmc!(chain, n)
     test_chain(chain, initial = false)
     @test length(chain) == n + 1
