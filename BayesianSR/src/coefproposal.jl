@@ -9,11 +9,9 @@ struct SetLinearCoef
 end 
 
 """
-    proposeparameters!(tree::RuleNode)
-Updates a tree with a new set of LinearCoef.
-Returns an object of type SetLinearCoef with the new coefficients.
-
-See also: SetLinearCoef
+    propose_LinearCoef!(tree::RuleNode, σ²_a::AbstractFloat, σ²_b::AbstractFloat)
+Updates a `RuleNode` with a new set of `LinearCoef`.
+Returns an object of type `SetLinearCoef` with the new coefficients.
 """
 function propose_LinearCoef!(tree::RuleNode, σ²_a::AbstractFloat, σ²_b::AbstractFloat)
     new_a = AbstractFloat[]
@@ -32,6 +30,11 @@ function propose_LinearCoef!(tree::RuleNode, σ²_a::AbstractFloat, σ²_b::Abst
     return SetLinearCoef(new_a, new_b)
 end 
 
+"""
+    recover_LinearCoef(tree::RuleNode)
+
+Returns an object of type `SetLinearCoef` with the `LinearCoef` of a `RuleNode`.
+"""
 function recover_LinearCoef(tree::RuleNode)
     a = AbstractFloat[]
     b = AbstractFloat[]
