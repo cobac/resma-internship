@@ -12,16 +12,24 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     old_sample = deepcopy(chain.samples[i])
     proposal = deepcopy(chain.samples[i])
 
-    # Gather old LinearCoef parameters
-    θ_old = recover_LinearCoef(proposal.trees[j])
+    # Maybe gather old LinearCoef parameters
+    any_linear_operator_old = any_linear_operators(old_sample.trees[j])
+    any_linear_operator_old ? θ_old = recover_LinearCoef(old_sample.trees[j]) :
+        nothing
 
     # Propose a new tree
     proposal_tree = proposetree(proposal.trees[j], chain.grammar, chain.hyper)
 
-    # Propose a new set of LinearCoef parameters
-    proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
-    proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
-    θ_new = propose_LinearCoef!(proposal.trees[j], σ²_a, σ²_b)
+    # Maybe propose a new set of LinearCoef parameters
+    any_linear_operator_proposal = any_linear_operators(proposal_tree.tree)
+    if any_linear_operator_proposal
+        proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
+        proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
+        θ_proposal = propose_LinearCoef!(proposal_tree.tree, σ²_a, σ²_b)
+    else 
+        proposal.σ²[:σ²_a] = 0.0
+        proposal.σ²[:σ²_b] = 0.0
+    end 
 
     # Update the proposal
     proposal.trees[j] = proposal_tree.tree
@@ -33,7 +41,7 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     end 
     proposal.σ²[:σ²] = rand(σ²_prior)
 
-     # Calculate R
+    # Calculate R
     numerator = log_likelihood(proposal, chain.grammar, chain.x, chain.y) + # Likelihood
         logpdf(σ²_prior, proposal.σ²[:σ²]) + # σ² prior
         # Trees prior
@@ -41,12 +49,27 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
         # Probability of tree jump
         proposal_tree.p_mov
 
+    if any_linear_operator_proposal
+        numerator += sum(logpdf.(Normal(1, √proposal.σ²[:σ²_a]), θ_proposal.a)) + # P intercepts
+            sum(logpdf.(Normal(1, √proposal.σ²[:σ²_b]), θ_proposal.b)) + # P slopes
+            logpdf(σ²_a_prior, proposal.σ²[:σ²_a]) + # σ²_a prior
+            logpdf(σ²_b_prior, proposal.σ²[:σ²_b])  # σ²_b prior
+    end 
+
     denominator = log_likelihood(old_sample, chain.grammar, chain.x, chain.y) + # Likelihood
         logpdf(σ²_prior, old_sample.σ²[:σ²]) + # σ² prior 
         # Trees prior
         sum([tree_p(tree, chain.grammar) for tree in old_sample.trees]) +
         # Probability of tree jump
         proposal_tree.p_mov_inv
+
+    if any_linear_operator_old
+        denominator += sum(logpdf.(Normal(1, √old_sample.σ²[:σ²_a]), θ_old.a)) + # P intercepts
+            sum(logpdf.(Normal(1, √old_sample.σ²[:σ²_b]), θ_old.b)) + # P slopes
+            logpdf(σ²_a_prior, old_sample.σ²[:σ²_a]) + # σ²_a prior
+            logpdf(σ²_b_prior, old_sample.σ²[:σ²_b])  # σ²_b prior
+     end 
+
     
     R = exp(numerator - denominator)
     
