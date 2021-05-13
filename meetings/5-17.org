@@ -10,6 +10,11 @@
   
 f(\Theta | S)
 
+- They don't use either the probability of the variances (residuals + LinearCoef)
+  - I had already included it in the ratio calculation without RJMCMC because I hadn't noticed they omit it 
+
+p(\Sigma)
+
 ** Type stability
 #+BEGIN_SRC julia :eval :session :results silent :exports code
   @code_warntype BayesianSR.step(chain, 1, 1, verbose = false)
