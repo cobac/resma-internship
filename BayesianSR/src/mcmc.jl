@@ -33,32 +33,22 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     end 
     proposal.σ²[:σ²] = rand(σ²_prior)
 
-    # TODO: Fix R calcualtion
-    # # Calculate R
-    # tree_x_proposal = evalsample(proposal, chain.x, chain.grammar)
-    # X_proposal = [ones(size(tree_x_proposal)[1]) tree_x_proposal]
-    # ε_proposal = chain.y - X_proposal * proposal.β
-    # L_proposal = sum(logpdf.(Normal(0, √proposal.σ²), ε_proposal))
-    # numerator = L_proposal + # Likelihood
-    #     logpdf(σ²_prior, proposal.σ²) + # σ² prior
-    #     # Trees prior
-    #     sum([tree_p(tree, chain.grammar) for tree in proposal.trees]) +
-    #     # Probability of tree jump
-    #     proposal_tree.p_mov
+     # Calculate R
+    numerator = log_likelihood(proposal, chain.grammar, chain.x, chain.y) + # Likelihood
+        logpdf(σ²_prior, proposal.σ²[:σ²]) + # σ² prior
+        # Trees prior
+        sum([tree_p(tree, chain.grammar) for tree in proposal.trees]) +
+        # Probability of tree jump
+        proposal_tree.p_mov
 
-    # tree_x_old_sample = evalsample(old_sample, chain.x, chain.grammar)
-    # X_old_sample = [ones(size(tree_x_old_sample)[1]) tree_x_old_sample]
-    # ε_old_sample = chain.y - X_old_sample * old_sample.β
-    # L_old_sample = sum(logpdf.(Normal(0, √old_sample.σ²), ε_old_sample))
-    # denominator = L_old_sample + # Likelihood
-    #     logpdf(σ²_prior, old_sample.σ²) + # σ² prior 
-    #     # Trees prior
-    #     sum([tree_p(tree, chain.grammar) for tree in old_sample.trees]) +
-    #     # Probability of tree jump
-    #     proposal_tree.p_mov_inv
-    # 
-    # R = exp(numerator - denominator)
-    R = rand()
+    denominator = log_likelihood(old_sample, chain.grammar, chain.x, chain.y) + # Likelihood
+        logpdf(σ²_prior, old_sample.σ²[:σ²]) + # σ² prior 
+        # Trees prior
+        sum([tree_p(tree, chain.grammar) for tree in old_sample.trees]) +
+        # Probability of tree jump
+        proposal_tree.p_mov_inv
+    
+    R = exp(numerator - denominator)
     
     # Update chain
     α = min(1.0, R)
@@ -85,4 +75,11 @@ function mcmc!(chain::Chain, n_steps::Int = 100; verbose::Bool = false)
         chain.stats[:lastj] = j
         chain.samples[i] = BayesianSR.step(chain, i-1, j, verbose = verbose)
     end 
+end 
+
+function log_likelihood(sample::Sample, grammar::Grammar, x::Matrix{Float64}, y::Vector{Float64})
+    logpdf(MvNormal(sample.β[begin] .+
+        evalsample(sample, x, grammar) * view(sample.β, 2:length(sample.β)),
+                    √sample.σ²[:σ²]),
+           y)
 end 
