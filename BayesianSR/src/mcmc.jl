@@ -16,7 +16,7 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
     # Propose a new tree
     proposal_tree = proposetree(proposal.trees[j], chain.grammar, chain.hyper)
 
-    # Propose a new set of LiearCoef parameters
+    # Propose a new set of LinearCoef parameters
     proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
     proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
     θ_new = propose_LinearCoef!(proposal.trees[j], σ²_a, σ²_b)
