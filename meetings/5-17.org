@@ -6,7 +6,21 @@
 - On Jin's paper they don't use the probability of the LinearCoef
   - I understand not using the probability of jumping between coefficients because it is symmetric
   - But why not use the probability of each coefficient?
+** Type stability
+#+BEGIN_SRC julia :eval :session :results silent :exports code
+  @code_warntype BayesianSR.step(chain, 1, 1, verbose = false)
+  # => Body::Union{Float64, BayesianSR.Sample}
+#+END_SRC
+- Why??
+- If I force ~step(...)::Sample~, the warning disappears (as expected)
+- No performance differences
 ** How to select best tree?
 - Check change after n steps
+** ExprBugs
+- There weren't any bugs :D
+  - Couldn't reproduce them
+  - I misunderstood how mutation, scope, and assigning(=) worked before when I thought there were bugs.
+- (apart from the insert! one)
+  - https://github.com/sisl/ExprRules.jl/pull/31
 * TO-DO
 * Notes
