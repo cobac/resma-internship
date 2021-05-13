@@ -29,7 +29,7 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
         optimβ!(proposal, chain.x, chain.y, chain.grammar)
     catch e 
         verbose && println("Got an eval error!")
-        return NaN
+        return old_sample
     end 
     proposal.σ²[:σ²] = rand(σ²_prior)
 

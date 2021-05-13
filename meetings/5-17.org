@@ -25,6 +25,8 @@ p(\Sigma)
 - Why??
 - If I force ~step(...)::Sample~, the warning disappears (as expected)
 - No performance differences
+- *FIXED:* =NaN= return when ~optimβ!~ failed.
+- I believe all the program is type stable now.
 ** How to select best tree?
 - Check change after n steps
 ** ExprBugs
