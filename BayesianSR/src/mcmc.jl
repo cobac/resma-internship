@@ -46,8 +46,8 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
         logpdf(σ²_prior, proposal.σ²[:σ²]) + # σ² prior
         # Trees prior
         sum([tree_p(tree, chain.grammar) for tree in proposal.trees]) +
-        # Probability of tree jump
-        proposal_tree.p_mov
+        # Probability of reverse tree jump (proposal -> old)
+        proposal_tree.p_mov_inv
 
     if any_linear_operator_proposal
         numerator += sum(logpdf.(Normal(1, √proposal.σ²[:σ²_a]), θ_proposal.a)) + # P intercepts
@@ -60,8 +60,8 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
         logpdf(σ²_prior, old_sample.σ²[:σ²]) + # σ² prior 
         # Trees prior
         sum([tree_p(tree, chain.grammar) for tree in old_sample.trees]) +
-        # Probability of tree jump
-        proposal_tree.p_mov_inv
+        # Probability of tree jump (old -> proposal)
+        proposal_tree.p_mov
 
     if any_linear_operator_old
         denominator += sum(logpdf.(Normal(1, √old_sample.σ²[:σ²_a]), θ_old.a)) + # P intercepts
