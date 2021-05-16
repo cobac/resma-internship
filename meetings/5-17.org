@@ -1,6 +1,16 @@
 * Things to discuss
 ** Jin's code
 - https://github.com/ying531/MCMC-SymReg
+** The hacky implementation of LinearCoefs means that the first =k= samples are not proper
+** Error with how I was tracking the variances
+- Each sample has one residual variance
+- But each tree has their own linear coefficients variances
+- For now hacky fix
+#+BEGIN_SRC julia :eval :session :results silent :exports code
+  i > k ? previous_i = i - k : previous_i = i
+  old_σ²_a = chain.samples[previous_i].σ²[:σ²_a]
+  old_σ²_b = chain.samples[previous_i].σ²[:σ²_b]
+#+END_SRC
 ** Acceptance ratio calculation
 *** Error with transition probabilities
 - I had MH reversed in my head

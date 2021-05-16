@@ -6,7 +6,7 @@ Generates a new Sample of `Chain`.
 `j` ∈ {1..k} is the index of the tree to be modified.
 """
 function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
-    @unpack σ²_prior, σ²_a_prior, σ²_b_prior = chain.hyper
+    @unpack k, σ²_prior, σ²_a_prior, σ²_b_prior = chain.hyper
 
     # Initialize new sample
     old_sample = deepcopy(chain.samples[i])
@@ -64,11 +64,16 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
         proposal_tree.p_mov
 
     if any_linear_operator_old
-        denominator += sum(logpdf.(Normal(1, √old_sample.σ²[:σ²_a]), θ_old.a)) + # P intercepts
-            sum(logpdf.(Normal(1, √old_sample.σ²[:σ²_b]), θ_old.b)) + # P slopes
-            logpdf(σ²_a_prior, old_sample.σ²[:σ²_a]) + # σ²_a prior
-            logpdf(σ²_b_prior, old_sample.σ²[:σ²_b])  # σ²_b prior
-     end 
+        # Get last LinearCoef variances for this (j-th) tree
+        # First k samples variances are not real
+        i > k ? previous_i = i - k : previous_i = i
+        old_σ²_a = chain.samples[previous_i].σ²[:σ²_a]
+        old_σ²_b = chain.samples[previous_i].σ²[:σ²_b]
+        denominator += sum(logpdf.(Normal(1, √old_σ²_a), θ_old.a)) + # P intercepts
+            sum(logpdf.(Normal(1, √old_σ²_b), θ_old.b)) + # P slopes
+            logpdf(σ²_a_prior, old_σ²_a) + # σ²_a prior
+            logpdf(σ²_b_prior, old_σ²_b)  # σ²_b prior
+    end 
 
     
     R = exp(numerator - denominator)
