@@ -40,13 +40,13 @@ function LinearCoef(hyper::Hyperparams)
     σ²_a = rand(σ²_a_prior)
     σ²_b = rand(σ²_b_prior)
     a = rand(Normal(1, σ²_a))
-    b = rand(Normal(1, σ²_b))
+    b = rand(Normal(0, σ²_b))
     return LinearCoef(a, b)
 end 
 
 function LinearCoef(σ²_a::AbstractFloat, σ²_b::AbstractFloat)
     a = rand(Normal(1, σ²_a))
-    b = rand(Normal(1, σ²_b))
+    b = rand(Normal(0, σ²_b))
     return LinearCoef(a, b)
 end 
 
