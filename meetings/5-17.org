@@ -8,9 +8,9 @@
 #+END_SRC
 
 * Things to discuss
+** Implemented your feedback
 ** Jin's code
 - https://github.com/ying531/MCMC-SymReg
-** The hacky implementation of LinearCoefs means that the first =k= samples are not proper
 ** Error with how I was tracking the variances
 - Each sample has one residual variance
 - But each tree has their own linear coefficients variances
@@ -20,6 +20,12 @@
   old_σ²_a = chain.samples[previous_i].σ²[:σ²_a]
   old_σ²_b = chain.samples[previous_i].σ²[:σ²_b]
 #+END_SRC
+- First \(K\) samples of a chain are not proper
+  - Probably ok...
+** Error with some distributions
+- They don't always sample from the prior distributions for the parameters
+- Only when there is no reversible jump
+- Probably still a good idea to create centered proposals for that case
 ** Acceptance ratio calculation
 *** Error with transition probabilities
 - I had MH reversed in my head
@@ -39,6 +45,7 @@ f(\Theta | S)
 p(\Sigma)
 
 - Maybe I'm just misunderstanding the equations
+  
 *** With RJMCM
 - I was confused with what operations were set notation or vector notation
 - The papers/tutorials you sent me have been the best source
