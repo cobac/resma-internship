@@ -18,8 +18,11 @@ function LinearCoef(hyper::Hyperparams)
     return LinearCoef(a, b)
 end 
 
-function LinearCoef(σ²_a::AbstractFloat, σ²_b::AbstractFloat)
-    a = rand(Normal(1, σ²_a))
-    b = rand(Normal(0, σ²_b))
+function LinearCoef(a::AbstractFloat, b::AbstractFloat; variances::Bool = false)
+    if variances
+        a = rand(Normal(1, a))
+        b = rand(Normal(0, b))
+        return LinearCoef(a, b)
+    end
     return LinearCoef(a, b)
 end 
