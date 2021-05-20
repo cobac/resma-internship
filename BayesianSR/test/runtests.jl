@@ -391,24 +391,75 @@ end
 end 
 
 @testset "LinearCoef Proposals" begin
-    Random.seed!(1)
-    node = RuleNode(fullgrammar, hyper)
-    θ = BayesianSR.recover_LinearCoef(node)
-    @test length(θ.a) == length(θ.b) == 0
+    @testset "Recover" begin
+        Random.seed!(1)
+        node = RuleNode(fullgrammar, hyper)
+        θ = BayesianSR.recover_LinearCoef(node)
+        @test length(θ.a) == length(θ.b) == 0
 
-    Random.seed!(2)
-    node = RuleNode(fullgrammar, hyper)
-    θ = BayesianSR.recover_LinearCoef(node)
-    @test length(θ.a) == length(θ.b) == 1
-    @test θ.a[1] ≈ 15.632280168597802
-    @test θ.b[1] ≈ 2.687852482764168
+        Random.seed!(2)
+        node = RuleNode(fullgrammar, hyper)
+        θ = BayesianSR.recover_LinearCoef(node)
+        @test length(θ.a) == length(θ.b) == 1
+        @test θ.a[1] ≈ 15.632280168597802
+        @test θ.b[1] ≈ 2.687852482764168
 
-    Random.seed!(104)
-    node = RuleNode(fullgrammar, hyper)
-    θ = BayesianSR.recover_LinearCoef(node)
-    @test length(θ.a) == length(θ.b) == 2
-    @test θ.a == [-0.908098317686729, 6.7865155459951945]
-    @test θ.b == [-0.6969881650341446, -6.4827857902895625]
+        Random.seed!(104)
+        node = RuleNode(fullgrammar, hyper)
+        θ = BayesianSR.recover_LinearCoef(node)
+        @test length(θ.a) == length(θ.b) == 2
+        @test θ.a == [-0.908098317686729, 6.7865155459951945]
+        @test θ.b == [-0.6969881650341446, -6.4827857902895625]
+    end 
+
+    @testset "No RJMCMC" begin
+        Random.seed!(104)
+        node = RuleNode(fullgrammar, hyper)
+        θ_old = BayesianSR.recover_LinearCoef(node)
+        θ = BayesianSR.propose_LinearCoef!(node, 1., 1.)
+        @test θ_old.a != θ.b
+        @test θ_old.b != θ.b
+        @test θ.a == [-0.9588066488484266, 0.3440309806651667]
+        @test θ.b == [3.1952887708593747, 0.7909832955503989]
+        @test node.children[1].children[1]._val == BayesianSR.LinearCoef(θ.a[1], θ.b[1])
+    end 
+
+    @testset "Expansion" begin
+        θ_old = BayesianSR.SetLinearCoef(rand(3), rand(3))
+        old_node = RuleNode(1, BayesianSR.LinearCoef(θ_old.a[1], θ_old.b[1]),
+                            [RuleNode(1, BayesianSR.LinearCoef(θ_old.a[2], θ_old.b[2])),
+                             RuleNode(1, BayesianSR.LinearCoef(θ_old.a[3], θ_old.b[3]))])
+        node = RuleNode(2, [deepcopy(old_node),
+                            RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                            RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                            RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                            RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                            RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                            RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                            ])
+        θ, U, U⁺ = BayesianSR.propose_LinearCoef!(node, 1., 1., θ_old, :expansion)
+        @test length(θ.a) == length(θ.b) == 9
+        @test length(U.a) == length(U.b) == 9
+        @test length(U⁺.a) == length(U⁺.b) == length(θ_old.a)
+        @test length(θ.a) + length(U⁺.a) == length(θ_old.a) + length(U.a)
+    end 
+
+    @testset "Shrinkage" begin
+        old_node = RuleNode(2, [RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                                RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                                RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                                RuleNode(1, BayesianSR.LinearCoef(hyper)),
+                                ])
+        θ_old = BayesianSR.recover_LinearCoef(old_node)
+        node =  RuleNode(1, BayesianSR.LinearCoef(θ_old.a[1], θ_old.b[1]),
+                         [RuleNode(1, BayesianSR.LinearCoef(θ_old.a[2], θ_old.b[2])),
+                          RuleNode(1, BayesianSR.LinearCoef(θ_old.a[1], θ_old.b[1]))])
+        θ, U, U⁺ = BayesianSR.propose_LinearCoef!(node, 1., 1., θ_old, :shrinkage)
+        @test length(θ.a) == length(θ.b) == 3
+        @test length(U.a) == length(U.b) == 3
+        @test length(U⁺.a) == length(U⁺.b) == length(θ_old.a)
+        @test length(θ.a) + length(U⁺.a) == length(θ_old.a) + length(U.a)
+    end 
 end 
 
 @testset "MCMC" begin
