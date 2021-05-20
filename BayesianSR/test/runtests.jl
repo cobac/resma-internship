@@ -113,7 +113,7 @@ end
     answ = Core.eval(table, eq)
     @test length(answ) == 1
     @test isreal(answ)
-    manual_answ = cos(x[3, 2]) / (-6.159091338126841 + 0.51775562953136 *x[3,1])
+    manual_answ = cos(x[3, 2]) / (-6.159091338126841 + 0.51775562953136 * x[3,1])
     @test answ ≈ manual_answ
     treex = BayesianSR.evaltree(tree, x, fullgrammar)
     @test length(treex) == size(x, 1)
@@ -192,7 +192,7 @@ end
     @test in(0, sample.β) == false
 end 
 
-function test_chain(chain::Chain; initial = true)
+function test_chain(chain::Chain; initial=true)
     initial && @test length(chain) == 1
     @test length(chain) == length(chain.samples)
     initial && @test chain.samples[1] == chain.samples[end]
@@ -206,17 +206,17 @@ function test_chain(chain::Chain; initial = true)
     test_hyperparams(chain.hyper)
 end 
 
- @testset "Random Chain initialization" begin
-     k = 3
-     chain = Chain(x, y)
-     test_chain(chain)
-     chain = Chain(x, y, hyper = hyper)
-     test_chain(chain)
-     chain = Chain(x, y, operators = deepcopy(BayesianSR.defaultgrammar))
-     test_chain(chain)
-     chain = Chain(x, y, operators = deepcopy(BayesianSR.defaultgrammar), hyper = hyper)
-     test_chain(chain)
- end 
+@testset "Random Chain initialization" begin
+    k = 3
+    chain = Chain(x, y)
+    test_chain(chain)
+    chain = Chain(x, y, hyper=hyper)
+    test_chain(chain)
+    chain = Chain(x, y, operators=deepcopy(BayesianSR.defaultgrammar))
+    test_chain(chain)
+    chain = Chain(x, y, operators=deepcopy(BayesianSR.defaultgrammar), hyper=hyper)
+    test_chain(chain)
+end 
 
 @testset "Utils" begin 
     @testset "flatten()" begin
@@ -241,7 +241,7 @@ end
             node = get(node, loc)
             @test node.ind in BayesianSR.operator_indices(fullgrammar)
         end 
-      end 
+    end 
     @testset "iscandidate()" begin
         node1 = RuleNode(3, [RuleNode(9), RuleNode(9)])
         @test BayesianSR.iscandidate(node1, node1, fullgrammar) == false
@@ -270,7 +270,7 @@ end
 end 
 
 @testset "Tree movements" begin
-    #TODO: Test edge cases with linear coef
+    # TODO: Test edge cases with linear coef
     @testset "grow!()" begin
         for _ in 1:N_TEST
             node = RuleNode(fullgrammar, hyper)
@@ -374,19 +374,19 @@ end
                        BayesianSR.IndAndCount(2, 4),
                        BayesianSR.IndAndCount(12, 5)]
     @test BayesianSR.flatten_with_depth(node, 2) == manual_flatten2
-    manual_p = log(2/(1 + 1)) +
-        log(2/(1 + 2)) +
-        log(2/(1 + 3)) + 
-        log(1/7)*3 + 
-        log(1 - 2/(1 + 4)) + 
-        log(1/3)
+    manual_p = log(2 / (1 + 1)) +
+        log(2 / (1 + 2)) +
+        log(2 / (1 + 3)) + 
+        log(1 / 7) * 3 + 
+        log(1 - 2 / (1 + 4)) + 
+        log(1 / 3)
     @test BayesianSR.tree_p(node, fullgrammar) ≈ manual_p
-    manual_p2 = log(2/(1 + 2)) +
-        log(2/(1 + 3)) +
-        log(2/(1 + 4)) + 
-        log(1/7)*3 + 
-        log(1 - 2/(1 + 5)) + 
-        log(1/3)
+    manual_p2 = log(2 / (1 + 2)) +
+        log(2 / (1 + 3)) +
+        log(2 / (1 + 4)) + 
+        log(1 / 7) * 3 + 
+        log(1 - 2 / (1 + 5)) + 
+        log(1 / 3)
     @test BayesianSR.tree_p(node, 2, fullgrammar) ≈ manual_p2
 end 
 
@@ -466,8 +466,8 @@ end
     chain = Chain(x, y)
     test_chain(chain)
     n = 100
-    mcmc!(chain, n, verbose = false)
-    test_chain(chain, initial = false)
+    mcmc!(chain, n, verbose=false)
+    test_chain(chain, initial=false)
     @test length(chain) == n + 1
     @test all([isassigned(chain.samples, i) for i in 1:length(chain)])
 end 
