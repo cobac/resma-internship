@@ -41,8 +41,9 @@ Selects a random operator node and replaces it with a terminal node.
 """
 function prune!(node::RuleNode, grammar::Grammar)
     loc = sampleoperator(node, grammar)
-    old_node = deepcopy(get(node, loc))
+    old_node = get(node, loc)
     d = node_depth(node, old_node)
+    old_node = deepcopy(old_node)
     insert!(node, loc, new_terminal(grammar))
     return ChangedTree(node, old_node, d)
 end 
