@@ -18,7 +18,8 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool = false)
         nothing
 
     # Propose a new tree
-    proposal_tree = proposetree(proposal.trees[j], chain.grammar, chain.hyper)
+    proposal_tree = proposetree(proposal.trees[j], chain.grammar, chain.hyper,
+                                verbose = verbose)
 
     # Maybe propose a new set of LinearCoef parameters
     any_linear_operator_proposal = any_linear_operators(proposal_tree.tree)

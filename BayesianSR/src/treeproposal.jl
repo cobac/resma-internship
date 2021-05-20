@@ -20,7 +20,7 @@ end
 
 Generates a `TreeProposal`.
 """
-function proposetree(tree::RuleNode, grammar::Grammar, hyper::Hyperparams)
+function proposetree(tree::RuleNode, grammar::Grammar, hyper::Hyperparams; verbose::Bool = false)
     tree = deepcopy(tree)
     nₒ = n_operators(tree, grammar)
     n_lo = n_linear_operators(tree)
@@ -45,6 +45,7 @@ function proposetree(tree::RuleNode, grammar::Grammar, hyper::Hyperparams)
     movements = [:stay , :grow, :prune, :delete, :insert, :re_operator, :re_feature]
     weights =   [p_0   ,   p_g,    p_p,     p_d,     p_i,         p_ro,        p_rf]
     mov = sample(movements, Weights(weights))
+    verbose && println("Tree movement: ", mov)
 
     # Hyper: α, β = 2, 1
     # Prior: Uniform for operators and features
