@@ -101,18 +101,3 @@ function terminal_indices(grammar::Grammar)
     is = findall(iszero, node_types)
     return is
 end 
-
-# This is the definition found in ExprRules.
-# It started not being imported properly again, so I've just redefined it for now. 
-function Base.append!(grammar1::Grammar, grammar2::Grammar)
-    N = length(grammar1.rules)
-    append!(grammar1.rules, grammar2.rules)
-    append!(grammar1.types, grammar2.types)
-    append!(grammar1.isterminal, grammar2.isterminal)
-    append!(grammar1.iseval, grammar2.iseval)
-    append!(grammar1.childtypes, copy.(grammar2.childtypes))
-    for (s,v) in grammar2.bytype
-        grammar1.bytype[s] = append!(get(grammar1.bytype, s, Int[]), N .+ v)
-    end
-    grammar1
-end
