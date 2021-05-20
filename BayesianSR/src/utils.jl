@@ -109,19 +109,6 @@ function iscandidate(target::RuleNode, root::RuleNode, grammar::Grammar)
 end 
 
 """
-    length(chain::Chain) = length(chain.samples)
-
-Number of samples in a `Chain`.
-"""
-Base.length(chain::Chain) = length(chain.samples)
-"""
-    no_trees(chain::Chain) = length(chain.samples[1].trees)
-
-Number of `RuleNode` per `Sample` of a `Chain`.
-"""
-no_trees(chain::Chain) = length(chain.samples[1].trees)
-
-"""
     n_operators(node::RuleNode, grammar::Grammar)
 
 Number of operator nodes in a `RuleNode`.
