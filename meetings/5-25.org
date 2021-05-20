@@ -1,0 +1,17 @@
+* Things to discuss
+** Jin's code
+- ...What a mess D:
+- They include things in different parts
+  - P(\sigma_{a|b}) in h()
+  - P(\Theta) in f(\Theta|S)
+*** Ratio calculation
+**** No RJMCMC
+- They don't use P(\Theta^{*})/P(\Theta) and they don't include in the paper equation
+  - =codes/funcs.py:1284,1285=
+  - They select only ~fStruc[0]~
+- They don't use P(\Sigma^{*}_a)/P(\Sigma_b) and they don't include in the paper equation
+  - They include it on the RJMCMC case with h()
+- They *use* P(\Sigma_\varepsilon) but they *don't* include in the paper equation
+**** RJMCMC
+- They use P(\Sigma) correctly and they include in the paper equation
+- They use P(\Theta) and they include it in the paper equation
