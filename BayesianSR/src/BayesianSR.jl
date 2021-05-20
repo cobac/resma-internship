@@ -1,5 +1,5 @@
 module BayesianSR
-using ExprRules, Distributions, Random, StatsBase, AbstractTrees, Parameters
+using ExprRules, Distributions, Random, StatsBase, Parameters
 import ExprRules: RuleNodeAndCount, RuleNode
 
 export Chain, Hyperparams, mcmc!, no_trees
