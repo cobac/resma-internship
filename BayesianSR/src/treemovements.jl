@@ -198,10 +198,11 @@ function re_operator!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
     operator_is = operator_indices(grammar)
     loc = sampleoperator(node, grammar)
-    target = get(node, loc)
+    target =get(node, loc)
+    d = node_depth(node, target)
+    target = deepcopy(target)
     old_ind = target.ind
     old_type = node_types[old_ind]
-    d = node_depth(node, target)
     # Remove old index from the pool of operators
     operator_rm = findfirst(isequal(target.ind), operator_is)
     deleteat!(operator_is, operator_rm)
@@ -253,7 +254,7 @@ function re_operator!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
             transition = :same
             changed_node = nothing
         end 
-        node = insert!(node, loc, target)
+        insert!(node, loc, target)
     end 
     return ReassignedTree(node, changed_node, d, transition)
 end 
@@ -276,6 +277,6 @@ function re_feature!(node::RuleNode, grammar::Grammar)
     while !in(new.ind, terminal_is)
         new = new_terminal(grammar)
     end 
-    node = insert!(node, loc, new)
+    insert!(node, loc, new)
     return node
 end 
