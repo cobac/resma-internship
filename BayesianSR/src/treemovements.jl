@@ -27,8 +27,9 @@ function grow!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     loc = sampleterminal(node, grammar)
     old_node = get(node, loc)
     d = node_depth(node, old_node)
+    old_node = deepcopy(old_node)
     new_node = growtree(grammar, hyper, d)
-    node = insert!(node, loc, new_node)
+    insert!(node, loc, new_node)
     return ChangedTree(node, new_node, d)
 end 
 
