@@ -144,6 +144,10 @@ function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     loc = sample(NodeLoc, node)
     old = get(node, loc)
     while old.ind == 1
+    while_count = 0
+    while old.ind == 1 # No LinearCoef node
+        while_count += 1
+        while_count > 1000 && error("insert_node!() got stuck in a infinite loop.")
         loc = sample(NodeLoc, node)
         old = get(node, loc)
     end 
