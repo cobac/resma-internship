@@ -113,7 +113,7 @@ end
     answ = Core.eval(table, eq)
     @test length(answ) == 1
     @test isreal(answ)
-    manual_answ = cos(x[3, 2]) / (-6.159091338126841 + 1.5177556295313601*x[3,1])
+    manual_answ = cos(x[3, 2]) / (-6.159091338126841 + 0.51775562953136 *x[3,1])
     @test answ ≈ manual_answ
     treex = BayesianSR.evaltree(tree, x, fullgrammar)
     @test length(treex) == size(x, 1)
@@ -401,14 +401,14 @@ end
     θ = BayesianSR.recover_LinearCoef(node)
     @test length(θ.a) == length(θ.b) == 1
     @test θ.a[1] ≈ 15.632280168597802
-    @test θ.b[1] ≈ 3.687852482764168
+    @test θ.b[1] ≈ 2.687852482764168
 
     Random.seed!(104)
     node = RuleNode(fullgrammar, hyper)
     θ = BayesianSR.recover_LinearCoef(node)
     @test length(θ.a) == length(θ.b) == 2
     @test θ.a == [-0.908098317686729, 6.7865155459951945]
-    @test θ.b == [0.3030118349658554, -5.4827857902895625]
+    @test θ.b == [-0.6969881650341446, -6.4827857902895625]
 end 
 
 @testset "MCMC" begin
