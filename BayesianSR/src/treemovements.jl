@@ -140,7 +140,6 @@ function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     node_types = nodetypes(grammar)
     loc = sample(NodeLoc, node)
     old = get(node, loc)
-    while old.ind == 1
     while_count = 0
     while old.ind == 1 # No LinearCoef node
         while_count += 1
@@ -151,6 +150,7 @@ function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
     new = new_operator(grammar, hyper)
     type = node_types[new.ind]
     d = node_depth(node, old)
+    old = deepcopy(old)
     if type == 2
         new_branch = growtree(grammar, hyper, d)
         new.children = [old, new_branch]
@@ -158,11 +158,7 @@ function insert_node!(node::RuleNode, grammar::Grammar, hyper::Hyperparams)
         push!(new.children, old)
         new_branch = nothing
     end 
-    if loc.i == 0
-        node = new
-    else 
-        node = insert!(node, loc, new)
-    end 
+    insert!(node, loc, new)
     return InsertedTree(node, new_branch, d)
 end 
 
