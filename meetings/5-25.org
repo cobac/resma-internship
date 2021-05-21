@@ -15,3 +15,15 @@
 **** RJMCMC
 - They use P(\Sigma) correctly and they include in the paper equation
 - They use P(\Theta) and they include it in the paper equation
+**** Edge cases
+- Shrinking from x to 0 linear operators
+- Expanding from 0 linear operators
+- I'm setting h()/h⁺() = 0 for each the respective edge case
+  - Like Jin
+- They include the prior probability of variances that are not used
+  - I don't
+** State of the code
+- Spaghetti
+  - Works, so ok for now
+  - If if works nicely I might rewrite it after the internship
+  - ~1week 
