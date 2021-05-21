@@ -37,7 +37,7 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool=false)
     try 
         optimβ!(proposal, chain.x, chain.y, chain.grammar)
     catch e 
-        verbose && println("Got an eval error!")
+        verbose && println("Got an eval error. Sample rejected with tree: ", proposal_tree.tree)
         return old_sample
     end 
     proposal.σ²[:σ²] = rand(σ²_prior)
