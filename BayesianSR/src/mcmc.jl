@@ -78,7 +78,11 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool=false)
 
     
     R = exp(numerator - denominator)
-    isnan(R) && error("R is NaN")
+    if verbose && isnan(R)
+        println("R is NaN at i: ", i+1)
+        println("Numerator: ", numerator)
+        println("Denominator: ", denominator)
+    end 
     
     # Update chain
     α = min(1.0, R)
