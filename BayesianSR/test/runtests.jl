@@ -463,11 +463,13 @@ end
 end 
 
 @testset "MCMC" begin
-    chain = Chain(x, y)
-    test_chain(chain)
-    n = 100
-    mcmc!(chain, n, verbose=false)
-    test_chain(chain, initial=false)
-    @test length(chain) == n + 1
-    @test all([isassigned(chain.samples, i) for i in 1:length(chain)])
+    for _ in 1:N_TEST
+        chain = Chain(x, y)
+        test_chain(chain)
+        n = 100
+        mcmc!(chain, n, verbose=false)
+        test_chain(chain, initial=false)
+        @test length(chain) == n + 1
+        @test all([isassigned(chain.samples, i) for i in 1:length(chain)])
+    end 
 end 
