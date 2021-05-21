@@ -14,22 +14,64 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool=false)
 
     # Maybe gather old LinearCoef parameters
     any_linear_operator_old = any_linear_operators(old_sample.trees[j])
-    any_linear_operator_old ? θ_old = recover_LinearCoef(old_sample.trees[j]) :
-        nothing
+    if any_linear_operator_old
+        θ_old = recover_LinearCoef(old_sample.trees[j])
+        # Get last LinearCoef variances for this (j-th) tree
+        # First k samples variances are not real
+        i > k ? previous_i = i - k : previous_i = i
+        old_σ²_a = chain.samples[previous_i].σ²[:σ²_a]
+        old_σ²_b = chain.samples[previous_i].σ²[:σ²_b]
+    end 
 
     # Propose a new tree
     proposal_tree = proposetree(proposal.trees[j], chain.grammar, chain.hyper,
                                 verbose=verbose)
 
-    # Maybe propose a new set of LinearCoef parameters
-    any_linear_operator_proposal = any_linear_operators(proposal_tree.tree)
-    if any_linear_operator_proposal
-        proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
-        proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
+    # Check for linear operators in proposal
+    n_linear_operators_proposal = n_linear_operators(proposal_tree.tree)
+    any_linear_operator_proposal = n_linear_operators_proposal > 0
+    # Even if there are no linear operators,
+    # we might need to sample variances to calculate rjmcmc_h⁺ in the shrinkage edge case
+    proposal.σ²[:σ²_a] = σ²_a = rand(σ²_a_prior)
+    proposal.σ²[:σ²_b] = σ²_b = rand(σ²_b_prior)
+
+    # Generate new LinearCoefs and auxiliary variables U
+    if any_linear_operator_old && any_linear_operator_proposal
+        if length(θ_old.a) < n_linear_operators_proposal
+            rjmcmc = :expansion
+            θ_proposal, U, U⁺ = propose_LinearCoef!(proposal_tree.tree, σ²_a, σ²_b, θ_old, rjmcmc)
+            rjmcmc_h = sum(logpdf.(Normal(1, σ²_a), U.a)) +
+                sum(logpdf.(Normal(0, σ²_b), U.b))
+            rjmcmc_h⁺ = sum(logpdf.(Normal(1, old_σ²_a), U⁺.a)) +
+                sum(logpdf.(Normal(0, old_σ²_b), U⁺.b))
+            jacobian = log(2.0^(-2 * length(θ_old.a)))
+        elseif length(θ_old.a) > n_linear_operators_proposal
+            rjmcmc = :shrinkage
+            θ_proposal, U, U⁺ = propose_LinearCoef!(proposal_tree.tree, σ²_a, σ²_b, θ_old, rjmcmc)
+            rjmcmc_h = sum(logpdf.(Normal(0, σ²_a), U.a)) +
+                sum(logpdf.(Normal(0, σ²_b), U.b))
+            rjmcmc_h⁺ = sum(logpdf.(Normal(0, old_σ²_a), U⁺.a)) +
+                sum(logpdf.(Normal(0, old_σ²_b), U⁺.b))
+            jacobian = log(2.0^(2 * length(θ_proposal.a)))
+        else # Same dimensions
+            θ_proposal = propose_LinearCoef!(proposal_tree.tree, σ²_a, σ²_b)
+        end 
+        # Edge cases: 
+    elseif any_linear_operator_proposal # From 0 to some linear operator
+        rjmcmc = :expansion
         θ_proposal = propose_LinearCoef!(proposal_tree.tree, σ²_a, σ²_b)
-    else 
-        proposal.σ²[:σ²_a] = 0.0
-        proposal.σ²[:σ²_b] = 0.0
+        # θ_proposal = U
+        rjmcmc_h = sum(logpdf.(Normal(1, σ²_a), θ_proposal.a)) +
+            sum(logpdf.(Normal(0, σ²_b), θ_proposal.b))
+        rjmcmc_h⁺ = 0
+        jacobian = 0
+    elseif any_linear_operator_old # From some linear operator to 0
+        rjmcmc = :shrinkage
+        # U⁺ = θ_old
+        rjmcmc_h = 0
+        rjmcmc_h⁺ = sum(logpdf.(Normal(1, old_σ²_a), θ_old.a)) +
+            sum(logpdf.(Normal(0, old_σ²_b), θ_old.b))
+        jacobian = 0
     end 
 
     # Update the proposal
@@ -51,10 +93,10 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool=false)
         proposal_tree.p_mov_inv
 
     if any_linear_operator_proposal
-        numerator += sum(logpdf.(Normal(1, √proposal.σ²[:σ²_a]), θ_proposal.a)) + # P intercepts
-            sum(logpdf.(Normal(1, √proposal.σ²[:σ²_b]), θ_proposal.b)) + # P slopes
-            logpdf(σ²_a_prior, proposal.σ²[:σ²_a]) + # σ²_a prior
-            logpdf(σ²_b_prior, proposal.σ²[:σ²_b])  # σ²_b prior
+        numerator += sum(logpdf.(Normal(1, √σ²_a), θ_proposal.a)) + # P intercepts
+            sum(logpdf.(Normal(1, √σ²_b), θ_proposal.b)) + # P slopes
+            logpdf(σ²_a_prior, σ²_a) + # σ²_a prior
+            logpdf(σ²_b_prior, σ²_b)  # σ²_b prior
     end 
 
     denominator = log_likelihood(old_sample, chain.grammar, chain.x, chain.y) + # Likelihood
@@ -65,21 +107,21 @@ function step(chain::Chain, i::Int, j::Int ; verbose::Bool=false)
         proposal_tree.p_mov
 
     if any_linear_operator_old
-        # Get last LinearCoef variances for this (j-th) tree
-        # First k samples variances are not real
-        i > k ? previous_i = i - k : previous_i = i
-        old_σ²_a = chain.samples[previous_i].σ²[:σ²_a]
-        old_σ²_b = chain.samples[previous_i].σ²[:σ²_b]
         denominator += sum(logpdf.(Normal(1, √old_σ²_a), θ_old.a)) + # P intercepts
             sum(logpdf.(Normal(1, √old_σ²_b), θ_old.b)) + # P slopes
             logpdf(σ²_a_prior, old_σ²_a) + # σ²_a prior
             logpdf(σ²_b_prior, old_σ²_b)  # σ²_b prior
     end 
 
+    # Reversible Jump MCMC required
+    if isdefined(BayesianSR, :rjmcmc)
+        numerator += rjmcmc_h⁺ + jacobian
+        denominator += rjmcmc_h
+    end 
     
     R = exp(numerator - denominator)
     if verbose && isnan(R)
-        println("R is NaN at i: ", i+1)
+        println("R is NaN at i: ", i + 1)
         println("Numerator: ", numerator)
         println("Denominator: ", denominator)
     end 
