@@ -7,9 +7,11 @@
 *** Ratio calculation
 **** No RJMCMC
 - They don't use P(\Theta^{*})/P(\Theta) and they don't include in the paper equation
+  - But I think they should
   - =codes/funcs.py:1284,1285=
-  - They select only ~fStruc[0]~
+    - They select only ~fStruc[0]~
 - They don't use P(\Sigma^{*}_a)/P(\Sigma_b) and they don't include in the paper equation
+  - But I think they should
   - They include it on the RJMCMC case with h()
 - They *use* P(\Sigma_\varepsilon) but they *don't* include in the paper equation
 **** RJMCMC
@@ -23,7 +25,16 @@
 - They include the prior probability of variances that are not used
   - I don't
 ** State of the code
-- Spaghetti
+*** Migrated BayesianSR to its own repo
+**** Each analysis with a different branch to have reproducible state
+- =scripts/jin-vanilla= uses =BayesianSR#jin-vanilla=
+- =scripts/centered-proposals= uses =BayesianSR#centered-proposals=
+- =scripts/centered-proposals-and-symplify= uses =BayesianSR#master=
+*** =[compat]= section of =Project.tml=
+- =ExprRules.jl= ok with bugfix
+- The rest... more recent?
+*** Spaghetti
   - Works, so ok for now
   - If if works nicely I might rewrite it after the internship
-  - ~1week 
+  - And nicer user-facing functions
+    - Input validation, graphs, etc
