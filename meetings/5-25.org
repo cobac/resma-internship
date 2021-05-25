@@ -1,4 +1,4 @@
-* Jin's code
+* Jin's [[https://github.com/ying531/MCMC-SymReg/tree/master/codes][code]]
 - ...What a mess D:
 - They include things in different parts
   - P(\sigma_{a|b}) in h()
@@ -37,8 +37,12 @@
   - If if works nicely I might rewrite it after the internship
   - And nicer user-facing functions
     - Input validation, graphs, latexify, etc.
+** OLS optimization thing
+- https://github.com/cobac/resma-internship/pull/2#discussion_r628047547
+
 * Performance
 - Something is not working sometimes (eq_3), need to look into it
+  - =NaNs= on first chain, and then it has to reject every proposal
 - It accepts an extremely low number of samples
   - <50/1000, <50/10000
 - Numerical fit can be excellent
@@ -48,6 +52,8 @@
   - The simplify step should fix this
 - A lot of variability between chains
   - Probably good idea to run multiple chains if the simplification step does not address it
+  - Time-free as we can do it in parallel
+  - Low memory footprint
 - Computationally is very fast
   - ~8ms per sample on my laptop
   - We'll see how it compares to the python version
@@ -67,6 +73,8 @@
 **** Bayesian things
 - How to select the best trees
 - How to get uncertainty over trees/branches
+- Should be /easy/ to identify where do things vary with these low acceptance rates
+- But maybe if it's hard to explore good samples the frequencies are not informative
 **** Fancy expression recovery
 - Biased neural networks to abstract functions and recovering expressions from them
   - Cranmer et al.
@@ -74,3 +82,4 @@
   - They usually recover mathematical expressions from neural nets
 - Compare vs structure into the data
   - You can include the structure information into the functions, or just as a way of structuring the data
+    
