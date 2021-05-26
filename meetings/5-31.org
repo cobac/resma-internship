@@ -1,4 +1,12 @@
 * Things I've done
 ** Found/Fixed bugs
 - Going through the whole program checking stuff with prints
+** grow/prune issue
+- Grow/prune share 1/3 of the probability of not keeping the tree
+- p_grow = min(1, 8/(n_operators + 2))
+  - 1 until n_operators = 7
+- In that case p_prune = 0
+- p_inv = 0, log(p_inv) = -Inf
+- Numerator = -Inf
+- Always reject sample
 
