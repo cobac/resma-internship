@@ -9,4 +9,6 @@
 - p_inv = 0, log(p_inv) = -Inf
 - Numerator = -Inf
 - Always reject sample
+- Now, R is only not well-behaved when this happens
+  - It's still Inf in other circumstances because of the exp()
 
