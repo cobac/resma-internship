@@ -17,5 +17,8 @@
   - It's still Inf in other circumstances because of the exp()
 ** Conversation with Jin
 - https://github.com/ying531/MCMC-SymReg/issues/2
-
+* Things to implement
+** Simplify
+- Issue when parsing an expression back to a tree with linear operators
+- Select which numbers go together and for which ones a need a new operator with a=0 or b=1
 
