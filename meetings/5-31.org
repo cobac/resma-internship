@@ -1,6 +1,8 @@
 * Things I've done
 ** Found/Fixed bugs
 - Going through the whole program checking stuff with prints
+** Checked the package with JET
+- Some reports on =Parameters.jl= source, but clean in ours.
 ** Checked how they calculate transition probabilities
 - Same as we do
 ** grow/prune issue
