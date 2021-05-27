@@ -11,4 +11,7 @@
 - Always reject sample
 - Now, R is only not well-behaved when this happens
   - It's still Inf in other circumstances because of the exp()
+** Conversation with Jin
+- https://github.com/ying531/MCMC-SymReg/issues/2
+
 
