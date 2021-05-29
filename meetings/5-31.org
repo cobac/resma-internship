@@ -17,6 +17,25 @@
   - It's still Inf in other circumstances because of the exp()
 ** Conversation with Jin
 - https://github.com/ying531/MCMC-SymReg/issues/2
+- I'm not sure if they agreed/not at the end
+** Report
+*** Functions Jin do + data set
+*** How to compare performance
+**** Computational 
+- Bayesian versions we have "sample" as a time unit
+- Create a unit of time based on total runtime
+- RMSE per unit of time
+**** Complexity
+- Just length
+*** Algorithms
+**** Jin's 
+**** Jin's Julia
+**** Modifications
+- Centered proposals
+- Simplify step
+- Multiple chains
+- All combined
+**** Evolutionary
 * Things to implement
 ** Simplify
 - Issue when parsing an expression back to a tree with linear operators
