@@ -1,4 +1,3 @@
-#+title: 
 #+BEGIN_SRC elisp :eval :results none :exports results
   (coba-define-org-tex-template)
   (setq custom-tex-template (mapconcat 'identity (list
@@ -143,40 +142,41 @@ Symbolic regression algorithms perform best when the relationships they are tryi
 
 \hfill Word count: 106/250
 
-* Work plan
-# (500w)
-** Time schedule
-# State the total amount of EC as noted in the internship contract (18-24 EC), 1EC stands for 28 hours work. Present and justify a time schedule in weeks, including your time investment in hours per week. Plan some spare time, and indicate what elements can be cut / reduced if necessary. Provide the intended presentation date.
+# * Work plan
+# # (500w)
+# ** Time schedule
+# # State the total amount of EC as noted in the internship contract (18-24 EC), 1EC stands for 28 hours work. Present and justify a time schedule in weeks, including your time investment in hours per week. Plan some spare time, and indicate what elements can be cut / reduced if necessary. Provide the intended presentation date.
+# 
+# This internship project consists of 18EC which corresponds to 504 hours of work. Over a period of 21 weeks it averages to 24 hours of work per week.
+# 
+# - February/March: During these months we have reviewed the relevant literature, selected and learned the tooling we are going to use, and designed the structure of the project.
+# - April: We plan to implement a simple Bayesian symbolic regression algorithm and evaluate its performance.
+# - May: We plan to implement and evaluate a Bayesian symbolic regression model equivalent to textcite:cranmer2020discovsymbol Newtonian Dynamics case.
+# - June: I will write my internship report. I intend to present the final draft of my internship report on the 18th of June.
+#  
+# If we encounter delays in our planning we could cut down on the number of models to which we compare the performance of the Bayesian symbolic regression algorithm at any step. If it were necessary we could cut the whole comparison with the Newtonian Dynamics case too.
+#   
+# ** 	Data storage
+# 
+# We plan on only using either synthetic or publicly available datasets. We are keeping and will keep all project files under version control, with physical and remote daily backups.
+# 
+# \hfill Word count: 192/500
 
-This internship project consists of 18EC which corresponds to 504 hours of work. Over a period of 21 weeks it averages to 24 hours of work per week.
 
-- February/March: During these months we have reviewed the relevant literature, selected and learned the tooling we are going to use, and designed the structure of the project.
-- April: We plan to implement a simple Bayesian symbolic regression algorithm and evaluate its performance.
-- May: We plan to implement and evaluate a Bayesian symbolic regression model equivalent to textcite:cranmer2020discovsymbol Newtonian Dynamics case.
-- June: I will write my internship report. I intend to present the final draft of my internship report on the 18th of June.
- 
-If we encounter delays in our planning we could cut down on the number of models to which we compare the performance of the Bayesian symbolic regression algorithm at any step. If it were necessary we could cut the whole comparison with the Newtonian Dynamics case too.
-  
-** 	Data storage
-
-We plan on only using either synthetic or publicly available datasets. We are keeping and will keep all project files under version control, with physical and remote daily backups.
-
-\hfill Word count: 192/500
-
-
-* Further steps
-Make sure your supervisor submits an Ethics Checklist for your intended research to the Ethics Review Board of the Department of Psychology at https://www.lab.uva.nl/lab/ethics/ .
-
-* Signatures
-- [ ] I hereby declare that both this proposal, and its resulting internship, will only contain original material and is free of plagiarism (cf. Teaching and Examination Regulation in the research master’s course catalogue).
-- [ ] I hereby declare that the results section of the internship report will consist of two subsections, one entitled “confirmatory analyses” and one entitled “exploratory analyses” (one of the two subsections may be empty):
-  1) The confirmatory analysis section reports exactly the analyses proposed in Section 4 of this proposal
-  2) The exploratory analysis section contains not previously specified, and thus exploratory, analyses.
-  
-\centering
-*Location:* \hspace{1cm} *Student’s signature:* \hspace{1cm} *Supervisor’s signature:*
-
-\raggedright
-\hspace{1.5cm} Amsterdam
-
+# * Further steps
+# Make sure your supervisor submits an Ethics Checklist for your intended research to the Ethics Review Board of the Department of Psychology at https://www.lab.uva.nl/lab/ethics/ .
+# 
+# * Signatures
+# - [ ] I hereby declare that both this proposal, and its resulting internship, will only contain original material and is free of plagiarism (cf. Teaching and Examination Regulation in the research master’s course catalogue).
+# - [ ] I hereby declare that the results section of the internship report will consist of two subsections, one entitled “confirmatory analyses” and one entitled “exploratory analyses” (one of the two subsections may be empty):
+#   1) The confirmatory analysis section reports exactly the analyses proposed in Section 4 of this proposal
+#   2) The exploratory analysis section contains not previously specified, and thus exploratory, analyses.
+#   
+# \centering
+# *Location:* \hspace{1cm} *Student’s signature:* \hspace{1cm} *Supervisor’s signature:*
+# 
+# \raggedright
+# \hspace{1.5cm} Amsterdam
+* Results
+* Discussion
 \printbibliography
