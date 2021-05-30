@@ -1,3 +1,6 @@
+* I'm stressed
+- Probably just enough time to do the boring comparisons
+- :(
 * Things I've done
 ** Found/Fixed bugs
 - Going through the whole program checking stuff with prints
@@ -5,7 +8,7 @@
 - Some reports on =Parameters.jl= source, but clean in ours.
 ** Checked how they calculate transition probabilities
 - Same as we do
-** grow/prune issue
+** grow/prune issue causes slow start
 - Grow/prune share 1/3 of the probability of not keeping the tree
 - p_grow = min(1, 8/(n_operators + 2))
   - 1 until n_operators = 7
@@ -17,27 +20,113 @@
   - It's still Inf in other circumstances because of the exp()
 ** Conversation with Jin
 - https://github.com/ying531/MCMC-SymReg/issues/2
-- I'm not sure if they agreed/not at the end
+- I'm not sure if they agree/not at the end
+** Tried to optimize
+- ~5% improvement with not creating a full =SymbolTable= all the time
+  - Only updating the values of the variables
+  - Calls to =Symbol()= are the most expensive part of the code
+    - 17% faster after creating the symbols manually
+  - The most expensive part of the program now is =Core.eval=
+- Currently evaluating the proposal sample twice: for OLS and for likelihood
+  - And every sample is re-evaluated when we try to update it
+- =SArrays=
+** Symbolic stuff
+- I'm not sure I fully understand how to work with =Symbolics.jl=
+- I'm generating a simplified =Symbolics.jl= =Num=
+  - And the latex version
+- How to extract a nice callable function?
+  - =build_function= but need to pre-specify the arguments?
+- Maybe faster than the =Core.eval= implementation by =ExprRules.jl=?
+  - Probably faster eval but the overhead of extracting the symbolic representation/function is not worth it
+- If ::
+  - =interface.jl=
+  - =runtests.jl=
 ** Report
 *** Functions Jin do + data set
 *** How to compare performance
 **** Computational 
 - Bayesian versions we have "sample" as a time unit
+  - But each sample takes different times in average
 - Create a unit of time based on total runtime
 - RMSE per unit of time
 **** Complexity
 - Just length
+**** Stability
+- Jin run 50 simulations
+- ... They don't report it
+- 7ms*6chains*100000samples/chain*50simulations/1000ms/s/3600s/h = 58h
+  - 7.25h on 8 threads
+- + multiple chains + simplify + genetic
+***** But...
+- I get a segfault because my RAM + swap runs out... I think
+#+BEGIN_SRC :results silent :exports code
+signal (11): Segmentation fault
+in expression starting at /home/coba/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl:72
+HDF5-DIAG: Error detected in HDF5 (1.12.0) thread 0:
+#000: H5F.c line 677 in H5Fcreate(): not file create property list
+major: Invalid arguments to routine
+minor: Inappropriate type
+#001: H5Pint.c line 3965 in H5P_isa_class(): not a property list
+major: Invalid arguments to routine
+minor: Inappropriate type
+H5SL_release_common at /home/coba/.julia/artifacts/997813d46a8a06e6e9871a2a01483f91ce954eca/lib/libhdf5.so (unknown line)
+H5SL_close at /home/coba/.julia/artifacts/997813d46a8a06e6e9871a2a01483f91ce954eca/lib/libhdf5.so (unknown line)
+H5P_create_id at /home/coba/.julia/artifacts/997813d46a8a06e6e9871a2a01483f91ce954eca/lib/libhdf5.so (unknown line)
+H5Pcreate at /home/coba/.julia/artifacts/997813d46a8a06e6e9871a2a01483f91ce954eca/lib/libhdf5.so (unknown line)
+h5p_create at /home/coba/.julia/packages/HDF5/VJkAi/src/api.jl:969 [inlined]
+#create_property#33 at /home/coba/.julia/packages/HDF5/VJkAi/src/HDF5.jl:863 [inlined]
+create_property at /home/coba/.julia/packages/HDF5/VJkAi/src/HDF5.jl:863 [inlined]
+#jldopen#12 at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:170
+jldopen##kw at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:162 [inlined]
+#jldopen#13 at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:249
+jldopen##kw at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:249
+unknown function (ip: 0x7fe019146d0c)
+unknown function (ip: 0x7fe0492cbf24)
+#jldopen#14 at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:259
+jldopen##kw at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:259
+unknown function (ip: 0x7fe01911f7f1)
+#fileio_save#38 at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:1258
+unknown function (ip: 0x7fe0492cbf24)
+fileio_save at /home/coba/.julia/packages/JLD/JHrZe/src/JLD.jl:1255
+jl_f__call_latest at /usr/bin/../lib/julia/libjulia-internal.so.1 (unknown line)
+unknown function (ip: 0x7fe0492cbf24)
+unknown function (ip: 0x7fe0378d56d2)
+unknown function (ip: 0x7fe0492cbf24)
+unknown function (ip: 0x7fe0377aa03a)
+unknown function (ip: 0x7fe0492cbf24)
+#action#33 at /home/coba/.julia/packages/FileIO/3jBq2/src/loadsave.jl:216
+unknown function (ip: 0x7fe0492cbf24)
+action at /home/coba/.julia/packages/FileIO/3jBq2/src/loadsave.jl:196
+unknown function (ip: 0x7fe0492cbf24)
+#action#32 at /home/coba/.julia/packages/FileIO/3jBq2/src/loadsave.jl:185
+unknown function (ip: 0x7fe0492cbf24)
+action at /home/coba/.julia/packages/FileIO/3jBq2/src/loadsave.jl:185
+unknown function (ip: 0x7fe0492cbf24)
+#save#20 at /home/coba/.julia/packages/FileIO/3jBq2/src/loadsave.jl:129
+save at /home/coba/.julia/packages/FileIO/3jBq2/src/loadsave.jl:126 [inlined]
+macro expansion at /home/coba/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl:68 [inlined]
+#51#threadsfor_fun at ./threadingconstructs.jl:81
+#51#threadsfor_fun at ./threadingconstructs.jl:48
+unknown function (ip: 0x7fe01910336c)
+unknown function (ip: 0x7fe0492da24b)
+unknown function (ip: (nil))
+unknown function (ip: 0x5622c43079af)
+Allocations: 53283607 (Pool: 53258634; Big: 24973); GC: 38
+zsh: segmentation fault (core dumped)  julia -t 6
+#+END_SRC
 *** Algorithms
 **** Jin's 
 **** Jin's Julia
 **** Modifications
 - Centered proposals
 - Simplify step
+  - Issue when parsing an expression back to a tree with linear operators
+  - Select which numbers go together and for which ones a need a new operator with a=0 or b=1
 - Multiple chains
+  - Easy stats because I can assign a fixed probability of sampling from another chain
+  - How to present the data, less time but more computational requirements
+    - Report both eror/time and error/samples
+  - Need to add an index tracking to the chain
 - All combined
 **** Evolutionary
-* Things to implement
-** Simplify
-- Issue when parsing an expression back to a tree with linear operators
-- Select which numbers go together and for which ones a need a new operator with a=0 or b=1
 
