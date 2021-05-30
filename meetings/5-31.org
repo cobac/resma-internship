@@ -24,12 +24,18 @@
 ** Tried to optimize
 - ~5% improvement with not creating a full =SymbolTable= all the time
   - Only updating the values of the variables
-  - Calls to =Symbol()= are the most expensive part of the code
+  - Calls to =Symbol()= were the most expensive part of the code
     - 17% faster after creating the symbols manually
+    - https://github.com/cobac/BayesianSR/blob/7318d2b2c978aae35c9f4d24aae5c0a46b866a57/src/eval.jl#L67-L70
   - The most expensive part of the program now is =Core.eval=
 - Currently evaluating the proposal sample twice: for OLS and for likelihood
   - And every sample is re-evaluated when we try to update it
+  - Expected ~x2 increase
+  - Refactor a lot of things
+  - Probably not worth changing this before the report
 - =SArrays=
+  - Idk how much faster it'll be, mostly because of the optimization steps and matrices multiplication on evalmodel
+  - But easy to implement
 ** Symbolic stuff
 - I'm not sure I fully understand how to work with =Symbolics.jl=
 - I'm generating a simplified =Symbolics.jl= =Num=
@@ -42,12 +48,13 @@
   - =interface.jl=
   - =runtests.jl=
 ** Report
-*** Functions Jin do + data set
+*** Functions Jin + data set
 *** How to compare performance
 **** Computational 
 - Bayesian versions we have "sample" as a time unit
   - But each sample takes different times in average
-- Create a unit of time based on total runtime
+  - How to compare with genetic program?
+- Create a unit of time based on total runtime (time elapsed per thread)
 - RMSE per unit of time
 **** Complexity
 - Just length
@@ -59,6 +66,7 @@
 - + multiple chains + simplify + genetic
 ***** But...
 - I get a segfault because my RAM + swap runs out... I think
+- But I'm not sure because it crashes on multiple threads 
 #+BEGIN_SRC :results silent :exports code
 signal (11): Segmentation fault
 in expression starting at /home/coba/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl:72
@@ -129,4 +137,5 @@ zsh: segmentation fault (core dumped)  julia -t 6
   - Need to add an index tracking to the chain
 - All combined
 **** Evolutionary
-
+*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl][Simulations]]
+*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/analysis.jl][Analysis]]
