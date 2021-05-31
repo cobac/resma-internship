@@ -18,8 +18,8 @@
 #+LATEX_HEADER: \affiliation{Research Master's Psychology \\ University of Amsterdam}
 #+LATEX_HEADER: \professor{ \hphantom{1cm} \\ % 
 #+LATEX_HEADER: Supervised by: \\% 
-#+LATEX_HEADER: Mr Don van den Bergh MSc \\%
-#+LATEX_HEADER: Prof. dr. E.M. Eric-Jan Wagenmakers \\%
+#+LATEX_HEADER: Don van den Bergh\\%
+#+LATEX_HEADER: Eric-Jan Wagenmakers \\%
 #+LATEX_HEADER: \hphantom{1cm} }
 #+LATEX_HEADER: \duedate{18 June 2021}
 
