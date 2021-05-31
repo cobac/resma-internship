@@ -1,8 +1,8 @@
 using BayesianSR,
     Random,
-    LinearAlgebra,
     Distributions,
-    JLD
+    JLD2,
+    ProgressMeter
 
 Random.seed!(3)
 n = 30 # no. observations
@@ -50,13 +50,13 @@ hyper = Hyperparams(k=2)
 function stepchains!(chains::Vector{Chain}, no_iter::Int)
     t = 0
     for chain in eachindex(chains)
-        println("Chain no ", chain)
-        t += @elapsed mcmc!(chains[chain], no_iter, verbose = true)
+        t += @elapsed mcmc!(chains[chain], no_iter, verbose = false)
     end 
     return t
 end 
 
 function simulation(no_sim, no_iter)
+    p = Progress(no_sim)
     Threads.@threads for i in 1:no_sim
         chains = [Chain(x, y₁, operators = functions, hyper = hyper),
                   Chain(x, y₂, operators = functions, hyper = hyper),
@@ -65,8 +65,9 @@ function simulation(no_sim, no_iter)
                   Chain(x, y₅, operators = functions, hyper = hyper),
                   Chain(x, y₆, operators = functions, hyper = hyper)]
         t = stepchains!(chains, no_iter)
-        save(string("./out/chains", i, ".jld"), "chains", chains, "t", t)
+        save(string("./chains/chains", i, ".jld2"), "chains", chains, "t", t)
+        next!(p)
     end 
 end 
 
-@time simulation(10, 100)
+@time simulation(50, 100)
