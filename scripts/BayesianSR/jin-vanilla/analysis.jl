@@ -72,31 +72,23 @@ for sample=1:length(chains[1][1]),
     # evalmodel() with the training dataset will always converge
     # because samples that do not converge are not included in the chains,
     # but it might fail (e.g. sin(Inf)) with a testing dataset
-    ŷ_train = evalmodel(chains[sim][fun].samples[sample],
-                        x,
-                        chains[sim][fun].grammar) 
+    ŷ_train = evalmodel(chains[sim][fun].samples[sample], x, chains[sim][fun].grammar) 
     try 
-        global ŷ_test₁ = evalmodel(chains[sim][fun].samples[sample],
-                                   x_test₁,
-                            chains[sim][fun].grammar) 
+        global ŷ_test₁ = evalmodel(chains[sim][fun].samples[sample], x_test₁, chains[sim][fun].grammar) 
     catch e 
         if isa(e, DomainError)
             global ŷ_test₁ = [Inf for _ in y]
         end 
     end 
     try 
-        global ŷ_test₂ = evalmodel(chains[sim][fun].samples[sample],
-                                   x_test₂,
-                            chains[sim][fun].grammar) 
+        global ŷ_test₂ = evalmodel(chains[sim][fun].samples[sample], x_test₂, chains[sim][fun].grammar) 
     catch e 
         if isa(e, DomainError)
             global ŷ_test₂ = [Inf for _ in y]
         end 
     end 
     try 
-        global ŷ_test₃ = evalmodel(chains[sim][fun].samples[sample],
-                                   x_test₃,
-                            chains[sim][fun].grammar) 
+        global ŷ_test₃ = evalmodel(chains[sim][fun].samples[sample], x_test₃, chains[sim][fun].grammar) 
     catch e 
         if isa(e, DomainError)
             global ŷ_test₃ = [Inf for _ in y]
