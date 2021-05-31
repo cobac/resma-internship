@@ -25,12 +25,12 @@ function applyf(f, x)
     return out
 end  
 
-y₁ = applyf(f₁, x) # .+ rand(Normal(0, 2))
-y₂ = applyf(f₂, x) # .+ rand(Normal(0, 2))
-y₃ = applyf(f₃, x) # .+ rand(Normal(0, 2))
-y₄ = applyf(f₄, x) # .+ rand(Normal(0, 2))
-y₅ = applyf(f₅, x) # .+ rand(Normal(0, 2))
-y₆ = applyf(f₆, x) # .+ rand(Normal(0, 2))
+y₁ = applyf(f₁, x)
+y₂ = applyf(f₂, x)
+y₃ = applyf(f₃, x)
+y₄ = applyf(f₄, x)
+y₅ = applyf(f₅, x)
+y₆ = applyf(f₆, x)
  
 functions = @grammar begin
     Real = Real + Real
@@ -70,4 +70,4 @@ function simulation(no_sim, no_iter)
     end 
 end 
 
-@time simulation(50, 100)
+@time simulation(50, 100000)
