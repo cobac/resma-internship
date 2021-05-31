@@ -3,7 +3,7 @@
 - :(
 * Things I've done
 ** Found/Fixed bugs
-- Going through the whole program checking stuff with prints
+- Updated probabilities after linear transformations
 ** Checked the package with JET
 - Some reports on =Parameters.jl= source, but clean in ours.
 ** Checked how they calculate transition probabilities
@@ -44,11 +44,12 @@
   - =build_function= but need to pre-specify the arguments?
 - Maybe faster than the =Core.eval= implementation by =ExprRules.jl=?
   - Probably faster eval but the overhead of extracting the symbolic representation/function is not worth it
-- If ::
-  - =interface.jl=
-  - =runtests.jl=
 ** Report
 *** Functions Jin + data set
+*** How to save simulation data for 
+- =JLD=
+*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl][Simulations]]
+*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/analysis.jl][Analysis]]
 *** How to compare performance
 **** Computational 
 - Bayesian versions we have "sample" as a time unit
@@ -65,8 +66,9 @@
   - 7.25h on 8 threads
 - + multiple chains + simplify + genetic
 ***** But...
-- I get a segfault because my RAM + swap runs out... I think
-- But I'm not sure because it crashes on multiple threads 
+- I get a segfault but my RAM + swap is not running out
+- Only on multiple threads
+- But I don't think there is any memory accessed by multiple threads
 #+BEGIN_SRC :results silent :exports code
 signal (11): Segmentation fault
 in expression starting at /home/coba/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl:72
@@ -137,5 +139,3 @@ zsh: segmentation fault (core dumped)  julia -t 6
   - Need to add an index tracking to the chain
 - All combined
 **** Evolutionary
-*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl][Simulations]]
-*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/analysis.jl][Analysis]]
