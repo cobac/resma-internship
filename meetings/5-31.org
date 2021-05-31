@@ -48,8 +48,8 @@
 *** Functions Jin + data set
 *** How to save simulation data for 
 - =JLD=
-*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/simulation.jl][Simulations]]
-*** [[file:~/Documentos/Psicología/resma/internship/repo/scripts/BayesianSR/jin-vanilla/analysis.jl][Analysis]]
+*** [[https://github.com/cobac/resma-internship/blob/master/scripts/BayesianSR/jin-vanilla/simulation.jl][Simulations]]
+*** [[https://github.com/cobac/resma-internship/blob/master/scripts/BayesianSR/jin-vanilla/analysis.jl][Analysis]]
 *** How to compare performance
 **** Computational 
 - Bayesian versions we have "sample" as a time unit
