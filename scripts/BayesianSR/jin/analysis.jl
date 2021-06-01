@@ -3,7 +3,8 @@ using BayesianSR,
     StatsBase,
     Distributions,
     JLD2,
-    FileIO
+    FileIO,
+    ProgressMeter
 
 filenames = readdir("./chains")
 rx = r"chain-(\d+)-(\d+)"
@@ -39,6 +40,7 @@ eqs = Vector(undef, no_chains)
 
 times = Matrix(undef, no_sim, no_chains)
 
+p = Progress(no_sim*no_chains*no_samples)
 for sim_id=1:no_sim, fun=1:no_chains
     l = load(string("./chains/chain-", sim_id, "-", fun, ".jld2"))
     c = l["chain"]
@@ -80,6 +82,7 @@ for sim_id=1:no_sim, fun=1:no_chains
         rmse_test₁[sample, fun, sim_id] = rmsd(y, ŷ_test₁)
         rmse_test₂[sample, fun, sim_id] = rmsd(y, ŷ_test₂)
         rmse_test₃[sample, fun, sim_id] = rmsd(y, ŷ_test₃)
+        next!(p)
     end 
 end 
 

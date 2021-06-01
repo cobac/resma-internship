@@ -1,4 +1,4 @@
-using BayesianSR, JLD2, FileIO
+using BayesianSR, JLD2, FileIO, ProgressMeter
 
 
 filenames = readdir("./splitchains")
@@ -22,6 +22,7 @@ function Base.append!(chain1::Chain, chain2::Chain)
     return chain1
 end 
 
+p = Progress(no_sim*no_chains*no_chunks)
 for sim=1:no_sim, chain_id=1:no_chains
     l = load(string("./splitchains/chains-", sim, "-", chain_id, "-", 1, ".jld2"))
     chain = l["chain"]
@@ -30,6 +31,7 @@ for sim=1:no_sim, chain_id=1:no_chains
         l = load(string("./splitchains/chains-", sim, "-", chain_id, "-", chunk, ".jld2"))
         append!(chain, l["chain"])
         t += l["t"]
+        next!(p)
     end 
     jldsave(string("./chains/chain-", sim, "-", chain_id, ".jld2"); chain, t)
 end 
