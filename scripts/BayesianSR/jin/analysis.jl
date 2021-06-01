@@ -2,7 +2,8 @@ using BayesianSR,
     Random,
     StatsBase,
     Distributions,
-    JLD2
+    JLD2,
+    FileIO
 
 chains = []
 t = []
