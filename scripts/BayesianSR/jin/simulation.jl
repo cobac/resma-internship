@@ -47,16 +47,16 @@ end
 # Each equation is a linear combination of k=2 symbolic trees
 hyper = Hyperparams(k=2)
 
-function stepchains!(chains::Vector{Chain}, no_iter::Int)
+function stepchains!(chains::Vector{Chain}, no_iter::Int, p::Progress)
     t = 0
     for chain in eachindex(chains)
-        t += @elapsed mcmc!(chains[chain], no_iter, verbose = false)
+        t += @elapsed mcmc!(chains[chain], no_iter, verbose = false, progress = p)
     end 
     return t
 end 
 
 function simulation(no_sim, no_iter)
-    p = Progress(no_sim)
+    p = Progress(no_sim*no_iter*6)
     Threads.@threads for i in 1:no_sim
         chains = [Chain(x, y₁, operators = functions, hyper = hyper),
                   Chain(x, y₂, operators = functions, hyper = hyper),
@@ -64,7 +64,6 @@ function simulation(no_sim, no_iter)
                   Chain(x, y₄, operators = functions, hyper = hyper),
                   Chain(x, y₅, operators = functions, hyper = hyper),
                   Chain(x, y₆, operators = functions, hyper = hyper)]
-        next!(p)
         t = stepchains!(chains, no_iter, p)
         jldsave(string("./chains/chains", i, ".jld2"); chains, t)
     end 
