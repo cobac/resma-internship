@@ -64,9 +64,9 @@ function simulation(no_sim, no_iter)
                   Chain(x, y₄, operators = functions, hyper = hyper),
                   Chain(x, y₅, operators = functions, hyper = hyper),
                   Chain(x, y₆, operators = functions, hyper = hyper)]
-        t = stepchains!(chains, no_iter)
-        save(string("./chains/chains", i, ".jld2"), "chains", chains, "t", t)
         next!(p)
+        t = stepchains!(chains, no_iter, p)
+        jldsave(string("./chains/chains", i, ".jld2"); chains, t)
     end 
 end 
 
