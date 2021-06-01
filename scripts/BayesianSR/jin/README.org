@@ -5,3 +5,8 @@
 - =bindchains.jl= :: Binds the chain-chunks into proper =BayesianSR.Chain= objects
   - Output in =./chains/=
 - =analysis.jl= :: Generates =output.jld2= with the simulation results
+
+* Runtime:
+- 7698s = 2.13h
+- 78GB allocations
+- 13% gc time
