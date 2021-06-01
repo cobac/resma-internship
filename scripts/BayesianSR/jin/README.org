@@ -7,6 +7,6 @@
 - =analysis.jl= :: Generates =output.jld2= with the simulation results
 
 * Runtime:
-- 7698s = 2.13h
+- 7698s = 2.13h, 8 threads
 - 78GB allocations
 - 13% gc time
