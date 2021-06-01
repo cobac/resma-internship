@@ -33,8 +33,8 @@ uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[BayesianSR]]
-deps = ["Distributions", "ExprRules", "ExprTools", "Latexify", "LinearAlgebra", "MacroTools", "Parameters", "Random", "Reexport", "StatsBase", "Symbolics"]
-git-tree-sha1 = "3d09dbbf9ef0065429f39d81cee9881ba92201a1"
+deps = ["Distributions", "ExprRules", "Latexify", "LinearAlgebra", "MacroTools", "Parameters", "ProgressMeter", "Random", "Reexport", "StatsBase", "Symbolics"]
+git-tree-sha1 = "62610edf99d9820e12b82c501b5d71a2a158896d"
 repo-rev = "jin"
 repo-url = "https://github.com/cobac/BayesianSR"
 uuid = "af77b4bf-3262-4d16-a9b7-c37d7173f26a"

@@ -1,0 +1,7 @@
+
+- =simulation.jl= :: Runs the simulation study
+  - Every 1000 MCMC steps it saves an unloads the current state of the chain, which is necessary to not run out of RAM
+  - Output in =./splitchains/=
+- =bindchains.jl= :: Binds the chain-chunks into proper =BayesianSR.Chain= objects
+  - Output in =./chains/=
+- =analysis.jl= :: Generates =output.jld2= with the simulation results

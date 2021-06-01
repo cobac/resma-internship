@@ -5,100 +5,82 @@ using BayesianSR,
     JLD2,
     FileIO
 
-chains = []
-t = []
+filenames = readdir("./chains")
+rx = r"chain-(\d)-(\d)"
 
-for file in readdir("./chains")
-    l = load(string("./chains/", file))
-    push!(chains, l["chains"])
-    push!(t, l["t"])
+no_sim = 0
+no_chains = 0
+
+# Get total number of sims and chains
+for file in filenames
+    m = match(rx, file)
+    global no_sim = max(no_sim, parse(Int, m.captures[1]))
+    global no_chains = max(no_chains, parse(Int, m.captures[2]))
 end 
 
-x = chains[1][1].x
-
+# Load the first chain to get its dimensions and x
+c₀ = load("./chains/chain-1-1.jld2")["chain"]
+no_samples = length(c₀)
+x = c₀.x
+n, m = size(x)
 Random.seed!(1)
-x_test₁ = rand(Uniform(-3 , 3), (30, 2))
-x_test₂ = rand(Uniform(-6 , 6), (30, 2))
-x_test₃ = rand(Uniform(3 , 6),  (30, 2))
+x_test₁ = rand(Uniform(-3 , 3), (n, m))
+x_test₂ = rand(Uniform(-6 , 6), (n, m))
+x_test₃ = rand(Uniform(3 , 6),  (n, m))
 
-accepted₁ = 0
-accepted₂ = 0
-accepted₃ = 0
-accepted₄ = 0
-accepted₅ = 0
-accepted₆ = 0
-for i in eachindex(chains)
-    global accepted₁ +=  chains[i][1].stats[:accepted]
-    global accepted₂ +=  chains[i][2].stats[:accepted]
-    global accepted₃ +=  chains[i][3].stats[:accepted]
-    global accepted₄ +=  chains[i][4].stats[:accepted]
-    global accepted₅ +=  chains[i][5].stats[:accepted]
-    global accepted₆ +=  chains[i][6].stats[:accepted]
-end 
+# 3D Arrays with dimensions samples/chain X no_functions X no_simulations
+rmse_train = Array{Float64}(undef, no_samples, no_chains, no_sim)
+rmse_test₁ = Array{Float64}(undef, no_samples, no_chains, no_sim)
+rmse_test₂ = Array{Float64}(undef, no_samples, no_chains, no_sim)
+rmse_test₃ = Array{Float64}(undef, no_samples, no_chains, no_sim)
 
-acceptance_ratios = Vector(undef, 6)
-acceptance_ratios[1] = accepted₁ / length(chains[1][1]) / length(chains)
-acceptance_ratios[2] = accepted₂ / length(chains[1][2]) / length(chains)
-acceptance_ratios[3] = accepted₃ / length(chains[1][3]) / length(chains)
-acceptance_ratios[4] = accepted₄ / length(chains[1][4]) / length(chains)
-acceptance_ratios[5] = accepted₅ / length(chains[1][5]) / length(chains)
-acceptance_ratios[6] = accepted₆ / length(chains[1][6]) / length(chains)
+accepted = Matrix(undef, no_sim, no_chains)
+eqs = Vector(undef, no_chains)
 
-eqs = Vector(undef, 6)
-eqs[1] = get_function(chains[1][1], latex = false)
-eqs[2] = get_function(chains[1][2], latex = false)
-eqs[3] = get_function(chains[1][3], latex = false)
-eqs[4] = get_function(chains[1][4], latex = false)
-eqs[5] = get_function(chains[1][5], latex = false)
-eqs[6] = get_function(chains[1][6], latex = false)
+times = Matrix(undef, no_sim, no_chains)
 
-# 3D Array with dimensions samples/chain X no_functions X no_simulations
-rmse_train = Array{Float64}(undef, length(chains[1][1]),
-                            length(chains[1]),
-                            length(chains))
-rmse_test₁ = Array{Float64}(undef, length(chains[1][1]),
-                            length(chains[1]),
-                            length(chains))
-rmse_test₂ = Array{Float64}(undef, length(chains[1][1]),
-                            length(chains[1]),
-                            length(chains))
-rmse_test₃ = Array{Float64}(undef, length(chains[1][1]),
-                            length(chains[1]),
-                            length(chains))
+for sim_id=1:no_sim, fun=1:no_chains
+    l = load(string("./chains/chain-", sim_id, "-", fun, ".jld2"))
+    c = l["chain"]
+    # Runtime of a chain
+    times[sim_id, fun] = l["t"]
+    y = c.y
+    # Accepted samples
+    accepted[sim_id, fun] = c.stats[:accepted]
+    # Example mathematical expressions
+    sim_id == 1 ? eqs[fun] = get_function(c) : nothing
 
-for sample=1:length(chains[1][1]),
-    fun=1:length(chains[1]),
-    sim=1:length(chains)
-    y = chains[sim][fun].y
-    # evalmodel() with the training dataset will always converge
-    # because samples that do not converge are not included in the chains,
-    # but it might fail (e.g. sin(Inf)) with a testing dataset
-    ŷ_train = evalmodel(chains[sim][fun][sample], x, chains[sim][fun].grammar) 
-    try 
-        global ŷ_test₁ = evalmodel(chains[sim][fun][sample], x_test₁, chains[sim][fun].grammar) 
-    catch e 
-        if isa(e, DomainError)
-            global ŷ_test₁ = [Inf for _ in y]
+    for sample in 1:no_samples
+        # evalmodel() with the training dataset will always converge
+        # because samples that do not converge are not included in the chains,
+        # but it might fail (e.g. sin(Inf)) with a testing dataset
+        ŷ_train = evalmodel(c[sample], x, c.grammar) 
+        try 
+            global ŷ_test₁ = evalmodel(c[sample], x_test₁, c.grammar) 
+        catch e 
+            if isa(e, DomainError)
+                global  ŷ_test₁ = [Inf for _ in y]
+            end 
         end 
-    end 
-    try 
-        global ŷ_test₂ = evalmodel(chains[sim][fun][sample], x_test₂, chains[sim][fun].grammar) 
-    catch e 
-        if isa(e, DomainError)
-            global ŷ_test₂ = [Inf for _ in y]
+        try 
+            global ŷ_test₂ = evalmodel(c[sample], x_test₂, c.grammar) 
+        catch e 
+            if isa(e, DomainError)
+                global ŷ_test₂ = [Inf for _ in y]
+            end 
         end 
-    end 
-    try 
-        global ŷ_test₃ = evalmodel(chains[sim][fun][sample], x_test₃, chains[sim][fun].grammar) 
-    catch e 
-        if isa(e, DomainError)
-            global ŷ_test₃ = [Inf for _ in y]
+        try 
+            global ŷ_test₃ = evalmodel(c[sample], x_test₃, c.grammar) 
+        catch e 
+            if isa(e, DomainError)
+                global ŷ_test₃ = [Inf for _ in y]
+            end 
         end 
+        rmse_train[sample, fun, sim_id] = rmsd(y, ŷ_train)
+        rmse_test₁[sample, fun, sim_id] = rmsd(y, ŷ_test₁)
+        rmse_test₂[sample, fun, sim_id] = rmsd(y, ŷ_test₂)
+        rmse_test₃[sample, fun, sim_id] = rmsd(y, ŷ_test₃)
     end 
-    rmse_train[sample, fun, sim] = rmsd(y, ŷ_train)
-    rmse_test₁[sample, fun, sim] = rmsd(y, ŷ_test₁)
-    rmse_test₂[sample, fun, sim] = rmsd(y, ŷ_test₂)
-    rmse_test₃[sample, fun, sim] = rmsd(y, ŷ_test₃)
 end 
 
 rmse_train[end, :, 1]
@@ -106,4 +88,7 @@ rmse_test₁[end, :, 1]
 rmse_test₂[end, :, 1] 
 rmse_test₃[end, :, 1] 
 
-jldsave("output.jld2"; t, acceptance_ratios, eqs, rmse_train, rmse_test₁, rmse_test₂, rmse_test₃)
+acceptance_ratios = accepted / no_samples
+
+jldsave("output.jld2"; times, acceptance_ratios, eqs, rmse_train, rmse_test₁, rmse_test₂, rmse_test₃)
+

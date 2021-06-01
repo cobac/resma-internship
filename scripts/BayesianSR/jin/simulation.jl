@@ -47,25 +47,33 @@ end
 # Each equation is a linear combination of k=2 symbolic trees
 hyper = Hyperparams(k=2)
 
-function stepchains!(chains::Vector{Chain}, no_iter::Int, p::Progress)
-    t = 0
-    for chain in eachindex(chains)
-        t += @elapsed mcmc!(chains[chain], no_iter, verbose = false, progress = p)
+
+function mcmc!_sim(chain::Chain, no_iter::Int, p::Progress, sim_id::Int, chain_id::Int)
+    no_iter == 1000 && no_iter/1000 % 1 !=0 && error("No_iter has to be a multiple of 1000 but it is ", no_iter)
+    for chunk in 1:(no_iter/1000)
+        t = @elapsed mcmc!(chain, 1000, progress = p)
+        jldsave(string("./splitchains/chains-", sim_id, "-", chain_id, "-", Int(chunk),  ".jld2"); chain, t)
+        deleteat!(chain.samples, 1:(length(chain)-1))
     end 
-    return t
+    return nothing
+end 
+
+function stepchains!(chains::Vector{Chain}, no_iter::Int, p::Progress, sim_id::Int)
+    for chain in eachindex(chains)
+        mcmc!_sim(chains[chain], no_iter, p, sim_id, chain)
+    end 
 end 
 
 function simulation(no_sim, no_iter)
     p = Progress(no_sim*no_iter*6)
-    Threads.@threads for i in 1:no_sim
+    Threads.@threads for sim_id in 1:no_sim
         chains = [Chain(x, y₁, operators = functions, hyper = hyper),
                   Chain(x, y₂, operators = functions, hyper = hyper),
                   Chain(x, y₃, operators = functions, hyper = hyper),
                   Chain(x, y₄, operators = functions, hyper = hyper),
                   Chain(x, y₅, operators = functions, hyper = hyper),
                   Chain(x, y₆, operators = functions, hyper = hyper)]
-        t = stepchains!(chains, no_iter, p)
-        jldsave(string("./chains/chains", i, ".jld2"); chains, t)
+        stepchains!(chains, no_iter, p, sim_id)
     end 
 end 
 
