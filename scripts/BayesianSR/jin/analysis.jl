@@ -41,7 +41,7 @@ eqs = Vector(undef, no_chains)
 times = Matrix(undef, no_sim, no_chains)
 
 p = Progress(no_sim*no_chains*no_samples)
-for sim_id=1:no_sim, fun=1:no_chains
+@time for sim_id=1:no_sim, fun=1:no_chains
     l = load(string("./chains/chain-", sim_id, "-", fun, ".jld2"))
     c = l["chain"]
     # Runtime of a chain

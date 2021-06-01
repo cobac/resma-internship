@@ -23,7 +23,7 @@ function Base.append!(chain1::Chain, chain2::Chain)
 end 
 
 p = Progress(no_sim*no_chains*no_chunks)
-for sim=1:no_sim, chain_id=1:no_chains
+@time for sim=1:no_sim, chain_id=1:no_chains
     l = load(string("./splitchains/chains-", sim, "-", chain_id, "-", 1, ".jld2"))
     chain = l["chain"]
     t = l["t"]
