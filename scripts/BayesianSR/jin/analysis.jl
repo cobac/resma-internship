@@ -6,7 +6,7 @@ using BayesianSR,
     FileIO
 
 filenames = readdir("./chains")
-rx = r"chain-(\d)-(\d)"
+rx = r"chain-(\d+)-(\d+)"
 
 no_sim = 0
 no_chains = 0

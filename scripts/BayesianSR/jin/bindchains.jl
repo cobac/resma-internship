@@ -2,7 +2,7 @@ using BayesianSR, JLD2, FileIO
 
 
 filenames = readdir("./splitchains")
-rx = r"chains-(\d)-(\d)-(\d)"
+rx = r"chains-(\d+)-(\d+)-(\d+)"
 
 no_sim = 0
 no_chains = 0
