@@ -7,6 +7,13 @@
 - =analysis.jl= :: Generates =output.jld2= with the simulation results
 
 * Runtime:
+** Simulation
 - 7698s = 2.13h, 8 threads
-- 78GB allocations
 - 13% gc time
+** Bindchains
+- 10133s = 2.8h
+- Chains size 2x143GB
+** Analysis
+- 15669s = 4.25h
+- Output size 900MB
+
