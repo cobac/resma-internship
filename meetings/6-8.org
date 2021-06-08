@@ -1,0 +1,97 @@
+* Simulations
+** Issues 
+- Thermal issues, throttling
+- RAM issues
+  - Offloading of chains
+  - Custom sampler different than the packaged one
+    - For a normal-user case this doesn't make sense
+  - A lot of overhead on saving/loading/binding chains
+  - Still comparable since I save runtime per chunk
+- Storage issues
+  - Dynamically deleting files to keep constant used space
+** =JLD2= instead of =serialize=
+- Standard format
+- Works fine
+** prune!() grow!() thing 
+- Not just delete the min() expression
+- The function need to be bounded to [0,1]
+- A cdf?
+- Evaluated twice per sample
+- Not worth the extra computation I think
+- At the end it catches up with other movements
+** Results
+- On the OSF
+*** Jin
+- 2.13h on 8 threads of simulations
+  - 143GB (x2)
+- 2.8h of rebinding chains from the HDD
+- 4.25h analysis on the HDD
+- Result /identical/ in terms of fit to the ones reported in Jin's paper
+**** Hyperparams issue
+- ... Except equations
+- More complex
+  - Maybe the examples I've chosen
+- They don't report their hyperparameters on the paper
+*** Python
+- Their code is a script that they modify for each run
+  - They don't show how they did run their simulations
+  - Which parameters, only one of the equations
+- They define hyper parameters that don't appear on the source code later
+- Other hyper parameters are hard-coded, but with different notation than on the paper
+- I'm going to just run one chain per expression (6) to check speed difference.
+*** Multichains
+- I only did 10 runs with 5 chains each
+  - Same number of chains at the end
+- 1.72h on 5 threads simulations
+  - Faster than Jin because less IO overhead
+- 2h of binding chains from SSD
+  - 121GB x2
+- 4.88h of analysis
+- *Worse fit than with only one chain !!*
+- (I've been checking the code looking for errors on the custom sampler but nothing found)
+- Inter-chains jump probability = 0.05
+  - Too high compared with acceptance ratio
+  - At the end some chains end up around the same area of posterior space
+*** Simplification 
+- TO-DO or TO-DROP
+- I think it's the most interesting modification
+** How to report simulations code
+- I've edited the code after ruining it on other versions
+  - Deletion of already-binded chains to save space
+  - Formatting, code quality/style
+- Is it better to include the code that was run or the cleaned code?
+- Results are not affected
+* BayesianSR.jl
+- Ugly version of multichain sampling
+- Before release (if we release) we need to implement two cases: one with multi-threading and another one without
+  - Now it only works on a single thread
+  - But the custom sampler I used on the simulations is multi-threaded
+- A type (e.g. Model) that is a superset of all possible models
+  
+* Report
+** Structure of the report
+- Good outline on the repo
+- Not following the sections of the /internship report/
+  - It's fine
+- Introduction I like the content
+- Results and discussion straightforward
+** Other /symbolic/ method: Sparse identification of nonlinear dynamics
+- Matrices with values and numerical derivatives of all variables at different time points
+- Represent the matrices in a space of bases that are the active functions
+- Lasso on the coefficients of the bases
+- Requires a lot of data
+** Choose dataset
+- Cognitive task?
+- Attention?
+- Speed/accuracy trade-off?
+** Paper-like or internhsip-report-like?
+- The simulations that we are going to include are not /good enough/ to justify if the Bayesian algorithm is better/not
+- The best contribution of the report I think it's going to be the exposition about symbolic regression(s)
+  - Multiple methods with the same goals with different names
+  - They don't cite each other
+- The connection between what it is on the introduction and the comparisons that we've done don't match perfectly
+
+* Timewise
+- I think I'll be just on time for the 18th deadline
+- So... probably not
+- But we have margin
