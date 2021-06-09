@@ -24,7 +24,7 @@ cs₀ = load("./chains/chains-1-1.jld2")["chains"]
 no_chains = length(cs₀)
 no_samples = length(cs₀[1])
 x = cs₀[1].x
-y = cs₀[1].y
+grammar = cs₀[1].grammar
 n, m = size(x)
 Random.seed!(1)
 x_test₁ = rand(Uniform(-3 , 3), (n, m))
@@ -47,6 +47,7 @@ p = Progress(no_sim*no_exprs*no_samples*no_chains)
     cs = l["chains"]
     # Runtime of a multichain
     times[sim_id, expr_id] = l["t"]
+    y = cs[1].y
     for chain_id in 1:no_chains
         # Accepted samples per multichain
         accepted[sim_id, expr_id] += cs[chain_id].stats[:accepted]
@@ -55,23 +56,23 @@ p = Progress(no_sim*no_exprs*no_samples*no_chains)
             # evalmodel() with the training dataset will always converge
             # because samples that do not converge are not included in the chains,
             # but it might fail (e.g. sin(Inf)) with a testing dataset
-            ŷ_train = evalmodel(cs[chain_id][sample], x, cs[1].grammar) 
+            ŷ_train = evalmodel(cs[chain_id][sample], x, grammar) 
             try 
-                global ŷ_test₁ = evalmodel(cs[chain_id][sample], x_test₁, cs[1].grammar) 
+                global ŷ_test₁ = evalmodel(cs[chain_id][sample], x_test₁, grammar) 
             catch e 
                 if isa(e, DomainError)
                     global  ŷ_test₁ = [Inf for _ in y]
                 end 
             end 
             try 
-                global ŷ_test₂ = evalmodel(cs[chain_id][sample], x_test₂, cs[1].grammar) 
+                global ŷ_test₂ = evalmodel(cs[chain_id][sample], x_test₂, grammar) 
             catch e 
                 if isa(e, DomainError)
                     global ŷ_test₂ = [Inf for _ in y]
                 end 
             end 
             try 
-                global ŷ_test₃ = evalmodel(cs[chain_id][sample], x_test₃, cs[1].grammar) 
+                global ŷ_test₃ = evalmodel(cs[chain_id][sample], x_test₃, grammar) 
             catch e 
                 if isa(e, DomainError)
                     global ŷ_test₃ = [Inf for _ in y]

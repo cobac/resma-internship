@@ -14,7 +14,7 @@
 - 7344s = 2.05h
 - Chains size 2x121GB
 ** Analysis
-- 17573 = 4.88h
+- 17974s = 5h
 - Output size 916MB
 
 * TODO Upload chains to OSF

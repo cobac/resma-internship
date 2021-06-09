@@ -67,12 +67,13 @@ function mcmc!_sim(chains::Vector{Chain}, n_steps::Int; no_chains::Int, p_interc
 end 
 
 function mcmc!_chunk(fun::Chain, no_iter::Int, no_chains::Int, p::Progress, sim_id::Int, expr_id::Int)
-    no_iter == 1000 && no_iter/1000 % 1 !=0 && error("No_iter has to be a multiple of 1000 but it is ", no_iter)
+    no_iter == 1000 && no_iter/1000 % 1 !=0 &&
+        error("Argument no_iter has to be a multiple of 1000 but it is ", no_iter)
     chains = push!([Chain([BayesianSR.new_sample_recursive(fun.grammar, fun.hyper, fun.x, fun.y)],
                           fun.grammar, fun.x, fun.y, deepcopy(fun.stats), fun.hyper)
                     for _ in 1:(no_chains - 1)], fun)
     for chunk in 1:(no_iter/1000)
-        t = @elapsed mcmc!_sim(chains, 1000, no_chains = 5, progress = p)
+        t = @elapsed mcmc!_sim(chains, 1000, no_chains = no_chains, progress = p)
         jldsave(string("./splitchains/chains-", sim_id, "-", expr_id, "-", Int(chunk), ".jld2"); chains, t)
         for chain in chains
             deleteat!(chain.samples, 1:(length(chain)-1))
@@ -94,6 +95,7 @@ function simulation(no_sim, no_chains, no_iter)
             mcmc!_chunk(expressions[expr_id], no_iter, no_chains, p, sim_id, expr_id)
         end 
     end 
+    return nothing
 end 
 
 @time simulation(10, 5, 100000)
