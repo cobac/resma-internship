@@ -1,0 +1,23 @@
+* Delay
+- Either drop the simplification step and crunch
+- or ~2 weeks delay
+* Multiple chains
+- Works well
+* Simplify
+- I think it is the more interesting modification
+  - Greatly reduces the posterior space
+- Lot's of issues / edge-cases
+  - Loose numbers
+  - Non-binary structure
+  - Symbols as function calls
+  - Symbolics.jl creates new functions
+  - + Combinations of all
+* Datasets
+- I checked rr98 and speed_acc on rtdists
+- I don't think they are ideal (?)
+- The only /accessible/ variables are speed and accuracy
+  - + The discrete ones
+  - Maybe it's interesting to plug the discrete ones as binary (?)
+- Doesn't really capture the dynamics of the diffusion model
+- But we could recover accuracy as a function of speed (?)
+  - I'm not really familiar with the diffusion model, but I don't think it can collapse to that function(?)
