@@ -17,4 +17,5 @@
 - 17974s = 5h
 - Output size 916MB
 
-* TODO Upload chains to OSF
+* Chains
+- https://osf.io/vk96t/
