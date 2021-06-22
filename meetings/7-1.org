@@ -1,0 +1,3 @@
+* SymbolicRegression
+- Accepted PR with the fix
+*
