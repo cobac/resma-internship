@@ -89,7 +89,7 @@ For example, a possible mutation of the symbolic tree depicted in Figure ref:fig
 
 #+label: fig:symbolictree
 #+ATTR_LATEX: :width 7cm :placement [H]
-#+caption: Symbolic tree that represents the equation \((2+x) \cdot \sin{y}\) .
+#+caption: Symbolic tree that represents the equation \((2+x1) \cdot \sin{x2}\) .
 #+RESULTS:
 [[file:symbolictree.pdf]]
 
@@ -99,8 +99,7 @@ A novel approach to perform symbolic regression is the use of Bayesian
  possible mathematical expressions and, similarly to the evolutionary
  algorithms, they represent the mathematical expressions as symbolic
  trees. In this case, instead of /mutating/ the trees we say that MCMC
- samplers /jump/ from one tree to another, although the movements from
- tree can be equivalent (e.g. replacing an operator, growing a new
+ samplers /jump/ from one tree to another, although the modifications can be equivalent (e.g. replacing an operator or growing a new
  branch from where a terminal node used to be). However, the
  calculation of the probability of accepting a jump needs to satisfy a
  detailed balance that guarantees that the MCMC sampler will
