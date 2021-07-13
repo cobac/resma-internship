@@ -1,0 +1,19 @@
+
+This contains a copy of https://github.com/ying531/MCMC-SymReg as of commit =22272f785d72d245bf1ad989b80b186d566fb311=
+and the virtual environment in which it was run. 
+
+We have modified the file under =MCMC-SymReg/codes/simulations.py= to only run one function to benchmark their implementation.
+
+#+BEGIN_SRC bash :exports code
+  time python simulations.py
+#+END_SRC
+
+: python simulations.py  735,15s user 285,98s system 247% cpu 6:52,50 total
+
+
+#+BEGIN_SRC R :eval :session :results output :tangle yes :exports both
+735150 / 336
+#+END_SRC
+
+#+RESULTS:
+: [1] 2187.946
