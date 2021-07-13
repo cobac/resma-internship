@@ -10,27 +10,19 @@ m = 2 # no. features
 k = 2 # no. trees per sample
 x = rand(Uniform(-3 , 3), (n, m))
    
-f₁ = x -> 2.5*x[1]^4 - 1.3*x[1]^3 + 0.5*x[2]^2 - 1.7*x[2]
-f₂ = x -> 8*x[1]^2 + 8*x[2]^3 - 15
-f₃ = x -> 0.2*x[1]^3 + 0.5*x[2]^3 - 1.2*x[2] - 0.5*x[1]
-f₄ = x -> 1.5*exp(x[1]) + 5*cos(x[2])
-f₅ = x -> 6 * sin(x[1]) * cos(x[2])
-f₆ = x -> 1.35*x[1]*x[2] * 5.5*sin((x[1]-1)*(x[2]-1))
+f₁(x)=2.5*x[1]^4 - 1.3*x[1]^3 + 0.5*x[2]^2 - 1.7*x[2]
+f₂(x)=8*x[1]^2 + 8*x[2]^3 - 15
+f₃(x)=0.2*x[1]^3 + 0.5*x[2]^3 - 1.2*x[2] - 0.5*x[1]
+f₄(x)=1.5*exp(x[1]) + 5*cos(x[2])
+f₅(x)=6 * sin(x[1]) * cos(x[2])
+f₆(x)=1.35*x[1]*x[2] * 5.5*sin((x[1]-1)*(x[2]-1))
 
-function applyf(f, x)
-    out = Vector{Float64}(undef, size(x, 1))
-    for i in axes(x, 1)
-        out[i] = f(x[i, :])
-    end 
-    return out
-end  
-
-y₁ = applyf(f₁, x)
-y₂ = applyf(f₂, x)
-y₃ = applyf(f₃, x)
-y₄ = applyf(f₄, x)
-y₅ = applyf(f₅, x)
-y₆ = applyf(f₆, x)
+y₁ = f₁.(eachrow(x))
+y₂ = f₂.(eachrow(x))
+y₃ = f₃.(eachrow(x))
+y₄ = f₄.(eachrow(x))
+y₅ = f₅.(eachrow(x))
+y₆ = f₆.(eachrow(x))
  
 functions = @grammar begin
     Real = Real + Real
