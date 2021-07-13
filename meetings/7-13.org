@@ -9,6 +9,7 @@
   - It was a mess
 - 88% of accepted simplifications
 ** Evolutionary
+- They have a bug were the populations were not initialized properly
 - On Friday they pushed a new symbolic backend
 - Perform better /wider/ (more equations per population rather than more iterations)
 *** Issue with how to calculate time
