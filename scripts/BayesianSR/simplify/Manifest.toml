@@ -36,7 +36,7 @@ uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 deps = ["Distributions", "ExprRules", "Latexify", "LinearAlgebra", "MacroTools", "Parameters", "ProgressMeter", "Random", "Reexport", "StatsBase", "Symbolics"]
 git-tree-sha1 = "f3e0668e92b0965c1794b910fe18a4472e2a2b87"
 repo-rev = "simplify"
-repo-url = "https://github.com/cobac/BayesianSR"
+repo-url = "https://github.com/cobac/BayesianSR.jl"
 uuid = "af77b4bf-3262-4d16-a9b7-c37d7173f26a"
 version = "0.1.0"
 

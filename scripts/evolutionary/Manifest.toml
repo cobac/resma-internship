@@ -532,11 +532,9 @@ uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 
 [[SymbolicRegression]]
 deps = ["Distributed", "FromFile", "JSON3", "LineSearches", "LossFunctions", "Optim", "Pkg", "Printf", "Random", "Reexport", "SpecialFunctions", "SymbolicUtils"]
-git-tree-sha1 = "19d2f16be0b15f0a6b70bbc7a3c6f97190278f0d"
-repo-rev = "1bee007"
-repo-url = "https://github.com/MilesCranmer/SymbolicRegression.jl"
+git-tree-sha1 = "2adf3279f8f987bf9efabcfada1693e58edf0397"
 uuid = "8254be44-1295-4e6a-a16d-46603ac705cb"
-version = "0.6.11"
+version = "0.6.12"
 
 [[SymbolicUtils]]
 deps = ["AbstractTrees", "ChainRulesCore", "Combinatorics", "ConstructionBase", "DataStructures", "DynamicPolynomials", "IfElse", "LabelledArrays", "LinearAlgebra", "MultivariatePolynomials", "NaNMath", "Setfield", "SparseArrays", "SpecialFunctions", "StaticArrays", "TimerOutputs"]
