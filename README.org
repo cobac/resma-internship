@@ -1,3 +1,15 @@
-Hey Don,
+This repository contains all the code from the Bayesian Symbolic Regression internship report. The development of this project is visible through the git history of this repository.
 
-I've moved the BayesianSR.jl code to [[https://github.com/cobac/BayesianSR.jl]]
+All of our results, raw output, intermediary results and final results are available in the following Open Science Framework repository: https://osf.io/p8bg5/. Some of them (i.e. figures and output expressions from the evolutionary algorithm) are also in this repository.
+
+Our Bayesian symbolic regression program is hosted in the following repository: [[https://github.com/cobac/BayesianSR.jl]]
+
+The repository is structured in the following way:
+
+- =products/= folder :: Contains the research proposal and the internship report, as well as feedback of different versions of both documents.
+- =scripts= :: Contains the analysis scripts and folder structure for all the analysis of the report. Each sub-folder contains code for different models, and the code of the parent repository integrates all intermediary results to generate the figures that are included in the report.
+  - All code is written in the Julia programming language. To run a script /instantiate/ the =Manifest.toml= of the corresponding folder (and do not update the packages) to guarantee that the correct versions of all dependencies are used.
+
+* TODO: Clean meetings, bureaucracy and products folders
+
+* TODO: Regularize analysis scripts so are easier to read.
