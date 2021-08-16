@@ -15,3 +15,5 @@ All of our results can be replicated if each =xxx.jl= file is run in order for e
 * TODO: Clean meetings, bureaucracy and products folders
 
 * TODO: Regularize analysis scripts so are easier to read.
+
+* TODO: Add a clean version of the model specification to the Bayesian SR repo, and possibly a link to this repo
