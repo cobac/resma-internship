@@ -61,4 +61,4 @@
 - This is by far the figure I've struggled the most to create
 - The compromise I've made (not zooming-in in the training set and first test set) it's the best out of all my attempts
 * I feel a bit weird saying on the discussion how Jin et. al. don't report their hyperparameters / their source code is incomplete
-- I've tried to keep the tone very neutral but when I read those sentences the come out as a bit dry, but hope not offensive
+- I've tried to keep the tone very neutral but when I read those sentences they come out as a bit dry, but hope not offensive
