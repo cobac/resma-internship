@@ -1,3 +1,10 @@
+# Without the @everywhere hack all workers try to compile SymbolicRegression.jl at the same time and ... something bad happens
+# https://stackoverflow.com/questions/60934852/why-does-multiprocessing-julia-break-my-module-imports
+using Distributed, Pkg
+@everywhere using Distributed, Pkg
+Pkg.activate(".")
+@everywhere Pkg.activate(".")
+
 using SymbolicRegression,
     Random,
     Distributions,
@@ -6,6 +13,7 @@ using SymbolicRegression,
     JLD2,
     Optim,
     FileIO
+@everywhere using SymbolicRegression
 
 Random.seed!(3)
 n = 30 # no. observations
@@ -32,25 +40,23 @@ y[:, 6] = f₆.(eachcol(x))
 sq(x) = x^2
 cb(x) = x^3
 
-for sim=1:10, expr=1:6
+t = @elapsed for sim=1:1, expr=1:6
     println("=================================")
     println("Sim. no. ", sim, " . Expression no. ", expr)
     opt = Options(binary_operators = (+, -, *, /),
                   unary_operators = (sin, cos, exp, sq, cb),
-                  progress = false,
+                  progress = true,
                   recorder = true,
-                  npopulations = 5,
-                  hofFile = string("./hofs/hofs-", sim, "-", expr),
                   npop = 1000,
+                  hofFile = string("./hofs/hofs-", sim, "-", expr),
                   recorder_file = string("./json/recorder-", sim, "-", expr, ".json"))
 
     hof = EquationSearch(x, y[:, expr],
-                         niterations = 2,
-                         numprocs = 5,
+                         niterations = 10,
                          runtests = false,
                          options = opt)
 end 
 
 # No. samples = niterations * ncyclesperiteration * npopulations * npop
-#                             (300                 5           1000)
-#                niterations *  1500000
+#                             (100                 5           1000)
+#                niterations *  500,000
