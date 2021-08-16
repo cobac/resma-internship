@@ -1,0 +1,64 @@
+* The report pdf is massive
+- Because I've included all figures vectorized
+- I think a high-quality raster might be a good compromise here, since the vectorized files contain lines for each of the 100,000 samples per figure
+- But maybe it's not too big (26mb) for published documents (?)
+* The project is incomplete and it's been quite messy to organize into a coherent report
+- I've done my best and I think it looks kinda coherent
+- But I think that most observations are trivial and that most arguments are very basic
+- It's not a bad thing necessarily but in an ideal world we would have had more time to push the project forward before having to write up the internship report :)
+* Citation of pre-prints
+- What I've done in the past is just include the link/doi and no journal
+- But I've seen multiple ways of doing it
+  - Treating it as an online publication with no journal and "Retrieved on.. from... link"
+    - In the case of arxiv does not include the eprint id
+    - No issue with psyarxiv
+  - Using the repository name as the journal
+  - In the case of the arxiv preprints (jin, cranmer) my importer defaulted to include CoRR (Computing Research Repository from arxiv) as the journal
+* Weak argument commented out in the introduction
+- The main advantage of Bayesian symbolic regression over evolutionary symbolic regression is that we can formally define all steps of the process using probability theory. For example, one of the main concerns with symbolic regression is that it can overfit a particular dataset if very complex expressions are not penalized. In an evolutionary algorithm we can modify the fitness function to penalize complexity in some arbitrary way, but with a Bayesian algorithm we can specify different prior probabilities for different degrees of complexity.
+- -> Not clear how they compare...
+* The version of Symbolics.jl I've used (current) is not behaving properly
+- Their new symbolic functionality is broken
+- Program sometimes crashes which makes our analysis non-reproducible
+- You have to re-run each expressions when it crushes and try to get lucky
+- It doesn't seem like they are aware of this issues
+- Their testing suit is quite limited so I'd like to contribute more exhaustive test and report the issue
+* I tried to generate plots for a comparison between the evolutionary and the Bayesian programs
+- But it looked silly because the Bayesian points are crammed to the left and are not visible
+- The evolutionary program is designed to be run in another scale (both in number of parallel operations and time)
+* No explanation of fundamentals of Bayes / MCMC in the report
+* I believe there is some inconsistent notation in Jin's paper, I've done my best to simplify while keeping it consistent
+* I've copy-pasted (and expanded) the first paragraph of the Bayesian SR model overview in the appendix
+- I'm always a bit scared of /self-plagiarism/ but I think this should be fine (?)
+* Neglected comparing the complexity of the expressions
+* Neglected the tutorial part using the speed-accuracy trade off data
+* I've tried to scaffold more the technical descriptions compared to Jin's paper, but I feel like they end up being too wordy
+* I've consciously left some sentences in passive voice since they end up being less wordy (and clear IMO) that active voice alternatives.
+* I've realized that our modification of using centered proposals for the linear operator node coefficients is not really a good idea
+- This is only relevant in the case with no RJMCMC
+- If all linear operator nodes are the same it makes sense to use centered proposals
+- But if there are the same number of linear operator nodes but they are in different positions, we would be artificially increasing the variance of the new ones
+- This is most definitely irrelevant in practice, but it is not as elegant as I was thinking it was
+- I will omit this modification from future versions of the program
+* On Jin's paper and code they only include the accepted samples into the MCMC chain
+- The number of iterations they report on their graphs makes more sense now
+  - Still the test-set-RMSE results do not
+  - And we see in our chains that the sampler often jumps to worse expressions so it's questionable to just use the last expression as a result
+- This completely breaks all possible Bayesian interpretations
+- I'm not sure whether the number of "iterations" they specify on their code / paper refers to the actual number of iterations or accepted samples
+  - I think they use the same term with both meanings in different places
+  - And we don't have the code they run to generate their results so idk
+  - This could be the main reason for our ~x2000 speed-up
+    - Will test
+* Divided visualizations
+- I've opted to divide the visualizations of the Bayesian algorithms into more, clearer figures instead of trying to combine some of them
+- All my attempts of having more complex graphs were quite messy
+* Distributions of RMSE
+- I tried to plot as well the inter-quantile ranges of the RMSE for the Bayesian figures, but they looked very messy and were not interesting
+* Ticks in visualizations
+- I'm not happy with the the ticks of the axis, but I'm having some issues making Makie do what I want :D
+* Figure 8 axis zoom between the training set and the first test set
+- This is by far the figure I've struggled the most to create
+- The compromise I've made (not zooming-in in the training set and first test set) it's the best out of all my attempts
+* I feel a bit weird saying on the discussion how Jin et. al. don't report their hyperparameters / their source code is incomplete
+- I've tried to keep the tone very neutral but when I read those sentences the come out as a bit dry, but hope not offensive
