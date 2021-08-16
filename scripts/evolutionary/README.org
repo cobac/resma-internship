@@ -1,0 +1,7 @@
+- =simulation.jl= :: Runs the evolutionary algorithm 
+  - Output in =./hof/=
+- =analysis.jl= :: Generates =output.jld2= with the results for the training and testing datasets
+- =speed.jl= :: Measures the speed of the algorithm.
+
+* Output
+- https://osf.io/42xqm/

@@ -10,6 +10,8 @@ The repository is structured in the following way:
 - =scripts= :: Contains the analysis scripts and folder structure for all the analysis of the report. Each sub-folder contains code for different models, and the code of the parent repository integrates all intermediary results to generate the figures that are included in the report.
   - All code is written in the Julia programming language. To run a script /instantiate/ the =Manifest.toml= of the corresponding folder (and do not update the packages) to guarantee that the correct versions of all dependencies are used.
 
+All of our results can be replicated if each =xxx.jl= file is run in order for each sub-folder in =scripts/=, and later the final analysis script. Alternatively, it is possible to download from the OSF repository each intermediary output and only partially replicate our results. Finally, it is also possible to download all =output.jl2= files from the OSF repository and further analyze our results.
+
 * TODO: Clean meetings, bureaucracy and products folders
 
 * TODO: Regularize analysis scripts so are easier to read.

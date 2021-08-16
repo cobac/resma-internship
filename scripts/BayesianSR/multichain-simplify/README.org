@@ -6,12 +6,5 @@
   - Output in =./chains/=
 - =analysis.jl= :: Generates =output.jld2= with the simulation results
 
-* Runtime:
-** Simulation
-- 7548s = 2.09h hdd
-** Bindchains
-- 805s
-** Analysis
-- 26447s = 7.34h
-
 * Chains
+- https://osf.io/pyezu/

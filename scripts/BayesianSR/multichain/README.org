@@ -6,16 +6,5 @@
   - Output in =./chains/=
 - =analysis.jl= :: Generates =output.jld2= with the simulation results
 
-* Runtime:
-** Simulation
-- 6203s = 1.72h
-- 16% gc time
-** Bindchains
-- 7344s = 2.05h
-- Chains size 2x121GB
-** Analysis
-- 17974s = 5h
-- Output size 916MB
-
 * Chains
 - https://osf.io/vk96t/

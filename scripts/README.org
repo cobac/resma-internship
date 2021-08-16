@@ -1,0 +1,3 @@
+- =analysis.jl= :: Generates all the figures from the report
+  - Inputs all =output.jld2= files from the sub-folders
+  - Output in =./figures/=
