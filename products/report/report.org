@@ -29,7 +29,7 @@
 #+LATEX_HEADER: This project aimed to develop and test a Bayesian symbolic regression algorithm. We build from the model of \textcite{jin2020bsr} and introduce two significant modifications: a symbolic simplification step and the possibility of running multiple Markov chain Monte Carlo chains in parallel. The symbolic simplification step model performed worse than the original algorithm, but the multi-chain sampler was more performant. Moreover, Bayesian models discovered similar equations than an evolutionary alternative, but required a fraction of computational resources. However, all symbolic regression methods substantially overfitted the training dataset. Finally, some issues remain open about how to best take advantage of the Bayesian framework of the model.
 #+LATEX_HEADER: }
 
-#+LATEX_HEADER: \keywords{Bayes, symbolic regression, machine learning}
+#+LATEX_HEADER: \keywords{Bayesian inference, symbolic regression, machine learning}
 
 #+LATEX_HEADER: \shorttitle{Bayesian symbolic regression}
 
@@ -329,7 +329,7 @@ https://osf.io/p8bg5/ . It includes code for all simulations and analyses, simul
 \appendix
 * Bayesian symbolic regression model specification
 
-This section is a complete mathematical specification of the Bayesian symbolic regression model from textcite:jin2020bsr and the differences between the original program[fn::https://github.com/ying531/MCMC-SymReg] and our implementation[fn::https://github.com/cobac/BayesianSR.jl] .
+This section is a complete mathematical specification of the Bayesian symbolic regression model from textcite:jin2020bsr and the differences between the original program[fn::https://github.com/ying531/MCMC-SymReg] and our implementation.[fn::https://github.com/cobac/BayesianSR.jl]
 
 ** General model structure
 The model consists of a linear combination of mathematical expressions represented as symbolic trees: \[

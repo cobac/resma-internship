@@ -24,8 +24,12 @@ my_theme = Theme(Axis = (xlabel = "Iterations", ylabel = "RMSE",
 colors = Makie.wong_colors()
 # One example chain
 
+double_text_size = 32
 ex_chain = with_theme(my_theme) do
-    ex_chain = lines(x_jin, sanitize(jin["rmse_train"][:, 1, 1]), color = colors[1], axis = (xticks = LinearTicks(3),))
+    ex_chain = lines(x_jin, sanitize(jin["rmse_train"][:, 1, 1]), color = colors[1],
+                     axis = (xticks = LinearTicks(3),
+                             xlabelsize = double_text_size, ylabelsize = double_text_size,
+                             xticklabelsize = double_text_size, yticklabelsize = double_text_size))
     ex_chain
 end 
 save("./figures/ex_chain.svg", ex_chain)
@@ -34,7 +38,10 @@ save("./figures/ex_chain.svg", ex_chain)
 y = multichain["rmse_train"][:, :, 1, 1]
 x_until = 15000
 ex_multichain = with_theme(my_theme) do
-    ex_multichain = lines(x_jin[1:x_until], y[1:x_until, 1], axis = (xticks = LinearTicks(3),))
+    ex_multichain = lines(x_jin[1:x_until], y[1:x_until, 1],
+                          axis = (xticks = LinearTicks(3),
+                                  xlabelsize = double_text_size, ylabelsize = double_text_size,
+                                  xticklabelsize = double_text_size, yticklabelsize = double_text_size))
     for chain in 2:4
         lines!(x_jin[1:x_until], y[1:x_until, chain])
     end 
