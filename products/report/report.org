@@ -198,7 +198,9 @@ After generating a new tree structure the MCMC sampler generates a new set of li
   Next, we define a function \(j_s(\Theta^{(t)}, U)\) that generates the new set of parameters \(\Theta^{*}\) and the auxiliary variables \(U^{*}\):\[
   \Theta^{*} = \Theta_0 + U\text{,} \; \; U^{*} = \left(\Theta_0- U, \Theta_d\right)\text{.}\]
 
-Note that \(\text{dim}(\Theta^{(t)}) + \text{dim}(U) = \text{dim}(\Theta^{*}) + \text{dim}(U^{*})\), which is necessary so that the Jacobian determinant in Expression ref:eq:ratiorjmcmc is computable. \(h(\{U , U^{*}\}| \Theta^{(t)}, S^{(t)}, S^{*})\) denotes the probability distributions of the auxiliary variables \(U\) and \(U^{*}\). To calculate \(h(\cdot)\) we need to take into account the probability of sampling \( \left( \sigma_\Theta^2 \right)^{*}\) and the auxiliary variables.
+Note that \(\text{dim}(\Theta^{(t)}) + \text{dim}(U) = \text{dim}(\Theta^{*}) + \text{dim}(U^{*})\) in all cases, which is necessary so that the Jacobian determinant in Expression ref:eq:ratiorjmcmc is computable. 
+The probability distribution of the auxiliary variables \(U\) and \(U^{*}\) is \(h(\{U , U^{*}\}| \Theta^{(t)}, S^{(t)}, S^{*})\).
+ To calculate \(h(\cdot)\) we need to take into account the probability of sampling the variances of the linear operator coefficients \( \left( \sigma_\Theta^2 \right)^{*}\) and the auxiliary variables.
 
 *** Accepting new samples
 
@@ -206,23 +208,23 @@ The last two steps that the MCMC performs are sampling a new variance \((\sigma^
 After generating a new proposal the MCMC sampler has to decide whether to accept it, and add the new sample to the MCMC chain, or reject it, and add a new copy of the previous sample to the MCMC chain. The probability of accepting the proposed sample is \(\min\{1, R\}\), where \(R\) is defined in Expression ref:eq:ratiometropolis for the case when no RJMCMC is required and in Expression ref:eq:ratiorjmcmc for the case with RJMCMC.
 This probability of accepting a new sample guarantees that the MCMC chains will asymptotically converge with the posterior distribution of all possible models.
 For brevity we denote all the variances of the model as \(\Sigma = (\sigma^2, \sigma^2_\Theta)\), and \(p(\Sigma)\) their joint prior distribution. 
-Given a particular sample, \( f\left[ y | \text{OLS}(\bm x, S, \Theta), \Sigma \right] \) is the value of the likelihood function of the model, which corresponds to the joint density of the residuals of all observations.
+Given a particular sample, \( f\left[ \bm y | \text{OLS}(\bm x, S, \Theta), \Sigma \right] \) is the value of the likelihood function of the model, which corresponds to the joint density of the residuals of all observations.
 
 #+NAME: eq:ratiometropolis
 \begin{equation}
 R = \frac
-{f \left[y | \text{OLS}\left(\bm{x}, S^{*}, \Theta^{*}\right), \Sigma^{*} \right]
+{f \left[\bm y | \text{OLS}\left(\bm{x}, S^{*}, \Theta^{*}\right), \Sigma^{*} \right]
 p(S^{*}) q(S^{(t)} | S^{*}) p(\Theta^{*} | S^{*}) p(\Sigma^{*}) }
-{f \left[ y | \text{OLS}\left(\bm{x}, S^{(t)}, \Theta^{(t)}\right), \Sigma^{(t)} \right]
+{f \left[\bm y | \text{OLS}\left(\bm{x}, S^{(t)}, \Theta^{(t)}\right), \Sigma^{(t)} \right]
 p(S^{(t)}) q(S^{*} | S^{(t)}) p(\Theta^{(t)} | S^{(t)}) p(\Sigma^{(t)})}
 \end{equation}
 
 #+NAME: eq:ratiorjmcmc
 \begin{equation}
 R = \frac
-{f \left[ y | \text{OLS}\left(\bm{x}, S^{*}, \Theta^{*}\right), \Sigma^{*} \right]
+{f \left[\bm y | \text{OLS}\left(\bm{x}, S^{*}, \Theta^{*}\right), \Sigma^{*} \right]
 p(S^{*}) q(S^{(t)} | S^{*}) p(\Theta^{*} | S^{*}) p(\Sigma^{*}) h\left(U^{*} | \Theta^{(t)}, S^{*}, S^{(t)}\right) }
-{f \left[ y | \text{OLS}\left(\bm{x}, S^{(t)}, \Theta^{(t)}\right), \Sigma^{(t)} \right]
+{f \left[ \bm y | \text{OLS}\left(\bm{x}, S^{(t)}, \Theta^{(t)}\right), \Sigma^{(t)} \right]
 p(S^{(t)}) q(S^{*} | S^{(t)}) p(\Theta^{(t)} | S^{(t)}) p(\Sigma^{(t)}) h\left(U | \Theta^{(t)}, S^{*}, S^{(t)}\right)}
 \cdot \left |
 \frac{\partial j \left( \Theta^{(t)}, U | S^{(t)}, S^{*} \right) }
@@ -232,7 +234,7 @@ p(S^{(t)}) q(S^{*} | S^{(t)}) p(\Theta^{(t)} | S^{(t)}) p(\Sigma^{(t)}) h\left(U
 
 The Jacobian determinant from Expression ref:eq:ratiorjmcmc is equivalent to \(2^{- \text{dim}(\Theta^{(t)})}\) in the expansion case, and to \(2^{\text{dim}(\Theta^{*})}\) in the shrinkage case.
 
-Expression ref:eq:ratiometropolis differ from its counterpart from textcite:jin2020bsr. In their version they omitted some of the components that we include to calculate \(R\) (i.e. \(p(\Theta | S)\) and \(p(\Sigma)\)). Moreover, textcite:jin2020bsr only add accepted samples to the MCMC chain, while we add a copy of the previous sample if the proposal is rejected. We believe our implementation is correct and it guarantees the detailed balance required for the MCMC sampler to asymptotically converge with the posterior distribution of all possible models.
+Expression ref:eq:ratiometropolis differs from its counterpart from textcite:jin2020bsr. In their version they omitted some of the components that we include to calculate \(R\) (i.e. \(p(\Theta | S)\) and \(p(\Sigma)\)). Moreover, textcite:jin2020bsr only add accepted samples to the MCMC chain, while we add a copy of the previous sample if the proposal is rejected. We believe our implementation is correct and it guarantees the detailed balance required for the MCMC sampler to asymptotically converge with the posterior distribution of all possible models.
 # We have contacted the original authors[fn::https://github.com/ying531/MCMC-SymReg/issues/2] and they will consider our comments in future versions of their paper.
 
 ** Modifications to the original algorithm
@@ -387,8 +389,8 @@ the Bayesian algorithms. However, the output of the evolutionary
 algorithm is different from the output of the Bayesian algorithm.
 Instead of a MCMC chain it reports the Pareto frontier between the
 RMSE and the complexity of the expressions. 
-The Pareto frontier between two---or more---variables is the set of elements that are more optimal for a one of the variables than all other elements with the same values for the other variables.
-In this case they are the expressions with the lowest RMSE of all observed complexity values.
+The Pareto frontier between two---or more---variables is the set of elements that are more optimal for one of the variables than all other elements with the same values for the other variables.
+In this case they are the expressions with the lowest RMSE for all observed complexity values.
 Figure
 ref:fig:evolutionary shows that the evolutionary algorithm is able to
 discover equations that model the data from the training set with similar errors as the Bayesian algorithm. Nevertheless, the evolutionary algorithm is also
@@ -425,7 +427,7 @@ For equation 2 the RMSE axis is zoomed-in and the missing data points are in the
 
 In this report we have evaluated the performance of Bayesian symbolic regression algorithms. We have introduced two significant modifications to the algorithm from textcite:jin2020bsr.
 The first one, a symbolic simplification step had issues exploring properly the posterior space. In contrast the second modification, allowing the MCMC sampler to explore multiple areas of posterior space simultaneously, outperformed the original algorithm in all scenarios.
-Moreover, our implementation is considerably faster than the implementation from textcite:jin2020bsr.
+Moreover, our implementation is considerably faster than the implementation from textcite:jin2020bsr, and to our knowledge it is the only Bayesian symbolic regression program available as an user-friendly package.
 We have also shown that the Bayesian symbolic regression algorithm finds equally good expressions as the evolutionary program on a fraction of the time. Still, all of the symbolic regression algorithms we have tested substantially overfitted the training data and produced worse models of the test sets than random number generators.
 These results are contradictory with what textcite:jin2020bsr report. In their article the expressions that the Bayesian symbolic regression program discovers---under the same conditions---model equally well the training data and the testing data generated from the same distribution.
 
@@ -442,7 +444,7 @@ One avenue for exploring this approach is to split the sampling algorithm into t
 
 We are aware that our analysis of the performance of the methods is simplistic, since we have focused mainly on predictive accuracy.
 In the future, after developing more mature symbolic regression MCMC samplers, we would have to examine how interpretable are the expressions that the algorithm can discover considering trade-offs between fit, computational resources and interpretability. After all, from our perspective the major advantage of symbolic regression over other methods is its ability to aid in discovering mathematical expressions with plausible scientific interpretations. 
-Our preliminary results show that the Bayesian approach is a promising alternative that seems to be able to match the performance of the current most common algorithms.
+Our preliminary results show that the Bayesian approach is a promising alternative that seems to be able to match the performance of the current most common symbolic regression algorithms.
 We believe that Bayesian symbolic regression can become an useful tool to aid in the development of formal scientific models and to researchers that wish to compose machine learning techniques with their scientific models.
 
 * Materials
