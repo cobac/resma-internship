@@ -21,7 +21,7 @@
 #+LATEX_HEADER: Don van den Bergh\\%
 #+LATEX_HEADER: Eric-Jan Wagenmakers \\%
 #+LATEX_HEADER: \hphantom{1cm} }
-#+LATEX_HEADER: \duedate{XX August 2021}
+#+LATEX_HEADER: \duedate{30 August 2021}
 
 #+LATEX_HEADER: \abstract{
 #+LATEX_HEADER: Symbolic regression is a supervised machine learning method that constructs mathematical expressions composing basic operations (e.g. addition, multiplication, trigonometric functions, etc.). Therefore, the models are fully interpretable, unlike other machine learning techniques. This allows symbolic regression to act as a bridge between black-box machine learning models and scientific models that are represented mathematically.
@@ -102,8 +102,9 @@ possible mathematical expressions and, similarly to the evolutionary
 algorithms, they represent the mathematical expressions as symbolic
 trees. In this case, instead of /mutating/ the trees we say that MCMC
 chains /jump/ from one tree to another, although the modifications can be equivalent (e.g. replacing an operator or growing a new
-branch from where a terminal node used to be). Since Bayesian symbolic regression methods are in early stages of development, it is not clear yet how they compare to other symbolic regression models.
+branch from where a terminal node used to be). Since Bayesian symbolic regression methods are in early stages of development, it is not clear yet how they perform compared to other symbolic regression models.
 
+# Weak argument
 # The main advantage of Bayesian symbolic regression over evolutionary symbolic regression is that we can formally define all steps of the process using probability theory.
 # For example, one of the main concerns with symbolic regression is that it can overfit a particular dataset if very complex expressions are not penalized.
 # In an evolutionary algorithm we can modify the fitness function to penalize complexity in some arbitrary way, but with a Bayesian algorithm we can specify different prior probabilities for different degrees of complexity.
@@ -204,7 +205,7 @@ The probability distribution of the auxiliary variables \(U\) and \(U^{*}\) is \
 
 *** Accepting new samples
 
-The last two steps that the MCMC performs are sampling a new variance \((\sigma^2)^{*}\) from the variance prior distribution and optimizing via ordinary least squares the linear coefficients \(\beta.\)
+The last two steps that the MCMC sampler performs are sampling a new variance \((\sigma^2)^{*}\) from the variance prior distribution and optimizing via ordinary least squares the linear coefficients \(\beta.\)
 After generating a new proposal the MCMC sampler has to decide whether to accept it, and add the new sample to the MCMC chain, or reject it, and add a new copy of the previous sample to the MCMC chain. The probability of accepting the proposed sample is \(\min\{1, R\}\), where \(R\) is defined in Expression ref:eq:ratiometropolis for the case when no RJMCMC is required and in Expression ref:eq:ratiorjmcmc for the case with RJMCMC.
 This probability of accepting a new sample guarantees that the MCMC chains will asymptotically converge with the posterior distribution of all possible models.
 For brevity we denote all the variances of the model as \(\Sigma = (\sigma^2, \sigma^2_\Theta)\), and \(p(\Sigma)\) their joint prior distribution. 
@@ -251,7 +252,7 @@ SymbolicUtils.jl parencite:gowda2021highperfor to simplify
 symbolically every accepted sample. This step introduces extra
 computational overhead, but we anticipated that the benefits would
 compensate the computational cost. Second, we can run multiple MCMC
-chains initialized with different random expressions. The MCMC sampler
+chains in parallel initialized with different random expressions. The MCMC sampler
 has the option to generate a new proposal from a different chain at
 each iteration, instead of using the last sample of the current chain.
 We set the default probability of inter-chain sampling at \(0.05\) .
