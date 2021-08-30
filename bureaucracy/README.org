@@ -1,6 +1,0 @@
-Total grade = mean(Product grade, Process grade)
-
-Product grade = 2/3 * Scientific reasoning + 1/3 * Language and style
-
-Info in ~rubrics.pdf~ and ~grading_form.pdf~.
-

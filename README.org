@@ -1,19 +1,12 @@
-This repository contains all the code from the Bayesian Symbolic Regression internship report. The development of this project is visible through the git history of this repository.
+This repository contains all the code and document files from the [[https://github.com/cobac/resma-internship/blob/master/products/report/report.pdf][Bayesian Symbolic Regression internship report]]. It is possible to audit the development of this project through the git history of this repository (e.g. meeting minutes, old analyses, discarded plans).
 
-All of our results, raw output, intermediary results and final results are available in the following Open Science Framework repository: https://osf.io/p8bg5/. Some of them (i.e. figures and output expressions from the evolutionary algorithm) are also in this repository.
-
+All of our results (i.e. raw output, intermediary results and final results) are available in the following Open Science Framework repository: https://osf.io/p8bg5/. 
 Our Bayesian symbolic regression program is hosted in the following repository: [[https://github.com/cobac/BayesianSR.jl]]
 
 The repository is structured in the following way:
 
-- =products/= folder :: Contains the research proposal and the internship report, as well as feedback of different versions of both documents.
-- =scripts= :: Contains the analysis scripts and folder structure for all the analysis of the report. Each sub-folder contains code for different models, and the code of the parent repository integrates all intermediary results to generate the figures that are included in the report.
-  - All code is written in the Julia programming language. To run a script /instantiate/ the =Manifest.toml= of the corresponding folder (and do not update the packages) to guarantee that the correct versions of all dependencies are used.
+- =products/= :: Contains the research proposal and the internship report, as well as feedback for different versions of both documents.
+- =scripts/= :: Contains the analysis scripts and folder structure for all the analysis of the report. Each sub-folder contains code for different models, and the code of the parent repository integrates all intermediary results to generate the figures that are included in the report.
+  - All code is written in the Julia programming language. To run a script /instantiate/ the =Manifest.toml= of the corresponding folder to guarantee that the correct versions of all dependencies are used (do not update the packages!). More info about reproducing Julia projects at https://pkgdocs.julialang.org/v1/environments/#Using-someone-else's-project .
 
-All of our results can be replicated if each =xxx.jl= file is run in order for each sub-folder in =scripts/=, and later the final analysis script. Alternatively, it is possible to download from the OSF repository each intermediary output and only partially replicate our results. Finally, it is also possible to download all =output.jl2= files from the OSF repository and further analyze our results.
-
-* TODO: Clean meetings, bureaucracy and products folders
-
-* TODO: Regularize analysis scripts so are easier to read.
-
-* TODO: Add a clean version of the model specification to the Bayesian SR repo, and possibly a link to this repo
+All of our results can be replicated if each =xxx.jl= file is run in order for each sub-folder in =scripts/=, and then the final analysis scripts. Alternatively, it is possible to download from the OSF repository intermediary outputs and only partially audit our results. Finally, it is also possible to download all =output.jl2= files from the OSF repository and further analyze our results.
